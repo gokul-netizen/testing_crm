@@ -4,11 +4,9 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 
-interface ParamsProps {
-    params: Promise<{ userId: string }>;
-}
+ 
 
-export async function GET(request: Request, { params }: ParamsProps) {
+export async function GET(request: Request) {
     try {
 
 

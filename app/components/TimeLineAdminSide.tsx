@@ -56,7 +56,7 @@ export default function TimeLineAdminSide({ id, userId, apiUrl }: Props) {
                     <button className="text-[#a5a3ae] hover:text-gray-600">
                         <MoreVertical size={20} />
                     </button>
-                    <FollowUpPanel userId={userId} inquiryId={inquiryId} usersApi={apiUrl} />
+                    <FollowUpPanel  inquiryId={inquiryId} usersApi={apiUrl} />
                 </div>
             </div>
 
