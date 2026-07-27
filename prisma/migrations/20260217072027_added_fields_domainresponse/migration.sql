@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "DomainResponse" ADD COLUMN     "oldData" JSONB,
+ADD COLUMN     "updatedBy" TEXT,
+ADD COLUMN     "updatedOn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

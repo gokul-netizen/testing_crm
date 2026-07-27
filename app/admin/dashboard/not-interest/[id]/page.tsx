@@ -1,0 +1,53 @@
+
+
+'use client';
+
+import CustomBreadcrumb from "@/app/components/BreadCrumb";
+import OverView from "@/app/components/OverView";
+import TimeLine from "@/app/components/TimeLine";
+import TimeLineAdminSide from "@/app/components/TimeLineAdminSide";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { LuUsers } from "react-icons/lu";
+
+
+export default function Page() {
+
+    const params = useParams<{ id: string }>();
+    const [followup, setFollowup] = useState(false);
+    const { id } = params;
+
+    return (
+        <section className="px-3">
+            <div className="flex items-center gap-4  ">
+                <button className={`flex items-center gap-2 px-6 py-2 rounded-md  ${followup ? "bg-[#7367f0] text-white" : "text-gray-500  hover:text-[#7367f0] hover:bg-[#bdb8f3]"} cursor-pointer font-medium text-[15px] hover:shadow-sm transition-all`}
+                    onClick={() => setFollowup(true)}
+                >
+                    <LuUsers size={20} />
+                    <span>Overview</span>
+
+                </button>
+
+                <button className={`flex items-center gap-2 px-6 py-2 rounded-md  hover:bg-[#cecbec] ${followup ? "text-gray-500  hover:text-[#7367f0]" : "text-white bg-[#7367f0]"} cursor-pointer hover:shadow-sm font-medium text-[15px] transition-all`}
+                    onClick={() => setFollowup(false)}
+                >
+                    <LuUsers size={20} />
+                    <span>Timeline</span>
+                </button>
+            </div>
+
+            <div className="flex justify-end py-2 px-3">
+                <CustomBreadcrumb
+                    paths={[
+                        { label: "Dashboard", href: `/admin/dashboard` },
+                        { label: "Not-interested follow up", href: `/admin/dashboard/not-interest` },
+                        { label: "Detail", isPage: true },
+                    ]}
+                />
+
+            </div>
+
+            {followup ? <OverView back={`/admin/dashboard/not-interest`} id={id} /> : <TimeLineAdminSide id={id} userId={2} />}
+        </section>
+    )
+}

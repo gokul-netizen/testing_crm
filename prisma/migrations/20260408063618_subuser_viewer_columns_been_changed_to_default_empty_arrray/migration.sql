@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "SubUser" ALTER COLUMN "viewer" SET DEFAULT ARRAY[]::TEXT[];

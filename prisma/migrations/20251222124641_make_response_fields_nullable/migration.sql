@@ -1,0 +1,12 @@
+-- AlterTable
+ALTER TABLE "Reviews" ALTER COLUMN "link" DROP NOT NULL,
+ALTER COLUMN "rating" DROP NOT NULL,
+ALTER COLUMN "iso_date" DROP NOT NULL,
+ALTER COLUMN "iso_date_of_last_edit" DROP NOT NULL,
+ALTER COLUMN "source" DROP NOT NULL,
+ALTER COLUMN "user_name" DROP NOT NULL,
+ALTER COLUMN "user_link" DROP NOT NULL,
+ALTER COLUMN "user_contributor_id" DROP NOT NULL,
+ALTER COLUMN "user_thumbnail" DROP NOT NULL,
+ALTER COLUMN "snippet" DROP NOT NULL,
+ALTER COLUMN "extracted_snippet_original" DROP NOT NULL;

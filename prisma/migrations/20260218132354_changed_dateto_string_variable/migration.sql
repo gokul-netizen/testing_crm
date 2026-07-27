@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Followup" ALTER COLUMN "date" SET DATA TYPE TEXT;

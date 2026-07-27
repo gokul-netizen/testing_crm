@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "is_deleted" DROP NOT NULL,
+ALTER COLUMN "is_deleted" DROP DEFAULT,
+ALTER COLUMN "is_deleted" SET DATA TYPE TEXT;

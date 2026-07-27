@@ -1,0 +1,243 @@
+generator client {
+  provider      = "prisma-client"
+  output        = "../app/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  role_id       Int
+  name          String
+  password      String
+  show_password String?
+  email         String    @unique
+  username      String    @unique
+  mobile_no     String?   
+  user_image    String?
+  status        String    @default("Active")
+  added_on      DateTime  @default(now())
+  added_by      String?
+  updated_on    DateTime?
+  updated_by    String?
+  last_login    DateTime?
+  last_loginip  String?
+  joining_date  DateTime?
+  domain        Int?     
+  isDeleted     Boolean   @default(false)
+  isDeletedBy   String?
+  isDeletedOn   DateTime?
+  emailTriggerOption   String?
+  type                 String?
+  otp                  String?
+
+  inquiryDomain InquiryDomain? @relation(fields: [domain], references: [id])
+ 
+  designation     Designation[]
+  followups Followup[]
+
+ 
+   
+}
+
+model InquiryDomain {
+  id             Int              @id @default(autoincrement())
+  domainName     String           @unique
+  accessToken    String           @unique
+  addedOn        DateTime         @default(now())
+  updatedOn      DateTime?
+  updatedBy      String?
+  isDeleted      Boolean          @default(false)
+  isDeletedOn    DateTime?
+  isDeletedBy    String?
+  addedBy        Int?
+  logo           String?
+  subscription    Int             @default(0)
+  status         String           @default("Active")
+  service        Service[]
+  domainResponse DomainResponse[]
+  users           User[]
+
+  @@index([isDeleted])
+
+}
+
+model DomainResponse {
+  id             Int           @id @default(autoincrement())
+  domain_id      Int
+  companyName    String?       
+  name           String?       
+  email          String?
+  website        String?
+  phone          String?
+  phoneSecondary           String?
+  response       Json?
+  createdAt      DateTime      @default(now())
+  status         Int           @default(1)
+  isDeletedBy    String?
+  isDeletedOn    DateTime?
+  addedBy        String?
+  oldData        Json?
+  updatedBy      String?
+  updatedOn      DateTime?
+  source         String        @default("Default")
+  service        String?        
+  followUpStatus String?
+  assignId       Int?
+  addedType       String?
+  domain         InquiryDomain @relation(fields: [domain_id], references: [id], onDelete: Cascade)
+
+  followups      Followup[]
+  assigns      Assign[]
+  incentives   Incentive[]
+  
+
+  @@index([phone,phoneSecondary , email])   
+  
+}
+
+model ReferenceDomain {
+  id        Int      @id @default(autoincrement())
+  user_name String
+  user_id   Int
+  domains   String[]
+  createdAt DateTime @default(now())
+}
+
+model Admin {
+  
+  id       Int    @id @default(autoincrement())
+  name      String?
+  username String @unique
+  password String
+  phoneNumber  String? @unique
+  email     String? @unique 
+  otp       String?
+  status        String    @default("Active")
+  user_image    String?
+  updated_on    DateTime?
+  updated_by    String?
+  last_login    DateTime?
+  last_loginip  String?
+  isDeleted     Boolean   @default(false)
+  isDeletedBy   String?
+  isDeletedOn   DateTime?
+  createdAt     DateTime @default(now())
+
+  
+
+}
+
+model Log_records {
+  id         Int      @id @default(autoincrement())
+  query      String
+  createdAt  DateTime @default(now())
+  ip         String?
+  table_name String?
+}
+
+model Source {
+  id        Int      @id @default(autoincrement())
+  source    String   @unique
+  status    String   @default("Active")
+  createdAt DateTime @default(now())
+}
+
+model Service {
+  id              Int      @id @default(autoincrement())
+  service         String   
+  status          String   @default("Active")
+  createdAt       DateTime @default(now())
+  domainId        Int?
+  domain          InquiryDomain? @relation(fields: [domainId], references: [id], onDelete: Cascade)
+}
+
+model Designation {
+  id              Int      @id @default(autoincrement())
+  jobTitle        String    
+  status          String   @default("Active")
+  createdAt       DateTime @default(now())
+  userId          Int?
+  user            User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+}
+
+
+model Followup {
+  id        Int            @id @default(autoincrement())
+  inquiryID Int
+  followUpStatus String?
+  date      String?
+  time      String?
+  addedBy   Int?
+  addedByUser  User? @relation(fields : [addedBy] , references : [id] , onDelete: Cascade)
+  remarks   String?
+  isPublic  Boolean @default(true)   
+  type      String?
+  assignFrom  Int?
+  assignTo    Int?
+  assignToName  String?
+  contact_mode  String?
+  createdAt DateTime       @default(now())
+  reminder     DateTime?   
+  address      String?
+  inquiry   DomainResponse @relation(fields: [inquiryID], references: [id] , onDelete: Cascade)
+
+}
+
+model Assign {
+  id          Int       @id @default(autoincrement())
+  inquiryId   Int
+  inquiry     DomainResponse @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  addedBy     Int?  
+  assignTo    Int
+  assingToName  String?
+  assignDate  String
+  assignTime  String
+  type      String?
+  remarks     String?
+  createdAt   DateTime @default(now())
+  
+}
+
+
+model EmailLogs {
+  id            Int    @id @default(autoincrement())
+  to            String
+  from          String
+  status        String
+  error         String?
+  sentAt        DateTime
+}
+
+model   WhatsappLogs {
+
+  id            Int    @id @default(autoincrement())
+  sentTo        String
+  smsTemplate   String?
+  erroInfo      String?
+  response      String?
+  smsUrl        String?
+  status        String?
+  createdAt     DateTime
+
+}
+
+
+model Incentive {
+  id                  Int           @id @default(autoincrement())
+  inquiryId           Int
+  inquiry             DomainResponse @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  incentive           String
+  createdAt           DateTime  
+}
+
+
+enum Status {
+  Active
+  Blocked
+}
