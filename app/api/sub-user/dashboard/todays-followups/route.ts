@@ -9,11 +9,9 @@ dayjs.extend(customParseFormat);
 
 
 
-interface ParamsProps {
-    user_id: string;
-}
+ 
 
-export async function GET(req: Request, { params }: { params: Promise<ParamsProps> }) {
+export async function GET(req: Request) {
     try {
 
         const decoded = await userSession();

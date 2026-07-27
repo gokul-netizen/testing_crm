@@ -11,11 +11,9 @@ dayjs.extend(timezone);
 
 
 
-interface ParamsProps {
-    params: Promise<{ userId: string }>;
-}
+ 
 
-export async function GET(req: Request, { params }: ParamsProps) {
+export async function GET(req: Request) {
     try {
 
         const decoded = await userSession();
