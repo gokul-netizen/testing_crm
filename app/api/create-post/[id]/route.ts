@@ -204,6 +204,8 @@ export async function PATCH(req: Request, { params }: ParamsPros) {
 
         const { followup, date, time, remarks, incentive, assignid, assignname, assigntype, ispublic, reminder, contactmode, address } = normalizedData;
 
+     
+
         let assignId = null;
         let assignName = null;
         let assignType = null;
@@ -393,6 +395,10 @@ export async function PATCH(req: Request, { params }: ParamsPros) {
                                 assignTo: assignId,
                                 assignToName: assignName,
                                 isPublic: ispublic,
+                                reminder,
+                                address,
+                                contact_mode: contactmode,
+
                                 createdAt: getCurrentUTCFromIST(),
                             }
                         },

@@ -43,7 +43,7 @@ export default function Page() {
                             icon={FiInbox }
                             iconColor="text-blue-600"
                             iconBgColor="bg-blue-100"
-                            title="Total Inquiries"
+                            title="Total Follow up"
                             subTitle1="Latest Update"
                             subTitle2={data?.totalInquiries}
                              

@@ -106,7 +106,7 @@ export default function SubUserHeader({ userName = "Sub User", userImage }: Head
                 UserImage={userImage ? `/${userImage.replace(/\\/g, '/')}` : "/admin_profile.webp"}
                 href={`/user/${id}`}
                 mainLinks={[
-                  { label: "Home", href: `/sub-user/${id}`, icon: RiMailOpenLine },
+                  { label: "Home", href: `/sub-user`, icon: RiMailOpenLine },
                 ]}
                 sections={[
 
@@ -115,7 +115,7 @@ export default function SubUserHeader({ userName = "Sub User", userImage }: Head
                     title: "Inquiry",
                     icon: LuFileSpreadsheet,
                     activeMatch: `/user/${id}/inquiry/view`,
-                    links: [{ label: "View", href: `/sub-user/${id}/inquiry/view` }],
+                    links: [{ label: "View", href: `/sub-user/inquiry/view` }],
                   },
                 ]}
               />

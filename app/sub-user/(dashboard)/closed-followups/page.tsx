@@ -142,7 +142,7 @@ export default function Page() {
 
                 <CustomBreadcrumb
                     paths={[
-                        { label: "Dashboard", href: `/sub-user/${id}` },
+                        { label: "Dashboard", href: `/sub-user` },
                         { label: "Closed", isPage: true },
                     ]}
                 />

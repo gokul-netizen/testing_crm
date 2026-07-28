@@ -20,7 +20,6 @@ export default function Page() {
 
   const { data, error, isLoading } = useSWR(`/api/user/user-management/${id}`,fetcher);
 
-  console.log(data);
 
 
   const [form, setForm] = useState({

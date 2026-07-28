@@ -39,7 +39,7 @@ export default function Page() {
                 <CustomBreadcrumb
                     paths={[
                         { label: "Dashboard", href: `/user` },
-                        { label: "total-followups", href: `/user/todays-followups` },
+                        { label: "todays-followups", href: `/user/todays-followups` },
                         { label: "Detail", isPage: true },
                     ]}
                 />

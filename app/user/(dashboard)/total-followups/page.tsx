@@ -2,7 +2,6 @@
 
 import { fetcher } from "@/lib/fetcherSwr";
 import useSWR from "swr";
-import { useParams } from 'next/navigation';
 import DataTableComponent from "@/app/components/DataTable";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -10,7 +9,6 @@ import utc from "dayjs/plugin/utc";
 import SpinnerCircle4 from "@/components/spinner-10";
 import Link from "next/link";
 import CopyText from "@/app/components/CopyText";
-
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { exportExcelDataInquiry } from "@/lib/export-excel-data";
 import { timeSince } from "@/lib/time-ago";
@@ -46,14 +44,9 @@ type DataItem = {
 
 export default function Page() {
 
-    const params = useParams();
-    const user_id = params.user_id;
-
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     const { data, error, isLoading } = useSWR(`/api/user/dashboard/total-followups`, fetcher);
-
- 
 
     if (isLoading) return <SpinnerCircle4 />;
 
@@ -191,7 +184,7 @@ export default function Page() {
                 <CustomBreadcrumb
                     paths={[
                         { label: "Dashboard", href: `/user` },
-                        { label: "Records", isPage: true },
+                        { label: "total followups", isPage: true },
                     ]}
                 />
             </div>

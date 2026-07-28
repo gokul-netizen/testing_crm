@@ -32,8 +32,6 @@ type DataItem = {
 export default function Page() {
 
  
-    const params = useParams();
-    const { user_id } = params;
 
     const { data, error, isLoading } = useSWR(`/api/user/dashboard/pending-followups`, fetcher);
 
@@ -137,7 +135,6 @@ export default function Page() {
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     detail={(item) =>  `/user/pending-followups/${item.inquiry.id}`}
-                    onEdit={() => "Edit"}
                     onExcel={() => userExcelData(data , "Pending")}
                     whatsapp={(item)=> item?.inquiry?.phone}
                     mobileCall={(item)=> String(item?.inquiry?.phone)}

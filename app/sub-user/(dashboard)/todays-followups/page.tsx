@@ -113,7 +113,7 @@ export default function Page() {
             <div className="flex justify-end py-2 px-3">
                 <CustomBreadcrumb
                     paths={[
-                        { label: "Dashboard", href: `/sub-user/${id}/` },
+                        { label: "Dashboard", href: `/sub-user` },
                         { label: "Today's follow up", isPage: true },
                     ]}
                 />
