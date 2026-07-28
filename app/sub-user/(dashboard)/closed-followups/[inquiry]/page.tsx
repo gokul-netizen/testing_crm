@@ -46,7 +46,7 @@ export default function Page() {
 
         </div>
 
-       {followup ? <OverView back={`/sub-user/closed-followups`} id={inquiryID} /> : <SubUserTimeLine url={`/sub-user/closed-followups/`}    inquiryId={inquiryID} />}
+       {followup ? <OverView back={`/sub-user/closed-followups`} id={inquiryID} /> : <SubUserTimeLine url={`/sub-user/closed-followups`}    inquiryId={inquiryID} />}
 
       </div>
 

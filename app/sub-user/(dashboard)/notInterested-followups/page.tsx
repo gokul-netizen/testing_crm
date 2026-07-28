@@ -117,7 +117,7 @@ export default function Page() {
             <div className="flex justify-end py-2 px-3">
                 <CustomBreadcrumb
                     paths={[
-                        { label: "Dashboard", href: `/sub-user/${id}/` },
+                        { label: "Dashboard", href: `/sub-user` },
                         { label: "Closed", isPage: true },
                     ]}
                 />
@@ -125,7 +125,7 @@ export default function Page() {
 
             <div  >
                 <DataTableComponent
-                    title="Not Interested"
+                    title="Not Interested "
                     columns={columns}
                     data={data ?? []}
                     selectedRows={selectedRows}

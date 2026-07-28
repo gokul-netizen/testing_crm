@@ -72,7 +72,7 @@ export async function GET(req: Request ) {
             }
         });
 
-        console.log(closedFollowups.inquiryDomain.domainResponse.length);
+         
 
         return NextResponse.json(closedFollowups, { status: 200 });
     } catch (error: any) {

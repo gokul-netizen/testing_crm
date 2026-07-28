@@ -32,10 +32,6 @@ type DataItem = {
 
 export default function Page() {
 
-    const params = useParams();
-    const { user_id } = params;
-    
-
     const { data, error, isLoading } = useSWR(`/api/user/dashboard/todays-followups`, fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 

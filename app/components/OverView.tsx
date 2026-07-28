@@ -34,7 +34,7 @@ export default function OverView({ id ,back } : IDsProps) {
     fetcher
   );
 
-  console.log(data);
+ 
 
   if (isLoading) {
     return <div className="p-6 text-gray-500">Loading...</div>;

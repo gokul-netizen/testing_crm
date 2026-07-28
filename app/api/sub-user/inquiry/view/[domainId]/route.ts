@@ -24,7 +24,7 @@ export async function GET(req: Request, { params }: { params: Promise<UserId> })
 
         const { domainId } = await params;
 
-        console.log(domainId);
+ 
 
         const inquiry = await prisma.DomainResponse.findMany({
             where: {

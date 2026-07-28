@@ -40,14 +40,14 @@ export default function Page() {
           <CustomBreadcrumb
             paths={[
               { label: "Dashboard", href: `/sub-user` },
-              { label: "closed followups", href: `/sub-user/closed-followups/` },
+              { label: "Assigned followups", href: `/sub-user/assigned-followups/` },
               { label: "Detail", isPage: true },
             ]}
           />
 
         </div>
 
-       {followup ? <OverView back={`/sub-user/closed-followups`} id={inquiryID} /> : <TimeLine url={`/sub-user/closed-followups/`}    inquiryId={inquiryID} />}
+       {followup ? <OverView back={`/sub-user/assigned-followups`} id={inquiryID} /> : <TimeLine url={`/sub-user/assigned-followups/`}    inquiryId={inquiryID} />}
 
       </div>
 

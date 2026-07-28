@@ -27,7 +27,6 @@ export default function Page() {
 
     const { data, error, isLoading } = useSWR(`/api/user/inquiry/view`, fetcher);
 
-    console.log(data);
 
     const domainList: DataItem[] = useMemo(() => {
         if (!data) return [];

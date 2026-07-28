@@ -197,12 +197,12 @@ export default function Page() {
                 />
             </div>
             <DataTableComponent
-                title="Total Inquiries"
+                title="Total Followups"
                 columns={columns}
                 data={data ?? []}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
-                onEdit={() => "edit page"}
+                 
                 onExcel={() => exportExcelDataInquiry(data ?? [])}
                 detail={(item)=> `/sub-user/total-followups/${item.id}`}
                 whatsapp={(item)=> item.phone}
