@@ -14,6 +14,8 @@ import Inquiry from "./add-inquiry";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { exportExcelDataInquiry } from "@/lib/export-excel-data";
 import { timeSince } from "@/lib/time-ago";
+import SliderPanel from "@/app/components/SideSlider";
+import Search from "./search";
 
 dayjs.extend(utc);
 
@@ -26,7 +28,7 @@ type DataItem = {
     createdAt: string;
     service: string;
     phoneSecondary: string;
-    response : any;
+    response: any;
 
     followups: {
         date: string;
@@ -48,9 +50,15 @@ export default function Page() {
     const params = useParams();
     const domain_id = params.domain_id;
 
-    const { data, error, isLoading } = useSWR(`/api/user/inquiry/view/${domain_id}`,fetcher);
+    const { data, error, isLoading } = useSWR(`/api/user/inquiry/view/${domain_id}`, fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
     const [open, setOpen] = useState(false);
+    const [openSearch, setOpenSearch] = useState(false);
+    const [searchData, setSearchData] = useState<any[]>([]);
+
+
+    const tableData = searchData.length > 0 ? searchData : data
+
 
     if (isLoading) return <SpinnerCircle4 />;
 
@@ -63,7 +71,7 @@ export default function Page() {
             header: "Name",
             accessor: (item: DataItem) => (
                 <div className="flex items-center gap-2 group">
-                    <Link href={detailLink(item.id)}>
+                    <Link href={detailLink(item?.id)}>
                         <span className="truncate">{item.name}</span>
                     </Link>
                     <CopyText text={item.name} />
@@ -123,9 +131,9 @@ export default function Page() {
                     <div className="group relative">
                         <Link className="truncate flex flex-col" href={detailLink(item.id)}>
 
-                            <span className={colorClass}> {item.followUpStatus === "Assign To" ? `${item.followUpStatus} ${`${item.followups[0]?.assignToName.slice(0,8)}...`}` : item.followUpStatus }</span>
+                            <span className={colorClass}> {item.followUpStatus === "Assign To" ? `${item.followUpStatus} ${`${item.followups[0]?.assignToName.slice(0, 8)}...`}` : item.followUpStatus}</span>
 
-                          
+
                             <div className={`flex gap-2 ${colorClass}`}>
                                 <span>
                                     {isFollowUp && item.followups?.[0]?.date && item.followups[0].date !== "Invalid Date"
@@ -145,7 +153,7 @@ export default function Page() {
 
                             </div>
 
-                           
+
                             <span>
                                 {timeSince(
                                     item.followups?.[0]?.createdAt ??
@@ -187,19 +195,22 @@ export default function Page() {
                     ]}
                 />
             </div>
+
             <DataTableComponent
                 title="Records"
                 columns={columns}
-                data={data ?? []}
+                data={tableData ?? []}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 onAdd={() => setOpen(true)}
+                onReset={() => setSearchData([])}
+                onSearch={() => setOpenSearch(true)}
                 enableSearch={true}
                 onExcel={() => exportExcelDataInquiry(data ?? [])}
-                whatsapp={(item)=> item?.phone}
-                mobileCall={(item)=> String(item?.phone)}
-                detail={(item)=> `/user/inquiry/view/${domain_id}/${item.id}/detail`}
-                
+                whatsapp={(item) => item?.phone}
+                mobileCall={(item) => String(item?.phone)}
+                detail={(item) => `/user/inquiry/view/${domain_id}/${item.id}/detail`}
+
             />
 
             {open && (
@@ -208,6 +219,21 @@ export default function Page() {
                     onClose={() => setOpen(false)}
                 />
             )}
+
+            {openSearch && (
+                <SliderPanel
+                    isOpen={openSearch}
+                    onClose={() => setOpenSearch(false)}
+                >
+
+                    <Search
+                        searchData={searchData}
+                        setSearchData={setSearchData}
+
+                    />
+                </SliderPanel>
+            )}
+
         </section>
     );
 }

@@ -3,8 +3,8 @@ type Props = {
   open: boolean;
   startDate: string;
   endDate: string;
-  setStartDate: (v: string) => void;
-  setEndDate: (v: string) => void;
+  setStartDate: (v: any) => void;
+  setEndDate: (v: any) => void;
   onClose: () => void;
 };
 

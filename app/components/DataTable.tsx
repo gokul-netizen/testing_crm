@@ -91,7 +91,7 @@ export default function DataTableComponent<T extends { [key: string]: any }>({
   const [currentPage, setCurrentPage] = useState(1);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [isSliderOpen, setIsSliderOpen] = useState(false);
+  
   const [keys, setKeys] = useState<string[]>([]);
   const [value, setValue] = useState("");
 
@@ -216,13 +216,19 @@ export default function DataTableComponent<T extends { [key: string]: any }>({
                 Delete Record
               </Button>
             )}
+
             {onSearch && (
-              <Button size="lg" className="bg-[#7367f0] hover:bg-[#7a2d99] cursor-pointer rounded-sm px-4 py-3 text-base font-semibold" onClick={onDelete}>
-                Search
+              <Button 
+              size="lg"
+              onClick={onSearch}
+              
+              className="bg-[#3d8ae0f5] hover:bg-[#857ed8] text-white cursor-pointer rounded-sm px-4 py-3 text-base font-semibold" >
+                Search Records
               </Button>
             )}
+
             {onReset && (
-              <Button size="lg" className=" bg-[#00bad1] hover:bg-[#11c4db] cursor-pointer rounded-sm px-4 py-3 text-base font-semibold" onClick={onDelete}>
+              <Button size="lg" className=" bg-[#00bad1] hover:bg-[#11c4db] cursor-pointer rounded-sm px-4 py-3 text-base font-semibold" onClick={onReset}>
                 Reset Record
               </Button>
             )}
@@ -255,35 +261,7 @@ export default function DataTableComponent<T extends { [key: string]: any }>({
             </DropdownMenu>
 
 
-            {
-              enableSearch && (
-                <div className="flex justify-end gap-2">
-                  <Button className="bg-[#00bad1] text-white hover:bg-[#00bad1] rounded-md px-4 py-3 text-base font-semibold cursor-pointer" onClick={() => { setFromDate(""); setToDate(""); setCurrentPage(1); setValue(""); setKeys([]) }}>Reset</Button>
-                  <Button className="bg-[#7367f0] text-white hover:bg-[#5a54d1] rounded-md px-4 py-3 text-base font-semibold cursor-pointer" onClick={() => setIsSliderOpen(true)}>Search</Button>
-                  {isSliderOpen && (
-                    <SliderPanel isOpen={isSliderOpen} onClose={() => setIsSliderOpen(false)}>
-                      <div  >
-                        <h3 className="text-lg font-semibold mb-4">Filter By Date</h3>
-                        <DateRangeFilter
-
-                          branch={keys}
-                          setBranch={setKeys}
-                          value={value}
-                          setValue={setValue}
-                          branchOptions={uniqueKeyNames}
-                          fromDate={fromDate}
-                          toDate={toDate}
-                          setFromDate={setFromDate}
-                          setToDate={setToDate}
-                          onApply={() => { setCurrentPage(1); setIsSliderOpen(false); }}
-                          onReset={() => { setFromDate(""); setToDate(""); setCurrentPage(1); }}
-                        />
-                      </div>
-                    </SliderPanel>
-                  )}
-                </div>
-              )
-            }
+            
           </div>
         </div>
 

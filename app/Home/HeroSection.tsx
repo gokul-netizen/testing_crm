@@ -112,7 +112,7 @@ export default function HeroSection() {
             <div className="absolute -z-10 h-80 w-80 rounded-full bg-[#7367f0]/20 blur-3xl"></div>
 
             <MotionImage
-              src="/herosection.avif"
+              src="/herosection.jpeg"
               alt="MarsWeb Solutions CRM Dashboard"
               width={700}
               height={600}

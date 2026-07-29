@@ -1,17 +1,26 @@
 "use client";
 
 import Image from "next/image";
-import { BarChart3, Activity, Mail, MessageCircle } from "lucide-react";
+import { BarChart3, Activity, Mail, MessageCircle, Inbox } from "lucide-react";
 import { motion } from "motion/react";
 
 
 const features = [
+
   {
     title: "Dashboard Tracking",
     description:
       "Get a complete overview of your business with an intuitive dashboard. Monitor inquiries, follow-ups, team performance, lead status, and daily progress in one centralized place.",
     icon: BarChart3,
-    desktopImage: "/dashboard.png",
+    desktopImage: "/d2.png",
+    
+  },
+  {
+    title: "Get Your Website Inquiry On Track Flow",
+    description:
+      "Automatically collect every inquiry from your website and manage leads, follow-ups, reminders, and customer communication from a single dashboard.",
+    icon: Inbox ,
+    desktopImage: "/inquiry.png",
     mobileImage: "/dashboardmobile.png",
   },
   {
@@ -27,7 +36,7 @@ const features = [
     description:
       "Receive automated Email and WhatsApp reports every day containing Today's Follow-ups, Pending Follow-ups, Upcoming Follow-ups, Not Interested Leads, and Closed Inquiries. Stay informed without logging into the CRM.",
     icon: Mail,
-    desktopImage: "/whatsapp.png",
+    desktopImage: "/email.png",
     mobileImage: "/remindermobile.png",
   },
   {
@@ -131,7 +140,7 @@ export default function FeaturesSection() {
                   <div className="relative w-full max-w-[800px] flex justify-center items-center">
 
                
-                    <div className="relative w-full max-w-[800px] aspect-[30/12] overflow-hidden rounded-xl sm:rounded-2xl border border-gray-200 shadow-xl bg-white">
+                    <div className="relative w-full max-w-[800px] aspect-[30/18] overflow-hidden">
                       <Image
                         src={feature.desktopImage}
                         alt={`${feature.title} Desktop View`}
@@ -142,7 +151,7 @@ export default function FeaturesSection() {
                     </div>
 
                  
-                    <motion.div
+                    {/* <motion.div
                       initial={{ opacity: 0, y: 40 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, amount: 0.2 }}
@@ -156,7 +165,7 @@ export default function FeaturesSection() {
                         sizes="200px"
                         className="object-cover object-top"
                       />
-                    </motion.div>
+                    </motion.div> */}
 
                   </div>
                 </motion.div>
