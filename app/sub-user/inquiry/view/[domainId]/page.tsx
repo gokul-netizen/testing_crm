@@ -11,9 +11,11 @@ import SpinnerCircle4 from "@/components/spinner-10";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
- 
+
 import { timeSince } from "@/lib/time-ago";
 import Inquiry from "./add-inquriy";
+import Search from "./search";
+import SliderPanel from "@/app/components/SideSlider";
 
 
 dayjs.extend(utc);
@@ -44,12 +46,16 @@ type DataItem = {
 export default function Page() {
 
     const params = useParams();
-    const {  domainId } = params;    
+    const { domainId } = params;
 
     const [open, setOpen] = useState(false);
 
     const { data, error, isLoading } = useSWR(`/api/sub-user/inquiry/view/${domainId}`, fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
+    const [openSearch, setOpenSearch] = useState(false);
+    const [searchData, setSearchData] = useState<any[]>([]);
+
+    const tableData = searchData.length > 0 ? searchData : data;
 
     if (isLoading) return <SpinnerCircle4 />
 
@@ -177,10 +183,12 @@ export default function Page() {
                 <DataTableComponent
                     title="All Inquiry "
                     columns={columns}
-                    data={data ?? []}
+                    data={tableData ?? []}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
-                
+                    onReset={() => setSearchData([])}
+                    onSearch={() => setOpenSearch(true)}
+
                     onAdd={() => setOpen(true)}
                     whatsapp={(item) => item.phone}
                     mobileCall={(item) => String(item.phone)}
@@ -194,6 +202,25 @@ export default function Page() {
                         onClose={() => setOpen(false)}
                     />
                 )}
+
+                {openSearch && (
+                    <SliderPanel
+
+                        isOpen={openSearch}
+                        onClose={() => setOpenSearch(false)}
+
+                    >
+
+                        <Search
+                            searchData={searchData}
+                            setSearchData={setSearchData}
+                            setOpenSearch={setOpenSearch}
+
+                        />
+
+                    </SliderPanel>
+                )}
+
             </div>
         </section>
     )
