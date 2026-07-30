@@ -16,6 +16,7 @@ import { timeSince } from "@/lib/time-ago";
 import Inquiry from "./add-inquriy";
 import Search from "./search";
 import SliderPanel from "@/app/components/SideSlider";
+import { ExportInquiryData } from "@/lib/inquiriesExportExcel";
 
 
 dayjs.extend(utc);
@@ -188,7 +189,7 @@ export default function Page() {
                     setSelectedRows={setSelectedRows}
                     onReset={() => setSearchData([])}
                     onSearch={() => setOpenSearch(true)}
-
+                    onExcel={()=> ExportInquiryData(tableData)}
                     onAdd={() => setOpen(true)}
                     whatsapp={(item) => item.phone}
                     mobileCall={(item) => String(item.phone)}

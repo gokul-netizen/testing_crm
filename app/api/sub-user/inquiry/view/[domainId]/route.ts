@@ -29,16 +29,8 @@ export async function GET(req: Request, { params }: { params: Promise<UserId> })
         const inquiry = await prisma.DomainResponse.findMany({
             where: {
                 domain_id: Number(domainId),
-                status: 1,
-                OR: [
-                    { assignId: Number(userId) },
-                    {
-                        AND: [
-                            { assignId: null },
-                            { addedBy: String(userId) }
-                        ]
-                    }
-                ]
+                status: 1,         
+                addedBy: String(userId)
             },
             orderBy: {
                 createdAt: "desc"

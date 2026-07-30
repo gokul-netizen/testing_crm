@@ -26,15 +26,7 @@ export async function GET(req: Request, { params }: Props) {
         const where: any = {
             domain_id: Number(domainId),
             status: 1,
-            OR: [
-                { assignId: Number(userId) },
-                {
-                    AND: [
-                        { assignId: null },
-                        { addedBy: String(userId) }
-                    ]
-                }
-            ]
+           addedBy: String(userId)  
         };
 
         if (fromDate || toDate) {
@@ -51,8 +43,6 @@ export async function GET(req: Request, { params }: Props) {
             };
         }
 
-
-
         const data = await prisma.domainResponse.findMany({
             where,
             orderBy: {
@@ -60,12 +50,15 @@ export async function GET(req: Request, { params }: Props) {
             },
             select: {
                 id: true,
-                name: true,
                 companyName: true,
+                email: true,
+                name: true,
                 phone: true,
+                phoneSecondary: true,
                 followUpStatus: true,
                 createdAt: true,
                 service: true,
+                source: true,
 
                 followups: {
 
@@ -88,7 +81,7 @@ export async function GET(req: Request, { params }: Props) {
         return NextResponse.json(data, { status: 200 });
 
     } catch (error: any) {
-        logger.error({ error: error.message }, "error when adding service");
+        logger.error({ error: error.message }, "Error On Search Api on sub user side");
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
