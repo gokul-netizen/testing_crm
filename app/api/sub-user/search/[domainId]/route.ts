@@ -26,7 +26,10 @@ export async function GET(req: Request, { params }: Props) {
         const where: any = {
             domain_id: Number(domainId),
             status: 1,
-           addedBy: String(userId)  
+            OR: [
+                { assignId: userId },
+                { addedBy: String(userId) }
+            ]
         };
 
         if (fromDate || toDate) {

@@ -1,7 +1,6 @@
 import { userSession } from "@/lib/jwt";
 import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
-import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 
 

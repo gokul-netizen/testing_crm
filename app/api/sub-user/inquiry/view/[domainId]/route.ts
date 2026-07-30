@@ -24,13 +24,17 @@ export async function GET(req: Request, { params }: { params: Promise<UserId> })
 
         const { domainId } = await params;
 
- 
+
 
         const inquiry = await prisma.DomainResponse.findMany({
             where: {
                 domain_id: Number(domainId),
-                status: 1,         
-                addedBy: String(userId)
+                status: 1,
+                OR: [
+                    { assignId: userId },
+                    { addedBy: String(userId) }
+                ]
+
             },
             orderBy: {
                 createdAt: "desc"
@@ -83,7 +87,7 @@ export async function POST(req: Request, { params }: { params: Promise<UserId> }
         const userType = decoded?.userType;
         const username = decoded?.username;
 
-        const { domainId   } = await params;
+        const { domainId } = await params;
 
 
         const domain = await prisma.inquiryDomain.findUnique({
@@ -196,7 +200,7 @@ export async function POST(req: Request, { params }: { params: Promise<UserId> }
 
     } catch (error: any) {
         logger.error({
-            message : "Fail to add new inquiry on sub user side",
+            message: "Fail to add new inquiry on sub user side",
             error: error.message,
         });
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
