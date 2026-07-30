@@ -7,30 +7,24 @@ import HeroSection from "./Home/HeroSection";
 import HowItWorksSection from "./Home/HowItWork";
 import Navbar from "./Home/NavBar";
 
- 
+
 
 export default function HomePage() {
-  
+
   return (
     <main className="bg-gray-50">
 
-        <Navbar/>
+      <Navbar />
 
-        <HeroSection/>
-        
-        <FeaturesSection/>
+      <HeroSection />
 
-        <HowItWorksSection/>
+      <FeaturesSection />
 
-        <DemoFormSection/>
+      <HowItWorksSection />
 
-        <Footer/>
+      <DemoFormSection />
 
-     
-
-      
- 
- 
+      <Footer />
 
     </main>
   );
