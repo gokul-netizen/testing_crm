@@ -111,14 +111,13 @@ export default function HeroSection() {
 
             <div className="absolute -z-10 h-80 w-80 rounded-full bg-[#7367f0]/20 blur-3xl"></div>
 
-            <MotionImage
-              src="/herosection.jpeg"
-              alt="MarsWeb Solutions CRM Dashboard"
-              width={700}
-              height={600}
-              priority
+            <motion.video
+              src="/heroSection.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
               className="w-full max-w-2xl rounded-2xl object-contain drop-shadow-2xl"
-
               initial={{ opacity: 0, x: 100 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
