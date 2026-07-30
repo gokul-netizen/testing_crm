@@ -13,15 +13,14 @@ const features = [
       "Get a complete overview of your business with an intuitive dashboard. Monitor inquiries, follow-ups, team performance, lead status, and daily progress in one centralized place.",
     icon: BarChart3,
     desktopImage: "/d2.png",
-    
+
   },
   {
     title: "Get Your Website Inquiry On Track Flow",
     description:
       "Automatically collect every inquiry from your website and manage leads, follow-ups, reminders, and customer communication from a single dashboard.",
-    icon: Inbox ,
-    desktopImage: "/inquiry.png",
-    mobileImage: "/dashboardmobile.png",
+    icon: Inbox,
+    video: "/featurev1.mp4",
   },
   {
     title: "Today's Activity Log",
@@ -104,7 +103,7 @@ export default function FeaturesSection() {
                   ease: "easeOut",
                 }}
               >
-            
+
                 <motion.div
                   initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -129,7 +128,7 @@ export default function FeaturesSection() {
                   </div>
                 </motion.div>
 
- 
+
                 <motion.div
                   initial={{ opacity: 0, scale: 0.85 }}
                   whileInView={{ opacity: 1, scale: 1 }}
@@ -139,33 +138,30 @@ export default function FeaturesSection() {
                 >
                   <div className="relative w-full max-w-[800px] flex justify-center items-center">
 
-               
-                    <div className="relative w-full max-w-[800px] aspect-[30/18] overflow-hidden">
-                      <Image
-                        src={feature.desktopImage}
-                        alt={`${feature.title} Desktop View`}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 500px"
-                        className="object-cover object-top"
-                      />
+
+                    <div className="relative w-full max-w-[800px] aspect-[30/18] overflow-hidden rounded-xl shadow-lg">
+                      {feature.video ? (
+                        <video
+                          src={feature.video}
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          className="h-full w-full object-cover object-top"
+                        />
+                      ) : (
+                        <Image
+                          src={feature.desktopImage ?? ""}
+                          alt={`${feature.title} Desktop View`}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 500px"
+                          className="object-cover object-top"
+                        />
+                      )}
                     </div>
 
-                 
-                    {/* <motion.div
-                      initial={{ opacity: 0, y: 40 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.2 }}
-                      transition={{ duration: 0.5, delay: 0.3 }}
-                      className="absolute -bottom-4 -right-2 sm:-bottom-6 sm:-right-4 w-[34%] max-w-[200px] aspect-[13/20] overflow-hidden rounded-[20px] sm:rounded-[24px] border-4 border-gray-900 shadow-2xl bg-white z-10"
-                    >
-                      <Image
-                        src={feature.mobileImage}
-                        alt={`${feature.title} Mobile View`}
-                        fill
-                        sizes="200px"
-                        className="object-cover object-top"
-                      />
-                    </motion.div> */}
+
+
 
                   </div>
                 </motion.div>

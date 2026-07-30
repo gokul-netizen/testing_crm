@@ -64,6 +64,8 @@ export default function Search({
 
         if (data.length === 0) {
             toast.error("Matching data not found");
+            setOpenSearch(true)
+            return;
         }
 
         setSearchData(data);
