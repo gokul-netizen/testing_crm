@@ -4,7 +4,6 @@ import { useState } from "react";
 import { FiGlobe } from "react-icons/fi";
 import { toast } from "sonner";
 import { mutate } from "swr";
-import { useParams } from "next/navigation";
 
 
 

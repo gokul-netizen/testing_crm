@@ -23,7 +23,6 @@ export async function GET(req: Request, { params }: Props) {
         const field = searchParams.get("field");
         const value = searchParams.get("value");
 
-
         const where: any = {
             domain_id: Number(domainId),
             status: 1,
@@ -38,7 +37,7 @@ export async function GET(req: Request, { params }: Props) {
             ]
         };
 
-        if (fromDate && toDate) {
+        if (fromDate || toDate) {
             where.createdAt = {
                 gte: dayjs(fromDate).startOf("day").toDate(),
                 lte: dayjs(toDate).endOf("day").toDate(),

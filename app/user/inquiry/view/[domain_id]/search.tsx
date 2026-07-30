@@ -67,7 +67,7 @@ export default function Search({
 
     };
 
-    if (isLoading) return <div>Loading options...</div>;
+    if (isLoading) return <div>Loading options...    </div>;
     if (error) return <div>Failed to load search parameters.</div>;
 
     return (

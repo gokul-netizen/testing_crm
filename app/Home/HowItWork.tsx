@@ -41,8 +41,7 @@ export default function HowItWorksSection() {
   return (
     <section className="bg-white py-12 sm:py-16 lg:py-20" id="how-it-works">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-
-        {/* Heading Animation */}
+         
         <motion.div
           className="mb-12 sm:mb-16 text-center"
           initial={{ opacity: 0, y: 40 }}
@@ -64,8 +63,7 @@ export default function HowItWorksSection() {
           </p>
         </motion.div>
 
-
-        {/* Steps Animation */}
+        
         <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {steps.map((step, index) => {
             const Icon = step.icon;
@@ -87,7 +85,6 @@ export default function HowItWorksSection() {
                 <div>
                   <div className="flex items-center justify-between">
 
-                    {/* Number Animation */}
                     <motion.span
                       initial={{ opacity: 0, scale: 0.5 }}
                       whileInView={{ opacity: 1, scale: 1 }}
@@ -97,9 +94,7 @@ export default function HowItWorksSection() {
                     >
                       {step.number}
                     </motion.span>
-
-
-                    {/* Icon Animation */}
+                  
                     <motion.div
                       whileHover={{ rotate: 10, scale: 1.1 }}
                       className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#7367f0]/10 text-[#7367f0]"
