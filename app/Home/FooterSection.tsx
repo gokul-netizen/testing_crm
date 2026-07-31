@@ -53,7 +53,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm leading-relaxed text-gray-600">
-              MarsWeb Solutions CRM helps businesses simplify client
+              MarsWeb Solutions TrackFlow helps businesses simplify client
               management, track daily inquiries, and automate follow-ups
               effortlessly.
             </p>
@@ -137,7 +137,7 @@ export default function Footer() {
                   className="flex items-center gap-3 text-sm text-gray-600 hover:text-[#7367f0]"
                 >
                   <Mail className="h-4 w-4 text-[#7367f0]" />
-                  info@marswebsolution.com
+                   contactus@marswebsolution.com
                 </a>
               </li>
 
@@ -147,13 +147,13 @@ export default function Footer() {
                   className="flex items-center gap-3 text-sm text-gray-600 hover:text-[#7367f0]"
                 >
                   <Phone className="h-4 w-4 text-[#7367f0]" />
-                  +91 98765 43210
+                  +91 80882 30479
                 </a>
               </li>
 
               <li>
                 <a
-                  href="https://wa.me/919876543210"
+                  href="https://wa.me/8088230479"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 text-sm text-gray-600 hover:text-[#7367f0]"
@@ -195,19 +195,19 @@ export default function Footer() {
               {[
                 {
                   icon: MessageCircle,
-                  href: "https://wa.me/919876543210",
+                  href: "https://wa.me/8088230479",
                 },
                 {
                   icon: Linkedin,
-                  href: "https://linkedin.com",
+                  href: "https://linkedin.com/company/mars-web-solution",
                 },
                 {
                   icon: Instagram,
-                  href: "https://instagram.com",
+                  href: "https://instagram.com/marswebsolution",
                 },
                 {
                   icon: Facebook,
-                  href: "https://facebook.com",
+                  href: "https://facebook.com/marswebsolutionbangalore/",
                 },
               ].map((social, index) => {
                 const Icon = social.icon;

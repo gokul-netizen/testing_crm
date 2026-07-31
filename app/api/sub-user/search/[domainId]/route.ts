@@ -63,6 +63,19 @@ export async function GET(req: Request, { params }: Props) {
                 service: true,
                 source: true,
 
+                _count: {
+                    select: {
+                        followups: {
+                            where: {
+                                createdAt: {
+                                    gte: dayjs(fromDate).startOf("day").toDate(),
+                                    lte: dayjs(toDate).endOf("day").toDate(),
+                                },
+                            },
+                        },
+                    },
+                },
+
                 followups: {
 
                     orderBy: { createdAt: "desc" },
@@ -84,7 +97,10 @@ export async function GET(req: Request, { params }: Props) {
         return NextResponse.json(data, { status: 200 });
 
     } catch (error: any) {
-        logger.error({ error: error.message }, "Error On Search Api on sub user side");
+        logger.error({
+            message : "Error On Search Api on sub user side",
+            error : { error: error.message },
+        });
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

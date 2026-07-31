@@ -12,11 +12,13 @@ import useSWR from "swr";
 interface SearchData {
   searchData: any[];
   setSearchData: React.Dispatch<React.SetStateAction<any[]>>;
+  setOpenSearch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function Search({
     searchData,
-    setSearchData
+    setSearchData,
+    setOpenSearch
 
 } : SearchData) {
     const { data, error, isLoading } = useSWR(`/api/user/search`, fetcher);
@@ -64,6 +66,7 @@ export default function Search({
         }
 
         setSearchData(data);
+        setOpenSearch(false);
 
     };
 

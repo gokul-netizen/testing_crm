@@ -16,6 +16,8 @@ export default function LoginPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showOtpVerify, setShowOtpVerify] = useState(false);
   const [sixDigitsOtp, setSixDigitsOtp] = useState("");
+  const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
+
 
   const router = useRouter();
   const otpRef = useRef<HTMLInputElement>(null);
@@ -53,7 +55,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleOtp = async () => {
+  const handleSendOtp = async () => {
     if (phoneNumber.trim().length !== 10) {
       toast.error("Please enter a valid 10-digit phone number");
       return;
@@ -74,6 +76,13 @@ export default function LoginPage() {
 
     toast.success(data.message);
     setShowOtpVerify(true);
+
+
+    setIsOtpButtonDisabled(true);
+    setTimeout(() => {
+      setIsOtpButtonDisabled(false);
+    }, 5000);
+
     setTimeout(() => {
       otpRef.current?.focus();
     }, 0);
@@ -128,7 +137,7 @@ export default function LoginPage() {
             } else if (showOtpVerify) {
               handleVerifyOtp();
             } else {
-              handleOtp();
+              handleSendOtp();
             }
           }}
           className="w-[350px] space-y-4 mx-4"
@@ -159,8 +168,8 @@ export default function LoginPage() {
               type="button"
               onClick={() => setIsOtp(false)}
               className={`flex-1 py-2.5 rounded-xl font-medium transition ${!isOtp
-                  ? "bg-[#7367f0] text-white"
-                  : "border border-[#7367f0] text-[#7367f0] hover:bg-[#7367f0] hover:text-white"
+                ? "bg-[#7367f0] text-white"
+                : "border border-[#7367f0] text-[#7367f0] hover:bg-[#7367f0] hover:text-white"
                 }`}
             >
               Password
@@ -170,8 +179,8 @@ export default function LoginPage() {
               type="button"
               onClick={() => setIsOtp(true)}
               className={`flex-1 py-2.5 rounded-xl font-medium transition ${isOtp
-                  ? "bg-[#7367f0] text-white"
-                  : "border border-[#7367f0] text-[#7367f0] hover:bg-[#7367f0] hover:text-white"
+                ? "bg-[#7367f0] text-white"
+                : "border border-[#7367f0] text-[#7367f0] hover:bg-[#7367f0] hover:text-white"
                 }`}
             >
               OTP
@@ -267,9 +276,10 @@ export default function LoginPage() {
               {!showOtpVerify ? (
                 <button
                   type="submit"
+                  disabled={isOtpButtonDisabled}
                   className="w-full bg-[#7367f0] text-white py-2 my-4 rounded-xl cursor-pointer"
                 >
-                  Send OTP
+                  {isOtpButtonDisabled ? "Resend OTP in 5s" : "Send OTP"}
                 </button>
               ) : (
                 <>
@@ -282,10 +292,11 @@ export default function LoginPage() {
 
                   <button
                     type="button"
-                    onClick={handleOtp}
+                    onClick={handleSendOtp}
+                    disabled={isOtpButtonDisabled}
                     className="w-full bg-[#7367f0] text-white py-2 rounded-xl cursor-pointer"
                   >
-                    Resend OTP
+                    {isOtpButtonDisabled ? "Resend OTP in 5s" : "Send OTP"}
                   </button>
                 </>
               )}

@@ -21,6 +21,7 @@ export const confirmAction = ({
     : "!bg-blue-600 hover:!bg-blue-700";
 
   return toast(title, {
+    duration: 1000 * 60 * 60,
     position: "top-center",
     description,
     classNames: {

@@ -28,7 +28,7 @@ const features = [
       "Keep track of every action performed by your team throughout the day. View customer interactions, follow-up updates, assigned tasks, and completed activities with a detailed activity timeline.",
     icon: Activity,
     desktopImage: "/todays-log.png",
-    mobileImage: "/activityMobile.png",
+    
   },
   {
     title: "Daily Email & WhatsApp Reports",
@@ -36,7 +36,7 @@ const features = [
       "Receive automated Email and WhatsApp reports every day containing Today's Follow-ups, Pending Follow-ups, Upcoming Follow-ups, Not Interested Leads, and Closed Inquiries. Stay informed without logging into the CRM.",
     icon: Mail,
     desktopImage: "/email.png",
-    mobileImage: "/remindermobile.png",
+     
   },
   {
     title: "Smart WhatsApp Follow-up Reminders",
@@ -44,7 +44,7 @@ const features = [
       "Automatically send WhatsApp reminders 10 minutes before scheduled follow-ups. You can also configure custom reminder times to ensure your sales team never misses an important customer interaction.",
     icon: MessageCircle,
     desktopImage: "/callreminder.png",
-    mobileImage: "/infoMobile.png",
+   
   },
 ];
 
@@ -60,7 +60,7 @@ export default function FeaturesSection() {
             transition={{ duration: 0.5 }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            Powerful CRM Features
+            Powerful TrackFlow Features
           </motion.span>
 
           <motion.h2
@@ -80,7 +80,7 @@ export default function FeaturesSection() {
             transition={{ duration: 0.5, delay: 0.4 }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            MarsWeb Solutions CRM is designed to simplify customer management,
+            MarsWeb Solutions TrackFlow is designed to simplify customer management,
             automate follow-ups, and help your sales team close more deals with
             less effort.
           </motion.p>
@@ -154,7 +154,7 @@ export default function FeaturesSection() {
                           src={feature.desktopImage ?? ""}
                           alt={`${feature.title} Desktop View`}
                           fill
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 500px"
+                           
                           className="object-cover object-top"
                         />
                       )}

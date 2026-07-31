@@ -47,7 +47,7 @@ type DataItem = {
 export default function Page() {
 
     const params = useParams();
-    const { domainId } = params;
+    const { domainId , id} = params;
 
     const [open, setOpen] = useState(false);
 
@@ -156,11 +156,11 @@ export default function Page() {
                         </Link>
 
 
-                        {/* {(item.followups?.[0]?.isPublic || Number(item.followups?.[0]?.addedBy) === Number(id)) && (
+                        {(item.followups?.[0]?.isPublic || Number(item.followups?.[0]?.addedBy) === Number(id)) && (
                             <div className="absolute hidden group-hover:block bg-gray-900/80 text-white text-sm p-2 rounded shadow-xl z-50 bottom-10">
                                 {remarks}
                             </div>
-                        )} */}
+                        )}
 
                     </div>
                 );

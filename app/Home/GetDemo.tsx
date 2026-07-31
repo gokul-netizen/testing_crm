@@ -71,7 +71,7 @@ export default function DemoFormSection() {
 
         <div className="grid items-center gap-12 lg:grid-cols-2">
 
-          {/* Left Content */}
+        
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -97,7 +97,7 @@ export default function DemoFormSection() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl"
             >
-              Get a Free Live Demo of MarsWeb CRM
+              Get a Free Live Demo of MarsWeb TrackFlow
             </motion.h2>
 
 
@@ -108,7 +108,7 @@ export default function DemoFormSection() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="mt-4 text-base sm:text-lg leading-relaxed text-gray-600"
             >
-              Discover how our CRM can help streamline your lead tracking,
+              Discover how our TrackFlow can help streamline your lead tracking,
               automate WhatsApp & email updates, and scale your sales pipeline
               effortlessly.
             </motion.p>
