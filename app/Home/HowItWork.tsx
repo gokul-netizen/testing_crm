@@ -54,11 +54,11 @@ export default function HowItWorksSection() {
           </span>
 
           <h2 className="mt-4 text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
-            How MarsWeb CRM Works
+            How MarsWeb TrackFlow Works
           </h2>
 
           <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-gray-600">
-            Our CRM is designed to be ridiculously easy to use. Manage your
+            Our TrackFlow is designed to be ridiculously easy to use. Manage your
             full customer lifecycle in five simple steps.
           </p>
         </motion.div>

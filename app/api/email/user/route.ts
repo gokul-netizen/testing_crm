@@ -27,8 +27,6 @@ export async function GET(req: Request) {
             }
         });
 
-
-
         for (const item of domains) {
 
             const domainResponses = await prisma.domainResponse.findMany({
@@ -78,7 +76,6 @@ export async function GET(req: Request) {
 
             const [notInterested, closed, totalInquiries] = await Promise.all([
 
-                
 
                 prisma.DomainResponse.count({
                     where: {

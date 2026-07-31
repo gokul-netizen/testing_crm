@@ -36,7 +36,7 @@ export async function GET(req: Request) {
                                 email: true,
                                 phone: true,
                                 website: true,
-                                status: true,
+                               
                                 followUpStatus: true,
 
                             }

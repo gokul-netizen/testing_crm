@@ -16,6 +16,7 @@ import { exportExcelDataInquiry } from "@/lib/export-excel-data";
 import { timeSince } from "@/lib/time-ago";
 import SliderPanel from "@/app/components/SideSlider";
 import Search from "./search";
+import { ExportInquiryData } from "@/lib/inquiriesExportExcel";
 
 dayjs.extend(utc);
 
@@ -57,7 +58,7 @@ export default function Page() {
     const [searchData, setSearchData] = useState<any[]>([]);
 
 
-    const tableData = searchData.length > 0 ? searchData : data
+    const tableData = searchData.length > 0 ? searchData : data;
 
 
     if (isLoading) return <SpinnerCircle4 />;
@@ -206,7 +207,7 @@ export default function Page() {
                 onReset={() => setSearchData([])}
                 onSearch={() => setOpenSearch(true)}
                 enableSearch={true}
-                onExcel={() => exportExcelDataInquiry(data ?? [])}
+                onExcel={()=> ExportInquiryData(tableData)}
                 whatsapp={(item) => item?.phone}
                 mobileCall={(item) => String(item?.phone)}
                 detail={(item) => `/user/inquiry/view/${domain_id}/${item.id}/detail`}
@@ -229,6 +230,7 @@ export default function Page() {
                     <Search
                         searchData={searchData}
                         setSearchData={setSearchData}
+                        setOpenSearch={setOpenSearch}
 
                     />
                 </SliderPanel>

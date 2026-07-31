@@ -46,7 +46,7 @@ export async function whatsappMessage({
     )}&message=${encodeURIComponent(
         remarks
     )}&message=${encodeURIComponent(
-        `${userId}/todaysfollowup/${inquiryId}`
+        `$/todays-followups/${inquiryId}`
     )}`;
 
 
@@ -146,7 +146,7 @@ export async function whatsappMessageToAdmin({
     )}&message=${encodeURIComponent(
         remarks
     )}&message=${encodeURIComponent(
-        `${userId}/todaysfollowup/${inquiryId}`
+        `$/todays-followups/${inquiryId}`
     )}`;
 
 

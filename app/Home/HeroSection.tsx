@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+
 import Link from "next/link";
 import { ArrowRight, PlayCircle } from "lucide-react";
 import { motion } from "motion/react";
@@ -8,7 +8,7 @@ import { motion } from "motion/react";
 
 export default function HeroSection() {
 
-  const MotionImage = motion(Image);
+
   const MotionLink = motion(Link);
 
   const container = {
@@ -37,7 +37,7 @@ export default function HeroSection() {
 
   return (
     <section className="bg-gradient-to-b from-[#7367f0]/10 to-white" >
-      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-10">
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-18">
         <div className="grid items-center gap-12 lg:grid-cols-2">
 
           <div>
@@ -50,16 +50,16 @@ export default function HeroSection() {
                 variants={item}
                 className="inline-flex items-center rounded-full bg-[#7367f0]/10 px-4 py-1 text-sm font-medium text-[#7367f0]"
               >
-                🚀 Smart CRM for Growing Businesses
+                🚀 TrackFlow Business CRM
               </motion.span>
 
               <motion.h1
                 variants={item}
                 className="mt-3 text-4xl font-extrabold leading-tight text-gray-900 md:text-5xl"
               >
-                Simplify Your Customer
+                Track Every Lead Manage Every Customer
                 <span className="block text-[#7367f0]">
-                  Relationship Management
+                 Grow Your Business.
                 </span>
               </motion.h1>
 
@@ -67,9 +67,8 @@ export default function HeroSection() {
                 variants={item}
                 className="mt-3 max-w-xl text-lg text-gray-600"
               >
-                MarsWeb Solutions CRM helps businesses manage inquiries, track customer
-                interactions, schedule follow-ups, assign leads to team members, and
-                increase conversions—all from one powerful platform.
+                Manage customer inquiries, schedule reminders, monitor sales activities, 
+                and boost productivity with a CRM built to keep your business moving forward.
               </motion.p>
             </motion.div>
 
@@ -101,9 +100,6 @@ export default function HeroSection() {
                 Book a Demo
               </MotionLink>
             </div>
-
-
-
           </div>
 
 
