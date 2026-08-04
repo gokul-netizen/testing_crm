@@ -1,6 +1,6 @@
 import { Toaster } from "sonner";
 import "./globals.css";
-
+import { UserProvider } from "@/app/context/userContext";
 
 export default function RootLayout({
   children,
@@ -9,10 +9,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <main>
-          {children}
-        </main>
-         <Toaster position="top-right" richColors/>
+        <UserProvider>
+          <main>
+            {children}
+          </main>
+        </UserProvider>
+
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

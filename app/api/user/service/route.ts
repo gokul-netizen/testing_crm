@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
         const body = await req.json();
         const { service, status } = body;
-        
+
         if (!service) return NextResponse.json({ error: "service is required" }, { status: 400 });
 
         const domainId = await prisma.user.findUnique({
@@ -51,7 +51,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Added service" }, { status: 200 });
 
     } catch (error: any) {
-        logger.error({ error: error.message }, "error when adding service");
+        logger.error({
+            message : "Error when creating new service app/api/user/service",
+            error : error.message
+        });
         return NextResponse.json({ error: error.message }, { status: 500 })
 
     }
@@ -66,24 +69,23 @@ export async function GET(req: Request) {
         const userId = decoded?.id;
         const userType = decoded?.usertype;
 
-        const domain = await prisma.user.findUnique({
+        const service = await prisma.user.findUnique({
             where: {
                 id: userId
             },
             select: {
-                domain: true
-
-            }
-        });
-
-        const service = await prisma.service.findMany({
-            where: {
-                domainId: domain.domain
-            },
-            include: {
-                domain: {
+                inquiryDomain: {
                     select: {
-                        domainName: true
+                        domainName: true,
+                        service: {
+                            select: {
+                                id: true,
+                                service: true,
+                                status: true,
+                                createdAt: true,
+                                domainId: true,
+                            }
+                        }
                     }
                 }
             }
@@ -91,7 +93,10 @@ export async function GET(req: Request) {
 
         return NextResponse.json(service, { status: 200 });
     } catch (error: any) {
-        logger.error({ error: error.message }, "error when adding service");
+        logger.error({
+            message : "Error when fetching service app/api/user/service",
+            error : error.message
+        });
         return NextResponse.json({ error: error.message }, { status: 500 })
 
     }

@@ -2,7 +2,6 @@
 
 import { fetcher } from "@/lib/fetcherSwr";
 import useSWR from "swr";
-import { useParams } from 'next/navigation';
 import DataTableComponent from "@/app/components/DataTable";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -14,58 +13,76 @@ import Link from "next/link";
 
 dayjs.extend(utc);
 
-type DataItem = {
+interface Service {
     id: string | number;
     service: string;
     status: string;
     createdAt: string;
-    domain : {domainName : string}
-};
+}
+
+interface ResponseData {
+    inquiryDomain: {
+        domainName: string;
+        service: Service[];
+    };
+}
 
 export default function Page() {
+    const { data, error, isLoading } = useSWR<ResponseData>(
+        "/api/user/service",
+        fetcher
+    );
 
-    const params = useParams();
+
     const [open, setOpen] = useState(false);
-    const user_id = params.user_id as string | number;
-    const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
-    const { data, error, isLoading } = useSWR(`/api/user/service`, fetcher);
 
-   
+    const [selectedRows, setSelectedRows] = useState<
+        Record<string | number, boolean>
+    >({});
+
     if (isLoading) return <SpinnerCircle4 />;
 
-    if (error) return <div className="p-4 text-red-500">Failed to load users.</div>;
+    if (error)
+        return <div className="p-4 text-red-500">Failed to load users.</div>;
 
     const columns = [
         {
             header: "Service",
-            accessor: (item: DataItem) => (
+            accessor: (item: Service) => (
                 <div className="flex items-center gap-2 group">
                     <Link href={`/user/master/service/${item.id}/detail`}>
-                     <span className="truncate">{item.service}</span>
-                     </Link>
-                   
-                    <CopyText text={String(item.service)} />
+                        <span className="truncate">{item.service}</span>
+                    </Link>
+                    <CopyText text={item.service} />
                 </div>
             ),
         },
         {
             header: "Domain Name",
             mobileHeader: "DN",
-            accessor: (item: DataItem) => (
+            accessor: (item: Service) => (
                 <div className="flex items-center gap-2 group">
                     <Link href={`/user/master/service/${item.id}/detail`}>
-                    <span className="truncate">{item.domain.domainName}</span>
+                        <span className="truncate">
+                            {data?.inquiryDomain.domainName}
+                        </span>
                     </Link>
-                     
                 </div>
             ),
         },
         {
             header: "Status",
-            accessor: (item: DataItem) => (
+            accessor: (item: Service) => (
                 <div className="flex items-center gap-2 group">
                     <Link href={`/user/master/service/${item.id}/detail`}>
-                    <span className={`truncate ${item.status === "Active" ? "text-[#00bad1]" : "text-red-600"}`}>{item.status}</span>
+                        <span
+                            className={`truncate ${item.status === "Active"
+                                    ? "text-[#00bad1]"
+                                    : "text-red-600"
+                                }`}
+                        >
+                            {item.status}
+                        </span>
                     </Link>
                 </div>
             ),
@@ -73,28 +90,26 @@ export default function Page() {
     ];
 
     return (
-        <section className="">
+        <section>
             <DataTableComponent
                 title="Service"
                 columns={columns}
-                data={data || []}
+                data={data?.inquiryDomain?.service || []}
                 placeholder="Search by service.."
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
-                onEdit={(item : DataItem)=> `/user/master/service/${item.id}/edit`}
+                onEdit={(item: Service) => `/user/master/service/${item.id}/edit`}
                 onAdd={() => setOpen(true)}
-                detail={ (item : DataItem)=> `/user/master/service/${item.id}/detail`}
-                
+                detail={(item: Service) => `/user/master/service/${item.id}/detail`}
             />
 
             {open && (
                 <RightSideDrawerservice
                     open={open}
                     onClose={() => setOpen(false)}
-                    userId={user_id}
+
                 />
             )}
-
         </section>
     );
 }

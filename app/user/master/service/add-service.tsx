@@ -14,10 +14,10 @@ type Domain = {
 type Props = {
     open: boolean;
     onClose: () => void;
-    userId: string | number;
+   
 };
 
-export default function RightSideDrawerservice({ open, onClose, userId }: Props) {
+export default function RightSideDrawerservice({ open, onClose }: Props) {
     const [loading, setLoading] = useState(false);
     const [multiLoading, multiSetLoading] = useState(false);
     const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null);

@@ -89,8 +89,6 @@ export async function GET(req: Request ) {
 
             for (const followup of domainResponse.followups) {
 
-
-
                 if (followup.followUpStatus === "Not Interested") {
                     notInterested++;
                 }
@@ -110,6 +108,7 @@ export async function GET(req: Request ) {
                 } else if (date.isBefore(today, "day")) {
                     pending++;
                 }
+
             }
         }
 

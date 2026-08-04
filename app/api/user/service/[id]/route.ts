@@ -30,7 +30,10 @@ export async function GET(req: Request, { params }: ParamsProps) {
 
         return NextResponse.json(service, { status: 200 });
     } catch (error: any) {
-        logger.error("error when getting service by id", error.message);
+        logger.error({
+            message : "Error when fetching service by id app/api/user/service/[id]",
+            error : error.message
+        });
         return NextResponse.json({ error: error.message }, { status: 500 })
 
     }
@@ -63,7 +66,10 @@ export async function PUT(req:Request , {params} : ParamsProps) {
         return NextResponse.json("Updated Successfully", { status : 200})
 
     } catch (error : any) {
-        logger.error("error when getting service by id", error.message);
+       logger.error({
+            message : "Error when updating service by id app/api/user/service/[id]",
+            error : error.message
+        });
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }

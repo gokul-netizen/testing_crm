@@ -4,8 +4,7 @@ import { LuFileSpreadsheet } from "react-icons/lu";
 import { RiMailOpenLine } from "react-icons/ri";
 import { Toaster } from "sonner";
 import SubUserHeader from "@/app/components/SubUserHeader";
-import useSWR from "swr";
-import { fetcher } from "@/lib/fetcherSwr";
+import { useUser } from "../context/userContext";
 
 export default function UserLayout({
   children,
@@ -13,10 +12,7 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
 
-  const { data, error, isLoading } = useSWR(`/api/sub-user`, fetcher);
-
-  const userImage = data?.user_image;
-  const userName = data?.username;
+  const { username, userImage } = useUser();
 
   return (
     <div className="flex h-screen">
@@ -48,7 +44,7 @@ export default function UserLayout({
 
         <SubUserHeader
           userImage={userImage ? `/${userImage.replace(/\\/g, '/')}` : "/admin_profile.webp"}
-          userName={userName}
+          userName={username}
         />
 
         <main className="flex-1 overflow-auto p-2 px-4">
