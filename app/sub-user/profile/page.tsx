@@ -2,42 +2,40 @@
 
 import { fetcher } from "@/lib/fetcherSwr";
 import dayjs from "dayjs";
-import { useParams } from "next/navigation";
+ 
 import useSWR from "swr";
 import utc from "dayjs/plugin/utc";
 import SpinnerCircle4 from "@/components/spinner-10";
 import { FaUserClock } from "react-icons/fa";
 import { LuUsers } from "react-icons/lu";
 import Link from "next/link";
+ 
 
 dayjs.extend(utc);
 
 
 export default function Page() {
-    const params = useParams();
-    const { id } = params;
-    const active = `/api/sub-user/profile`
 
     const { data, error, isLoading } = useSWR(`/api/sub-user`, fetcher);
-
-    
+ 
+    const active = `/api/sub-user/profile`;
 
     if (isLoading) return <SpinnerCircle4 />
 
     return (
         <section className=" flex flex-col-reverse lg:flex-row  items-start gap-4">
-            
+
             <div className="bg-white shadow-xl rounded-md w-full lg:w-[40%] p-8 border border-gray-100">
-              
+
                 <div className="flex flex-col justify-center items-center mb-6">
                     <div className=" rounded  mb-4 shadow-sm ">
-                         
-                            <img
-                                src={!data?.user_image ? '/admin_profile.webp' : `/${data.user_image.replace(/\\/g, "/")}`}
-                                alt={data?.username}
-                                className="w-32 h-36 "
-                            />
-                 
+
+                        <img
+                            src={!data?.user_image ? '/admin_profile.webp' : `/${data.user_image.replace(/\\/g, "/")}`}
+                            alt={data?.username}
+                            className="w-32 h-36 "
+                        />
+
                     </div>
 
                     <h1 className="text-xl font-bold text-slate-700 tracking-tight uppercase">
@@ -66,7 +64,7 @@ export default function Page() {
                         <p><span className="font-bold text-gray-600">Mobile_no: </span> {data?.mobile_no}</p>
                         <p><span className="font-bold text-gray-600">Status: </span> {data?.status}</p>
                         <p><span className="font-bold text-gray-600">last_login: </span> {dayjs(data?.createdAt).format("DD-MM-YYYY hh : mm A")}</p>
-                         
+
                     </div>
                 </div>
 
@@ -75,7 +73,7 @@ export default function Page() {
                     <Link href={`/sub-user/profile-edit`} className="flex-1 bg-[#7C69EF] hover:bg-[#6a56e0] text-white font-bold py-3 flex items-center justify-center rounded-lg transition-all shadow-md shadow-indigo-100">
                         Edit
                     </Link>
-                     
+
                     <Link href={`/sub-user`} className="flex-1 flex justify-center   cursor-pointer bg-[#00BDD6] hover:bg-[#00a8bf] text-white font-bold py-3 rounded-lg transition-all shadow-md shadow-cyan-100">
                         Back ←
                     </Link>

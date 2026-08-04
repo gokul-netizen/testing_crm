@@ -8,7 +8,6 @@ import { LuCalendarClock, LuMessageCircleOff } from "react-icons/lu";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { MdPendingActions } from "react-icons/md";
 import { TbXboxX } from "react-icons/tb";
-import { useParams } from "next/navigation";
 import { FiInbox } from "react-icons/fi";
 import { FaUserGroup } from "react-icons/fa6";
 
@@ -27,8 +26,6 @@ interface IncomingData {
 
 export default function Page() {
 
-    const params = useParams();
-    const { id } = params;
 
     const { data, error, isLoading } = useSWR<IncomingData>(`/api/sub-user/dashboard`, fetcher);
 

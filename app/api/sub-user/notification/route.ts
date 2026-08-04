@@ -6,17 +6,17 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { userSession } from "@/lib/jwt";
 dayjs.extend(customParseFormat);
 
- 
+
 export async function GET(
     req: Request,
-  
+
 ) {
     try {
 
 
-       const decoded = await userSession();
-           const userId = decoded?.id;
-           const userType = decoded?.userType;
+        const decoded = await userSession();
+        const userId = decoded?.id;
+        const userType = decoded?.userType;
 
         const today = dayjs();
 
@@ -27,73 +27,6 @@ export async function GET(
                 domain: true,
             },
         });
-
-
-        // const followups = await prisma.user.findUnique({
-        //     where: {
-        //         id: userID,
-        //         status: "Active"
-        //     },
-        //     select: {
-        //         id: true,
-        //         domain: true,
-        //         inquiryDomain: {
-        //             where: {
-        //                 status: "Active"
-        //             },
-        //             select: {
-        //                 id: true,
-        //                 domainName: true,
-        //                 domainResponse: {
-        //                     where: {
-        //                         status: 1,
-        //                         OR: [
-        //                             { assignId: Number(user_id) },
-        //                             {
-        //                                 AND: [
-        //                                     { assignId: null },
-        //                                     { addedBy: String(user_id) }
-        //                                 ]
-        //                             }
-        //                         ],
-        //                         orderBy: {
-        //                             createdAt: "desc"
-        //                         },
-        //                         distinct: ["inquiryID"],
-
-
-        //                     },
-        //                     select: {
-        //                         date: true,
-        //                         time: true,
-        //                         remarks: true,
-        //                         followUpStatus: true,
-        //                         createdAt: true,
-        //                         assignToName: true,
-
-        //                         inquiry: {
-        //                             select: {
-        //                                 id: true,
-        //                                 name: true,
-        //                                 email: true,
-        //                                 phone: true,
-        //                                 createdAt: true,
-        //                             },
-        //                         },
-        //                     },
-        //                 }
-        //             }
-
-
-        //         }
-        //     },
-
-
-
-
-        // });
-
-        // console.log(followups);
 
         if (!domainId) {
             throw new Error("Not Found");

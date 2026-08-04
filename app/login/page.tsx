@@ -1,14 +1,14 @@
 "use client";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "sonner";
 import { motion } from "motion/react";
+import {  useUser } from "../context/userContext";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [username, setUsername] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ export default function LoginPage() {
   const [showOtpVerify, setShowOtpVerify] = useState(false);
   const [sixDigitsOtp, setSixDigitsOtp] = useState("");
   const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
-
+  const { setUsername, setUserImage } = useUser();
 
   const router = useRouter();
   const otpRef = useRef<HTMLInputElement>(null);
@@ -35,6 +35,9 @@ export default function LoginPage() {
       });
 
       const data = await res.json();
+
+      setUsername(data?.user?.username);
+      setUserImage(data?.user?.image);
 
       if (!res.ok) {
         setError(data.error || "Invalid username or password ❌");
@@ -96,6 +99,10 @@ export default function LoginPage() {
     });
 
     const data = await res.json();
+
+    setUsername(data?.username);
+    setUserImage(data?.image);
+
 
     if (!res.ok) {
       toast.error(data.message || "Internal Issues while sending OTP");
@@ -197,7 +204,7 @@ export default function LoginPage() {
                 placeholder="Enter username"
                 className="w-full border border-purple-400 text-gray-700 rounded-xl px-3 py-2 mb-4 outline-none focus:ring-2 focus:ring-purple-500"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setUserName(e.target.value)}
                 required
               />
 

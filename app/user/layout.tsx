@@ -5,8 +5,8 @@ import { RiMailOpenLine } from "react-icons/ri";
 import UserHeader from "@/app/components/UserHeader";
 import { Toaster } from "sonner";
 import { FaUsers } from "react-icons/fa";
-import useSWR from "swr";
-import { fetcher } from "@/lib/fetcherSwr";
+import { useUser } from "../context/userContext";
+ 
 
 export default function UserLayout({
   children,
@@ -14,14 +14,8 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
 
- 
- 
 
-  const { data, error, isLoading } = useSWR(`/api/user`, fetcher);
-
-
-  const userImage = data?.user_image;
-  const userName = data?.username;
+  const { username, userImage } = useUser();
 
   return (
     <div className="flex h-screen">
@@ -39,8 +33,8 @@ export default function UserLayout({
               title: "Master",
               icon: FaUsers,
               activeMatch: `/user/master/service`,
-              links: [{ label: "Service", href: `/user/master/service` },{ label: "Designation", href: `/user/master/designation` }],
-              
+              links: [{ label: "Service", href: `/user/master/service` }, { label: "Designation", href: `/user/master/designation` }],
+
             },
 
             {
@@ -64,11 +58,11 @@ export default function UserLayout({
       <div className="flex-1 flex flex-col overflow-auto bg-[#f8f7fa]">
         <UserHeader
           user_image={userImage ? `/${userImage.replace(/\\/g, '/')}` : "/admin_profile.webp"}
-          userName={userName}
+          userName={username}
         />
 
         <main className="flex-1 overflow-auto p-2 px-4 ">
-          
+
           {children}
 
           <Toaster richColors position="top-right" />

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import logger from "@/lib/logs";
-import { GenerateToken, GenerateTokenUser } from "@/lib/tokenJwt";
+import { GenerateTokenUser } from "@/lib/tokenJwt";
 import { getCurrentUTCFromIST } from "@/lib/date-time";
 import { headers } from "next/headers";
 
@@ -35,7 +35,7 @@ export async function POST(req: Request, { params }: ParamsPros) {
         });
 
         if (!user) {
-            return NextResponse.json({ message: "Can't find this user" }, { status: 400 })
+            return NextResponse.json({ message: "Can't find the user" }, { status: 400 })
         }
 
 
@@ -45,28 +45,34 @@ export async function POST(req: Request, { params }: ParamsPros) {
             return NextResponse.json({ message: "Invalid Code" }, { status: 401 });
         }
 
-        const token = await GenerateTokenUser({ id: user.id, username: user.username, userType: user.type, image: user.user_image });
+        const [_, token] = await Promise.all([
+
+            prisma.user.update({
+                where: { id: user.id },
+                data: {
+                    last_login: getCurrentUTCFromIST(),
+                    last_loginip: ip,
+                    otp: null
+                },
+            }),
+
+            GenerateTokenUser({ id: user.id, username: user.username, userType: user.type, image: user.user_image })
+        ]);
 
         const response = NextResponse.json(
             {
                 message: "OTP Verified",
                 username: user.username,
                 type: user.type,
-                userId: user.id
+                userId: user.id,
+                image : user.user_image
 
             },
             { status: 200 }
         );
 
 
-        await prisma.user.update({
-            where: { id: user.id },
-            data: {
-                last_login: getCurrentUTCFromIST(),
-                last_loginip: ip,
-                otp: null
-            },
-        });
+
 
         response.cookies.set("token", token, {
             httpOnly: true,
@@ -81,7 +87,10 @@ export async function POST(req: Request, { params }: ParamsPros) {
 
     } catch (error: any) {
 
-        logger.error("Error verifying  otp :", error.message);
+        logger.error({
+            message: "Error in verifying the otp on user side app/api/user-otp/[phonenumber]",
+            error: error.message
+        });
         return NextResponse.json({ message: error.message }, { status: 500 });
 
     }

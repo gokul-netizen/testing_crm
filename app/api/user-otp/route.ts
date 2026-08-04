@@ -3,10 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import logger from "@/lib/logs";
- 
+
 import { whatsAppOtp } from "@/lib/whatsappOtp";
-
-
 
 
 export async function POST(req: Request) {
@@ -31,32 +29,35 @@ export async function POST(req: Request) {
         }
 
         const otp = GenerateOtp();
-
-        const whatsappResponse = await   whatsAppOtp({phoneNumber , otp , username : userExist.username});
-
-        if(!whatsappResponse){
-            return NextResponse.json({message : "Error while sending OTP"},  { status: 500 })
-        }
- 
-
         const hashedOtp = crypto.createHash("md5").update(String(otp)).digest("hex");
 
-        await prisma.user.update({
-            where: {
-                username: userExist.username
-            },
-            data: {
-                otp: hashedOtp
-            }
+
+        const [_, whatsappResponse] = await Promise.all([
+
+            prisma.user.update({
+                where: { username: userExist.username },
+                data: { otp: hashedOtp },
+            }),
+
+            whatsAppOtp({ phoneNumber, otp, username: userExist.username })
+
+        ]);
+
+        if (!whatsappResponse) {
+            return NextResponse.json({ message: "Error while sending OTP" }, { status: 500 })
+        }
+
+        return NextResponse.json({ message: "OTP sent to registered phone number", username: userExist.username }, { status: 200 });
+
+
+    } catch (error: any) {
+
+        logger.error({
+            message: "Error on sending otp to user whatsapp app/api/user-otp",
+            error: error.message
         });
 
-        return NextResponse.json({message : "OTP sent to registered phone number" , username : userExist.username }, {status : 200});
-
-
-    } catch (error : any) {
-
-        logger.error("Error sending otp On user side :" , error);
-        return NextResponse.json({message : error.message } , {status : 500});
+        return NextResponse.json({ message: error.message }, { status: 500 });
 
     }
 }

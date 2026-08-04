@@ -7,10 +7,6 @@ import { userSession } from "@/lib/jwt";
 
 dayjs.extend(customParseFormat);
 
-
-
- 
-
 export async function GET(req: Request) {
     try {
 

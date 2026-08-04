@@ -4,19 +4,22 @@ import crypto from "crypto";
 import { getCurrentUTCFromIST } from "@/lib/date-time";
 import { headers } from "next/headers";
 import { GenerateTokenUser } from "@/lib/tokenJwt";
+import logger from "@/lib/logs";
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
         const { username, password } = body;
 
-        const headerList = await headers();
+         if (!username || !password) {
+            return NextResponse.json({ error: "Username and password are required" }, { status: 400 });
+        }
 
+
+        const headerList = await headers();
         const ip = headerList.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
 
-        if (!username || !password) {
-            return NextResponse.json({ error: "All fields are required" }, { status: 400 });
-        }
+       
 
         let user = await prisma.user.findUnique({
             where: { username },
@@ -33,18 +36,16 @@ export async function POST(req: Request) {
         const userImage = user?.user_image;
 
         if (!user) {
-            return NextResponse.json({ error: "Invalid username " }, { status: 401 });
+            return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
         }
 
         const hashedPassword = crypto.createHash("md5").update(password).digest("hex");
 
-
         if (hashedPassword !== user.password) {
-            return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+            return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
         }
 
         const token = await GenerateTokenUser({ id: user.id, username: user.username, userType: user.type, image: user.user_image });
-
 
         const response = NextResponse.json({
             success: true,
@@ -77,7 +78,10 @@ export async function POST(req: Request) {
         return response;
 
     } catch (error: any) {
-        console.error(error);
+        logger.error({
+            message : "User login issue on file api/user-login/route.ts",
+            error : error.message
+        })
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }
