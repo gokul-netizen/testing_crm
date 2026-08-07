@@ -5,7 +5,7 @@ import DataTableComponent, { Column } from "@/app/components/DataTable";
 import dayjs from "dayjs";
 import { useState } from "react";
 import utc from 'dayjs/plugin/utc';
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
 import { useParams, useRouter } from "next/navigation";
@@ -13,11 +13,13 @@ import Link from "next/link";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { timeSince } from "@/lib/time-ago";
 import { userExcelData } from "@/lib/export-excel-data";
+import { toast } from "sonner";
 
 dayjs.extend(utc);
 
 type DataItem = {
 
+    
     inquiry: { id: number, name: string, companyName: string, phone: number };
     date: string;
     time: string;
@@ -31,15 +33,16 @@ type DataItem = {
 };
 
 export default function Page() {
+    
+    const { data, error, isLoading } = useSWR(`/api/sub-user/dashboard/todays-followups`, fetcher);
+    const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     const params = useParams();
     const { id } = params;
 
- 
-
-    const { data, error, isLoading } = useSWR(`/api/sub-user/dashboard/todays-followups`, fetcher);
-
-    const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
+    const inquiryIds = Object.keys(selectedRows)
+        .filter(key => selectedRows[key])
+        .map(Number);
 
     if (isLoading) return <SpinnerCircle4 />
 
@@ -107,6 +110,45 @@ export default function Page() {
     ];
 
 
+    const handleDelete = async (inquiryIds: number[]) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: inquiryIds })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate("/api/sub-user/dashboard/todays-followups");
+            setSelectedRows({});
+
+
+        } catch (error) {
+
+            toast.error("Failed to delete the inquiry")
+
+        }
+    }
+
+    const handleDeleteById = async (inquiryId: string | number) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: [inquiryId] })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+           mutate("/api/sub-user/dashboard/todays-followups");
+
+        } catch (error) {
+            toast.error("Failed to delete the inquiry")
+        }
+    }
+
+
     return (
         <section>
 
@@ -126,6 +168,8 @@ export default function Page() {
                     data={data?.todaysfollowup ?? []}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
+                    onDelete={() => handleDelete(inquiryIds)}
+                    deleteById={(item) => handleDeleteById(item.inquiry?.id)}
                     detail={(item) => `/sub-user/todays-followups/${item.inquiry.id}`}
                     onExcel={() => userExcelData(data, "Todays follow up")}
                     whatsapp={(item)=> item?.inquiry?.phone}

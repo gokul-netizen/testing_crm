@@ -28,7 +28,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ message: "Added Title" }, { status: 200 });
 
     } catch (error: any) {
-        logger.error("error when adding Title", error);
+       logger.error({
+            message : "Error on addign new designation data app/api/user/designation",
+            error : error.message
+        });
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }
@@ -36,7 +39,15 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
     try {
+
+        const decoded = await userSession();
+        const userId = decoded?.id;
+        const userType = decoded?.usertype;
+
         const titles = await prisma.Designation.findMany({
+            where : {
+                 userId: Number(userId),
+            },
             orderBy: {
                 createdAt: "desc"
             }
@@ -45,7 +56,10 @@ export async function GET(req: Request) {
         return NextResponse.json(titles, { status: 200 });
 
     } catch (error: any) {
-        logger.error("error when getting Title", error);
+        logger.error({
+            message : "Error on fetching designation data app/api/user/designation",
+            error : error.message
+        });
         return NextResponse.json({ error: error }, { status: 500 })
     }
 }

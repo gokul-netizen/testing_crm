@@ -4,34 +4,26 @@ import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { userSession } from "@/lib/jwt";
-dayjs.extend(customParseFormat);
 
+dayjs.extend(customParseFormat);
 
 export async function GET(req: Request) {
     try {
         const decoded = await userSession();
         const userId = decoded?.id;
-        const userType = decoded?.userType;
 
         const today = dayjs();
 
-        const domainId = await prisma.user.findUnique({
+        const userDomain = await prisma.user.findUnique({
             where: { id: userId },
-            select: {
-                id: true,
-                domain: true,
-            },
+            select: { domain: true },
         });
 
-        if (!domainId) {
-            throw new Error("Not Found");
-        }
 
-
-        const inquiryIds = await prisma.domainResponse.findMany({
+        const inquiries = await prisma.domainResponse.findMany({
             where: {
                 status: 1,
-                domain_id: domainId.domain,
+                domain_id: userDomain.domain,
                 OR: [
                     { assignId: Number(userId) },
                     {
@@ -42,78 +34,72 @@ export async function GET(req: Request) {
                     }
                 ]
             },
-            select: { id: true },
-        });
-
-        const followInquiryIds = inquiryIds.map((item: any) => item.id);
-
-
-        const pendingRaw = await prisma.followup.findMany({
-            where: {
-                inquiryID: { in: followInquiryIds },
-
-                inquiry: {
-                    status: 1,
-                },
-            },
-
-            distinct: ["inquiryID"],
-
-            orderBy: {
-                createdAt: "desc"
-            },
-
             select: {
-                date: true,
-                time: true,
-                remarks: true,
-                followUpStatus: true,
+                id: true,
+                name: true,
+                phone: true,
                 createdAt: true,
-                assignToName: true,
-                isPublic: true,
-                addedBy: true,
-
-                inquiry: {
-                    select: {
-                        id: true,
-                        name: true,
-                        phone: true,
-                        companyName: true,
-                        createdAt: true,
+                companyName: true,
+                followups: {
+                    orderBy: {
+                        createdAt: "desc",
                     },
-                },
-            },
+                    take: 1,
+                    select: {
+                        date: true,
+                        time: true,
+                        remarks: true,
+                        assignToName: true,
+                        followUpStatus: true,
+                        createdAt: true,
+                        isPublic: true,
+                        addedBy: true,
+                    }
+                }
+            }
         });
 
 
-        const pending = pendingRaw
-            .filter((item: any) => {
-                if (!item.date) return false;
+        const pending = inquiries
+            .map((inquiry: any) => {
+                const latestFollowup = inquiry.followups[0];
+                if (!latestFollowup) return null;
 
+                return {
+                    id: inquiry.id,
+                    inquiryID: inquiry.id,
+                    date: latestFollowup.date,
+                    time: latestFollowup.time,
+                    remarks: latestFollowup.remarks,
+                    assignToName: latestFollowup.assignToName,
+                    followUpStatus: latestFollowup.followUpStatus,
+                    createdAt: latestFollowup.createdAt,
+                    isPublic: latestFollowup.isPublic,
+                    addedBy: latestFollowup.addedBy,
+                    inquiry: {
+                        id: inquiry.id,
+                        name: inquiry.name,
+                        phone: inquiry.phone,
+                        createdAt: inquiry.createdAt,
+                        companyName: inquiry.companyName,
+                    }
+                };
+            })
+            .filter((item: any): item is NonNullable<typeof item> => {
+                if (!item || !item.date) return false;
                 const itemDate = dayjs(item.date, "DD-MM-YYYY");
-
-                if (!itemDate.isValid()) return false;
-
-                return itemDate.isBefore(today, "day");
+                return itemDate.isValid() && itemDate.isBefore(today, "day");
             })
             .sort((a: any, b: any) => {
                 const dateA = dayjs(a.date, "DD-MM-YYYY");
                 const dateB = dayjs(b.date, "DD-MM-YYYY");
-
                 return dateA.diff(dateB);
             });
 
         return NextResponse.json({ pending }, { status: 200 });
 
     } catch (error: any) {
-        logger.error(
-            "Error when getting pending followups for sub user",
-            error
-        );
-
-        return NextResponse.json(
-            { error: error.message },
-            { status: 500 }
-        );
+        logger.error("Error when getting pending followups for sub user", error);
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

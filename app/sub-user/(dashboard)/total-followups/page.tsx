@@ -1,7 +1,7 @@
 'use client';
 
 import { fetcher } from "@/lib/fetcherSwr";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { useParams } from 'next/navigation';
 import DataTableComponent from "@/app/components/DataTable";
 import { useState } from "react";
@@ -10,10 +10,11 @@ import utc from "dayjs/plugin/utc";
 import SpinnerCircle4 from "@/components/spinner-10";
 import Link from "next/link";
 import CopyText from "@/app/components/CopyText";
- 
+
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { exportExcelDataInquiry } from "@/lib/export-excel-data";
 import { timeSince } from "@/lib/time-ago";
+import { toast } from "sonner";
 
 dayjs.extend(utc);
 
@@ -27,7 +28,7 @@ type DataItem = {
     createdAt: string;
     service: string;
     phoneSecondary: string;
-   
+
 
     followups: {
         date: string;
@@ -48,12 +49,18 @@ type DataItem = {
 
 export default function Page() {
 
-    const params = useParams();
-    const user_id = params.id;
-
+    const { data, error, isLoading } = useSWR(`/api/sub-user/dashboard/total-followups`, fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
-    const { data, error, isLoading } = useSWR( `/api/sub-user/dashboard/total-followups`, fetcher);
+ 
+    const params = useParams();
+    const user_id = params.id;
+    
+
+    const inquiryIds = Object.keys(selectedRows)
+        .filter(key => selectedRows[key])
+        .map(Number);
+
 
     if (isLoading) return <SpinnerCircle4 />;
 
@@ -76,7 +83,7 @@ export default function Page() {
         },
         {
             header: "Company Name",
-              mobileHeader: "CN",
+            mobileHeader: "CN",
             accessor: (item: DataItem) => (
                 <div className="flex items-center gap-2 group">
                     <Link href={detailLink(item.id)}>
@@ -88,7 +95,7 @@ export default function Page() {
         },
         {
             header: "Phone",
-              mobileHeader: "Phone",
+            mobileHeader: "Phone",
             accessor: (item: DataItem) => (
                 <div className="flex items-center gap-2 group">
                     <Link href={detailLink(item.id)}>
@@ -121,16 +128,16 @@ export default function Page() {
                     "Assign To": "text-blue-500 font-medium"
                 };
 
-                const colorClass = statusColors[item.followUpStatus] || "text-gray-500";            
+                const colorClass = statusColors[item.followUpStatus] || "text-gray-500";
                 const remarks = item.followups?.[0]?.remarks || item.assigns?.[0]?.remarks;
 
                 return (
                     <div className="group relative">
                         <Link className="truncate flex flex-col" href={detailLink(item.id)}>
 
-                  
+
                             <span className={colorClass}>
-                                  {
+                                {
                                     item?.followUpStatus === "Assign To"
                                         ? item?.followups?.[0]?.assignToName
                                             ? `Assign To ${item.followups[0].assignToName}`
@@ -138,21 +145,21 @@ export default function Page() {
                                         : item?.followUpStatus
                                 }
                             </span>
- 
-                   
+
+
                             <div className={`flex gap-2 ${colorClass}`}>
 
                                 <span>
-                                    {  item.followups?.[0]?.date && item.followups[0].date !== "Invalid Date" ? item.followups[0].date : null}
+                                    {item.followups?.[0]?.date && item.followups[0].date !== "Invalid Date" ? item.followups[0].date : null}
                                 </span>
 
                                 <span>
-                                    {  item.followups?.[0]?.time && item.followups[0].time !== "Invalid time" ? item.followups[0].time : null}
+                                    {item.followups?.[0]?.time && item.followups[0].time !== "Invalid time" ? item.followups[0].time : null}
                                 </span>
 
                             </div>
 
-                     
+
                             <span>
                                 {timeSince(
                                     item.followups?.[0]?.createdAt ??
@@ -163,7 +170,7 @@ export default function Page() {
 
                         </Link>
 
-                         {(item.followups?.[0]?.isPublic || Number(item.followups?.[0]?.addedBy) === Number(user_id)) && (
+                        {(item.followups?.[0]?.isPublic || Number(item.followups?.[0]?.addedBy) === Number(user_id)) && (
                             <div className="absolute hidden group-hover:block bg-gray-900/80 text-white text-sm p-2 rounded shadow-xl z-50 bottom-10">
                                 {remarks}
                             </div>
@@ -185,6 +192,47 @@ export default function Page() {
     ];
 
 
+    const handleDelete = async (inquiryIds: number[]) => {
+        try {
+
+            console.log(inquiryIds);
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: inquiryIds })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate("/api/sub-user/dashboard/total-followups");
+            setSelectedRows({});
+
+
+        } catch (error) {
+
+            toast.error("Failed to delete the inquiry")
+
+        }
+    }
+
+    const handleDeleteById = async (inquiryId: string | number) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: [inquiryId] })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate("/api/sub-user/dashboard/total-followups");
+
+        } catch (error) {
+            toast.error("Failed to delete the inquiry")
+        }
+    }
+
+
     return (
         <section >
 
@@ -202,14 +250,15 @@ export default function Page() {
                 data={data ?? []}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
-                 
+                onDelete={() => handleDelete(inquiryIds)}
+                deleteById={(item) => handleDeleteById(item.id)}
                 onExcel={() => exportExcelDataInquiry(data ?? [])}
-                detail={(item)=> `/sub-user/total-followups/${item.id}`}
-                whatsapp={(item)=> item.phone}
-                mobileCall={(item)=> String(item.phone)}
+                detail={(item) => `/sub-user/total-followups/${item.id}`}
+                whatsapp={(item) => item.phone}
+                mobileCall={(item) => String(item.phone)}
             />
 
-             
+
         </section>
     );
 }
