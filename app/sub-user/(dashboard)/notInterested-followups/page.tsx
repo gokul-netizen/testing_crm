@@ -5,13 +5,14 @@ import DataTableComponent, { Column } from "@/app/components/DataTable";
 import dayjs from "dayjs";
 import { useState } from "react";
 import utc from 'dayjs/plugin/utc';
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { userExcelData } from "@/lib/export-excel-data";
+import { toast } from "sonner";
  
 
 dayjs.extend(utc);
@@ -35,13 +36,15 @@ type DataItem = {
 export default function Page() {
 
  
+    const { data, error, isLoading } = useSWR(`/api/sub-user/dashboard/notInterested-followups`, fetcher);
+    const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
+
     const params = useParams();
     const { id } = params;
 
-    const { data, error, isLoading } = useSWR(`/api/sub-user/dashboard/notInterested-followups`, fetcher);
-
-
-    const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
+    const inquiryIds = Object.keys(selectedRows)
+        .filter(key => selectedRows[key])
+        .map(Number);
 
     if (isLoading) return <SpinnerCircle4 />
 
@@ -109,6 +112,46 @@ export default function Page() {
 
     ];
 
+
+    const handleDelete = async (inquiryIds: number[]) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: inquiryIds })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate("/api/sub-user/dashboard/notInterested-followups");
+            setSelectedRows({});
+
+
+        } catch (error) {
+
+            toast.error("Failed to delete the inquiry")
+
+        }
+    }
+
+    const handleDeleteById = async (inquiryId: string | number) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: [inquiryId] })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate("/api/sub-user/dashboard/notInterested-followups");
+
+
+        } catch (error) {
+            toast.error("Failed to delete the inquiry")
+        }
+    }
+
    
 
     return (
@@ -128,6 +171,8 @@ export default function Page() {
                     title="Not Interested "
                     columns={columns}
                     data={data ?? []}
+                    onDelete={() => handleDelete(inquiryIds)}
+                    deleteById={(item) => handleDeleteById(item.id)}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     detail={(item) => `/sub-user/notInterested-followups/${item.id}`}

@@ -49,7 +49,8 @@ type DataTableProps<T> = {
   onReset?: () => void;
   detail?: (item: T) => string;
   onDelete?: () => void;
-  deleteById?: (item: T) => void;
+  deleteById?: (item: T ) => void;
+ 
   whatsapp?: (item: T) => number;
   mobileCall?: (item : T) => string;
   selectedRows: Record<string | number, boolean>;
@@ -365,8 +366,8 @@ export default function DataTableComponent<T extends { [key: string]: any }>({
                               </DropdownMenuItem>
                             )}
 
-                            {onDelete && (
-                              <DropdownMenuItem onClick={() => deleteById?.(item)} className="px-4 py-3 text-lg text-red-600 cursor-pointer"  >
+                            {deleteById && (
+                              <DropdownMenuItem onClick={() => deleteById(item)} className="px-4 py-3 text-lg text-red-600 cursor-pointer"  >
                                 Delete
                               </DropdownMenuItem>
                             )}
@@ -424,6 +425,12 @@ export default function DataTableComponent<T extends { [key: string]: any }>({
                         {detail && (
                           <DropdownMenuItem onClick={() => router.push(detail(item))} className="px-4 py-3 text-lg cursor-pointer">Detail</DropdownMenuItem>
                         )}
+
+                        {onEdit && (
+                          <DropdownMenuItem onClick={() => router.push(onEdit(item))} className="px-4 py-3 text-lg cursor-pointer">Edit</DropdownMenuItem>
+                        )}
+
+                        
 
                         <DropdownMenuSeparator />
                         {onUndo && (

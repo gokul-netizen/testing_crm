@@ -5,7 +5,7 @@ import DataTableComponent, { Column } from "@/app/components/DataTable";
 import dayjs from "dayjs";
 import { useState } from "react";
 import utc from 'dayjs/plugin/utc';
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
 import { useParams } from "next/navigation";
@@ -13,6 +13,7 @@ import Link from "next/link";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { timeSince } from "@/lib/time-ago";
 import { userExcelData } from "@/lib/export-excel-data";
+import { toast } from "sonner";
 
 
 dayjs.extend(utc);
@@ -40,6 +41,10 @@ export default function Page() {
     const { data, error, isLoading } = useSWR(`/api/sub-user/dashboard/upcoming-followups`, fetcher);
 
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
+
+    const inquiryIds = Object.keys(selectedRows)
+        .filter(key => selectedRows[key])
+        .map(Number);
 
     if (isLoading) return <SpinnerCircle4 />
 
@@ -94,15 +99,55 @@ export default function Page() {
                     </Link>
 
                     {(item.isPublic || Number(item.addedBy) === Number(id)) && (
-                            <div className="absolute hidden group-hover:block bg-gray-900/80 text-white text-sm p-2 rounded shadow-xl z-50 bottom-10">
-                                {item?.remarks}
-                            </div>
-                        )}
-                        
+                        <div className="absolute hidden group-hover:block bg-gray-900/80 text-white text-sm p-2 rounded shadow-xl z-50 bottom-10">
+                            {item?.remarks}
+                        </div>
+                    )}
+
                 </div>
             ),
         },
     ];
+
+
+    const handleDelete = async (inquiryIds: number[]) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: inquiryIds })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate("/api/sub-user/dashboard/upcoming-followups");
+            setSelectedRows({});
+
+
+        } catch (error) {
+
+            toast.error("Failed to delete the inquiry")
+
+        }
+    }
+
+    const handleDeleteById = async (inquiryId: string | number) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: [inquiryId] })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate("/api/sub-user/dashboard/upcoming-followups");
+
+
+        } catch (error) {
+            toast.error("Failed to delete the inquiry")
+        }
+    }
 
 
     return (
@@ -124,10 +169,12 @@ export default function Page() {
                     data={data?.upcoming ?? []}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
-                    detail={(item) =>  `/sub-user/upcoming-followups/${item.inquiry.id}`}
+                    onDelete={() => handleDelete(inquiryIds)}
+                    deleteById={(item) => handleDeleteById(item.inquiry?.id)}
+                    detail={(item) => `/sub-user/upcoming-followups/${item.inquiry.id}`}
                     onExcel={() => userExcelData(data, "Todays follow up")}
-                    whatsapp={(item)=> item?.inquiry?.phone}    
-                     mobileCall={(item)=> String(item?.inquiry?.phone)}
+                    whatsapp={(item) => item?.inquiry?.phone}
+                    mobileCall={(item) => String(item?.inquiry?.phone)}
 
                 />
             </div>
