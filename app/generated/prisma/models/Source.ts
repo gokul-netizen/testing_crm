@@ -28,16 +28,25 @@ export type AggregateSource = {
 
 export type SourceAvgAggregateOutputType = {
   id: number | null
+  isDeletedBy: number | null
+  isUpdatedBy: number | null
 }
 
 export type SourceSumAggregateOutputType = {
   id: number | null
+  isDeletedBy: number | null
+  isUpdatedBy: number | null
 }
 
 export type SourceMinAggregateOutputType = {
   id: number | null
   source: string | null
   status: string | null
+  isDeleted: boolean | null
+  isDeletedOn: Date | null
+  isDeletedBy: number | null
+  isUpdateOn: Date | null
+  isUpdatedBy: number | null
   createdAt: Date | null
 }
 
@@ -45,6 +54,11 @@ export type SourceMaxAggregateOutputType = {
   id: number | null
   source: string | null
   status: string | null
+  isDeleted: boolean | null
+  isDeletedOn: Date | null
+  isDeletedBy: number | null
+  isUpdateOn: Date | null
+  isUpdatedBy: number | null
   createdAt: Date | null
 }
 
@@ -52,6 +66,11 @@ export type SourceCountAggregateOutputType = {
   id: number
   source: number
   status: number
+  isDeleted: number
+  isDeletedOn: number
+  isDeletedBy: number
+  isUpdateOn: number
+  isUpdatedBy: number
   createdAt: number
   _all: number
 }
@@ -59,16 +78,25 @@ export type SourceCountAggregateOutputType = {
 
 export type SourceAvgAggregateInputType = {
   id?: true
+  isDeletedBy?: true
+  isUpdatedBy?: true
 }
 
 export type SourceSumAggregateInputType = {
   id?: true
+  isDeletedBy?: true
+  isUpdatedBy?: true
 }
 
 export type SourceMinAggregateInputType = {
   id?: true
   source?: true
   status?: true
+  isDeleted?: true
+  isDeletedOn?: true
+  isDeletedBy?: true
+  isUpdateOn?: true
+  isUpdatedBy?: true
   createdAt?: true
 }
 
@@ -76,6 +104,11 @@ export type SourceMaxAggregateInputType = {
   id?: true
   source?: true
   status?: true
+  isDeleted?: true
+  isDeletedOn?: true
+  isDeletedBy?: true
+  isUpdateOn?: true
+  isUpdatedBy?: true
   createdAt?: true
 }
 
@@ -83,6 +116,11 @@ export type SourceCountAggregateInputType = {
   id?: true
   source?: true
   status?: true
+  isDeleted?: true
+  isDeletedOn?: true
+  isDeletedBy?: true
+  isUpdateOn?: true
+  isUpdatedBy?: true
   createdAt?: true
   _all?: true
 }
@@ -177,6 +215,11 @@ export type SourceGroupByOutputType = {
   id: number
   source: string
   status: string
+  isDeleted: boolean
+  isDeletedOn: Date | null
+  isDeletedBy: number | null
+  isUpdateOn: Date | null
+  isUpdatedBy: number | null
   createdAt: Date
   _count: SourceCountAggregateOutputType | null
   _avg: SourceAvgAggregateOutputType | null
@@ -207,6 +250,11 @@ export type SourceWhereInput = {
   id?: Prisma.IntFilter<"Source"> | number
   source?: Prisma.StringFilter<"Source"> | string
   status?: Prisma.StringFilter<"Source"> | string
+  isDeleted?: Prisma.BoolFilter<"Source"> | boolean
+  isDeletedOn?: Prisma.DateTimeNullableFilter<"Source"> | Date | string | null
+  isDeletedBy?: Prisma.IntNullableFilter<"Source"> | number | null
+  isUpdateOn?: Prisma.DateTimeNullableFilter<"Source"> | Date | string | null
+  isUpdatedBy?: Prisma.IntNullableFilter<"Source"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Source"> | Date | string
 }
 
@@ -214,6 +262,11 @@ export type SourceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   source?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isDeletedOn?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  isUpdateOn?: Prisma.SortOrderInput | Prisma.SortOrder
+  isUpdatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -224,6 +277,11 @@ export type SourceWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.SourceWhereInput[]
   NOT?: Prisma.SourceWhereInput | Prisma.SourceWhereInput[]
   status?: Prisma.StringFilter<"Source"> | string
+  isDeleted?: Prisma.BoolFilter<"Source"> | boolean
+  isDeletedOn?: Prisma.DateTimeNullableFilter<"Source"> | Date | string | null
+  isDeletedBy?: Prisma.IntNullableFilter<"Source"> | number | null
+  isUpdateOn?: Prisma.DateTimeNullableFilter<"Source"> | Date | string | null
+  isUpdatedBy?: Prisma.IntNullableFilter<"Source"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Source"> | Date | string
 }, "id" | "source">
 
@@ -231,6 +289,11 @@ export type SourceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   source?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isDeletedOn?: Prisma.SortOrderInput | Prisma.SortOrder
+  isDeletedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  isUpdateOn?: Prisma.SortOrderInput | Prisma.SortOrder
+  isUpdatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SourceCountOrderByAggregateInput
   _avg?: Prisma.SourceAvgOrderByAggregateInput
@@ -246,12 +309,22 @@ export type SourceScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Source"> | number
   source?: Prisma.StringWithAggregatesFilter<"Source"> | string
   status?: Prisma.StringWithAggregatesFilter<"Source"> | string
+  isDeleted?: Prisma.BoolWithAggregatesFilter<"Source"> | boolean
+  isDeletedOn?: Prisma.DateTimeNullableWithAggregatesFilter<"Source"> | Date | string | null
+  isDeletedBy?: Prisma.IntNullableWithAggregatesFilter<"Source"> | number | null
+  isUpdateOn?: Prisma.DateTimeNullableWithAggregatesFilter<"Source"> | Date | string | null
+  isUpdatedBy?: Prisma.IntNullableWithAggregatesFilter<"Source"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Source"> | Date | string
 }
 
 export type SourceCreateInput = {
   source: string
   status?: string
+  isDeleted?: boolean
+  isDeletedOn?: Date | string | null
+  isDeletedBy?: number | null
+  isUpdateOn?: Date | string | null
+  isUpdatedBy?: number | null
   createdAt?: Date | string
 }
 
@@ -259,12 +332,22 @@ export type SourceUncheckedCreateInput = {
   id?: number
   source: string
   status?: string
+  isDeleted?: boolean
+  isDeletedOn?: Date | string | null
+  isDeletedBy?: number | null
+  isUpdateOn?: Date | string | null
+  isUpdatedBy?: number | null
   createdAt?: Date | string
 }
 
 export type SourceUpdateInput = {
   source?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeletedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isDeletedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isUpdateOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUpdatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -272,6 +355,11 @@ export type SourceUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   source?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeletedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isDeletedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isUpdateOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUpdatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -279,12 +367,22 @@ export type SourceCreateManyInput = {
   id?: number
   source: string
   status?: string
+  isDeleted?: boolean
+  isDeletedOn?: Date | string | null
+  isDeletedBy?: number | null
+  isUpdateOn?: Date | string | null
+  isUpdatedBy?: number | null
   createdAt?: Date | string
 }
 
 export type SourceUpdateManyMutationInput = {
   source?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeletedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isDeletedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isUpdateOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUpdatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -292,6 +390,11 @@ export type SourceUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   source?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isDeletedOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isDeletedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isUpdateOn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isUpdatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -299,17 +402,29 @@ export type SourceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   source?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isDeletedOn?: Prisma.SortOrder
+  isDeletedBy?: Prisma.SortOrder
+  isUpdateOn?: Prisma.SortOrder
+  isUpdatedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type SourceAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  isDeletedBy?: Prisma.SortOrder
+  isUpdatedBy?: Prisma.SortOrder
 }
 
 export type SourceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   source?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isDeletedOn?: Prisma.SortOrder
+  isDeletedBy?: Prisma.SortOrder
+  isUpdateOn?: Prisma.SortOrder
+  isUpdatedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -317,11 +432,18 @@ export type SourceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   source?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  isDeleted?: Prisma.SortOrder
+  isDeletedOn?: Prisma.SortOrder
+  isDeletedBy?: Prisma.SortOrder
+  isUpdateOn?: Prisma.SortOrder
+  isUpdatedBy?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type SourceSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  isDeletedBy?: Prisma.SortOrder
+  isUpdatedBy?: Prisma.SortOrder
 }
 
 
@@ -330,6 +452,11 @@ export type SourceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   id?: boolean
   source?: boolean
   status?: boolean
+  isDeleted?: boolean
+  isDeletedOn?: boolean
+  isDeletedBy?: boolean
+  isUpdateOn?: boolean
+  isUpdatedBy?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["source"]>
 
@@ -337,6 +464,11 @@ export type SourceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   source?: boolean
   status?: boolean
+  isDeleted?: boolean
+  isDeletedOn?: boolean
+  isDeletedBy?: boolean
+  isUpdateOn?: boolean
+  isUpdatedBy?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["source"]>
 
@@ -344,6 +476,11 @@ export type SourceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   id?: boolean
   source?: boolean
   status?: boolean
+  isDeleted?: boolean
+  isDeletedOn?: boolean
+  isDeletedBy?: boolean
+  isUpdateOn?: boolean
+  isUpdatedBy?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["source"]>
 
@@ -351,10 +488,15 @@ export type SourceSelectScalar = {
   id?: boolean
   source?: boolean
   status?: boolean
+  isDeleted?: boolean
+  isDeletedOn?: boolean
+  isDeletedBy?: boolean
+  isUpdateOn?: boolean
+  isUpdatedBy?: boolean
   createdAt?: boolean
 }
 
-export type SourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "source" | "status" | "createdAt", ExtArgs["result"]["source"]>
+export type SourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "source" | "status" | "isDeleted" | "isDeletedOn" | "isDeletedBy" | "isUpdateOn" | "isUpdatedBy" | "createdAt", ExtArgs["result"]["source"]>
 
 export type $SourcePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Source"
@@ -363,6 +505,11 @@ export type $SourcePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     id: number
     source: string
     status: string
+    isDeleted: boolean
+    isDeletedOn: Date | null
+    isDeletedBy: number | null
+    isUpdateOn: Date | null
+    isUpdatedBy: number | null
     createdAt: Date
   }, ExtArgs["result"]["source"]>
   composites: {}
@@ -790,6 +937,11 @@ export interface SourceFieldRefs {
   readonly id: Prisma.FieldRef<"Source", 'Int'>
   readonly source: Prisma.FieldRef<"Source", 'String'>
   readonly status: Prisma.FieldRef<"Source", 'String'>
+  readonly isDeleted: Prisma.FieldRef<"Source", 'Boolean'>
+  readonly isDeletedOn: Prisma.FieldRef<"Source", 'DateTime'>
+  readonly isDeletedBy: Prisma.FieldRef<"Source", 'Int'>
+  readonly isUpdateOn: Prisma.FieldRef<"Source", 'DateTime'>
+  readonly isUpdatedBy: Prisma.FieldRef<"Source", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Source", 'DateTime'>
 }
     

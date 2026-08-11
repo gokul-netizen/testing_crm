@@ -47,10 +47,14 @@ export async function DELETE(req: Request) {
 
     } catch (error: any) {
 
-        logger.error({
-            message: "Failed to soft delete inquiry.",
+         logger.error({
+            
+            message: "Fail to delete the inquiry",
+            file: "api/sub-user/inquiry/delete-inquiry/route.ts",
+            method: req.method,
             errorMessage: error instanceof Error ? error.message : String(error),
-            errorStack: error instanceof Error ? error.stack : undefined,
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
 
         return NextResponse.json({ error: "Falied to delete the inquiry" }, { status: 500 });

@@ -57,7 +57,7 @@ export default function Page() {
       if (!params?.id) return;
       try {
         const userId = params.id;
-        const resUser = await fetch(`/api/add-user/${userId}`);
+        const resUser = await fetch(`/api/admin/user-management/add-user/${userId}`);
         const userData = await resUser.json();
         const domainsList = await fetchAllDomains();
         setAllDomains(domainsList);
@@ -118,9 +118,8 @@ export default function Page() {
       formData.append("user_image", form.user_image);
     }
 
-    const res = await fetch(`/api/add-user/${userId}`, {
+    const res = await fetch(`/api/admin/user-management/add-user/${userId}`, {
       method: "PUT",
-
       credentials: "include",
       body: formData,
     });

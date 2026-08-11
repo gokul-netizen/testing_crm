@@ -125,7 +125,15 @@ export async function GET(req: Request) {
         return NextResponse.json("Successfully email sent to users");
 
     } catch (error: any) {
-        logger.error(error.message);
+        logger.error({
+
+            message: "Fail to send every day email",
+            file: "api/email/user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

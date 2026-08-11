@@ -99,7 +99,15 @@ ORDER BY "createdAt" DESC;
       { status: 200 }
     );
   } catch (error: any) {
-    logger.error({ error: error.message }, "Error getting time line data");
+    logger.error({
+
+      message: "Fail to get inquiry timeline",
+      file: "api/user/inquiry/view/inquiry/[id]/timeline/route.ts",
+      method: req.method,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+
+    });
 
     return NextResponse.json(
       { error },

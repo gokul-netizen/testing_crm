@@ -1,5 +1,6 @@
 import { getCurrentUTCFromIST } from "@/lib/date-time";
 import getSession from "@/lib/jwt";
+import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { uploadFile } from "@/lib/uploadFile";
 import { NextResponse } from "next/server";
@@ -19,6 +20,17 @@ export async function GET(req: Request, { params }: { params: Params }) {
         return NextResponse.json({ user: user }, { status: 200 });
 
     } catch (error) {
+
+        logger.error({
+
+            message: "Fail to get user admin detail ",
+            file: "api/add-user/[id]/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: error })
     }
 }
@@ -75,36 +87,15 @@ export async function PUT(req: Request, { params }: { params: Params }) {
         return NextResponse.json(updatedUser, { status: 200 })
 
     } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: error });
-    }
-}
+        logger.error({
 
+            message: "Fail to update user admin detail ",
+            file: "api/add-user/[id]/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
 
-
-
-export async function DELETE(req: Request, { params }: { params: Params }) {
-    const userId = await getSession();
-    if (!userId) return NextResponse.json({ message: "Unauth" }, { status: 401 });
-    const Id = userId?.id;
-    try {
-        const { id } = await params;
-        const deleteUser = await prisma.user.update({
-            where: {
-                id: Number(id)
-            },
-            data: {
-                isDeleted: true,
-                isDeletedBy: String(Id),
-                isDeletedOn: getCurrentUTCFromIST()
-
-            }
         });
-
-        return NextResponse.json({ message: "User Deleted" }, { status: 200 });
-
-    } catch (error) {
-        console.error(error);
         return NextResponse.json({ error: error });
     }
 }

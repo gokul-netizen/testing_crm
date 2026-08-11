@@ -77,7 +77,17 @@ export async function GET(req: Request) {
         return NextResponse.json({ data }, { status: 200 })
 
     } catch (error: any) {
-        logger.error("Error when getting count of inquiries in sub user", error);
+        
+        logger.error({
+
+            message: "Fail to get assign followups ",
+            file: "api/sub-user/dashboard/assigned-followups/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

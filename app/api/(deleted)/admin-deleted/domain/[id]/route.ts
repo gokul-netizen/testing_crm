@@ -3,8 +3,6 @@ import { NextResponse } from "next/server";
 
 type Params = Promise<{id : string}>
 
-
-// this is method is for revoke delete
 export async function PUT(req:Request , {params} : {params:Params}){
     try {
 

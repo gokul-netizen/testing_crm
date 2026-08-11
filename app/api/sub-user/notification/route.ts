@@ -110,7 +110,16 @@ export async function GET(
 
     } catch (error: any) {
 
-        logger.error({ error: error.message }, "Error getting notification data of user");
+        logger.error({
+            
+            message: "Fail to get the notifications",
+            file: "api/sub-user/notification/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
 
     }

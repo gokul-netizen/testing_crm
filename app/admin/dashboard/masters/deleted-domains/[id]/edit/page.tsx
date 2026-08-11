@@ -22,28 +22,24 @@ export default function Page() {
     const params = useParams();
     const { id } = params
 
-    const { data, error, isLoading } = useSWR(`/api/active-domain/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/master/domain/${id}`, fetcher);
     const detailData = data?.data;
-    
- 
 
     useEffect(() => {
-    if (detailData) {
-        setDomainName(detailData.domainName ?? '');
-        setSubscription(detailData.subscription ?? 0);
-        setStatus(detailData.status ?? '');
-        setIsDeleted(detailData.isDeleted ?? false);
-    }
-}, [detailData]);
+        if (detailData) {
+            setDomainName(detailData.domainName ?? '');
+            setSubscription(detailData.subscription ?? 0);
+            setStatus(detailData.status ?? '');
+            setIsDeleted(detailData.isDeleted ?? false);
+        }
+    }, [detailData]);
 
 
     const handleUpdate = async () => {
         setLoading(true);
 
-   
-
         try {
-            const res = await fetch(`/api/active-domain/${id}`, {
+            const res = await fetch(`/api/admin/master/domain/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,12 +60,12 @@ export default function Page() {
                 );
             }
 
-            mutate(`/api/domain/${id}`);
+            mutate(`/api/admin/master/deleted-domain/${id}`);
 
             toast.success('Domain updated successfully');
 
             router.push(`/admin/dashboard/deleted-domain`);
-             
+
         } catch (error: any) {
             toast.error(error.message);
         } finally {
@@ -86,8 +82,6 @@ export default function Page() {
                 </h1>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-                    {/* Domain Name */}
                     <div className="flex flex-col gap-1">
                         <label className="text-gray-500 text-sm">
                             Domain Name
@@ -97,9 +91,7 @@ export default function Page() {
                             <div className="px-3 flex items-center">
                                 <MdDomain size={20} />
                             </div>
-
                             <div className="h-10 w-px bg-gray-300" />
-
                             <input
                                 type="text"
                                 value={domainName}
@@ -111,7 +103,7 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* Subscription */}
+            
                     <div className="flex flex-col gap-1">
                         <label className="text-gray-500 text-sm">
                             Subscription
@@ -135,7 +127,7 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* Status */}
+               
                     <div className="flex flex-col gap-2">
                         <label className="text-sm text-gray-500">
                             Status
@@ -172,7 +164,7 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* Delete Status */}
+             
                     <div className="flex flex-col gap-2">
                         <label className="text-sm text-gray-500">
                             Delete Status

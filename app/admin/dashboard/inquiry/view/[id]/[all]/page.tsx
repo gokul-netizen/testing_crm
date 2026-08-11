@@ -17,11 +17,6 @@ export default function Page() {
   const domainId = params.id;
   const inquiryId = params.all;
 
- 
-
-
-
-
   return (
     <div className="flex flex-col items-center justify-start min-h-screen p-8 bg-[#f8f7fa]">
       <div className="w-full max-w-[1200px] flex flex-col gap-6">

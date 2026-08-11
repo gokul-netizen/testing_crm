@@ -1618,6 +1618,11 @@ export const SourceScalarFieldEnum = {
   id: 'id',
   source: 'source',
   status: 'status',
+  isDeleted: 'isDeleted',
+  isDeletedOn: 'isDeletedOn',
+  isDeletedBy: 'isDeletedBy',
+  isUpdateOn: 'isUpdateOn',
+  isUpdatedBy: 'isUpdatedBy',
   createdAt: 'createdAt'
 } as const
 

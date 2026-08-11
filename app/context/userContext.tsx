@@ -1,7 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+} from "react";
 import useSWR from "swr";
+import { usePathname } from "next/navigation";
 import { fetcher } from "@/lib/fetcherSwr";
 
 type SubUserContextType = {
@@ -12,14 +19,21 @@ type SubUserContextType = {
   setUserImage: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const SubUserContext = createContext<SubUserContextType | undefined>(undefined);
+const SubUserContext = createContext<SubUserContextType | undefined>(
+  undefined
+);
 
 export function UserProvider({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
 
   const [username, setUsername] = useState("");
   const [userImage, setUserImage] = useState<string | null>(null);
 
-  const shouldFetchUser = !username ;
+  const shouldFetchUser =
+    pathname === "/user" ||
+    pathname.startsWith("/user/") ||
+    pathname === "/sub-user" ||
+    pathname.startsWith("/sub-user/");
 
   const { data } = useSWR(
     shouldFetchUser ? "/api/user" : null,
@@ -27,16 +41,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    if (!data) return;
+    if (!shouldFetchUser || !data) return;
 
     setUsername(data.username ?? "");
-
-    setUserImage(
-      data.user_image
-    );
-
-  }, [data]);
-
+    setUserImage(data.user_image ?? null);
+    
+  }, [data, shouldFetchUser]);
 
   return (
     <SubUserContext.Provider

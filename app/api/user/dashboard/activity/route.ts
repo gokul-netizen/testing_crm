@@ -83,7 +83,15 @@ export async function GET(req: Request) {
 
 
     } catch (error: any) {
-        logger.error({ error: error.message }, "Failed to fetch data's of today's activity")
+        logger.error({
+
+            message: "Fail to get activity followups ",
+            file: "api/user/dashboard/activity-followups/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
         return NextResponse.json({ message: "Failed to fetch data's of today's activity" }, { status: 500 })
     }
 }

@@ -3,7 +3,7 @@ import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
     try {
 
         const decoded = await userSession();
@@ -37,7 +37,17 @@ export async function GET(request: Request) {
         return NextResponse.json(result)
 
     } catch (error: any) {
-        logger.error("API Error:", error.message);
+       
+        logger.error({
+
+            message: "Fail to get domain inquiry count",
+            file: "api/user/inquiry/view/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json(
             { error: "Internal Server Error" },
             { status: 500 }

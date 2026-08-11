@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 
 
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
     try {
 
 
@@ -79,7 +79,15 @@ export async function GET(request: Request) {
         return NextResponse.json(todaysInquiry)
 
     } catch (error: any) {
-        logger.error(error.message);
+        logger.error({
+
+            message: "Fail to get todays followups ",
+            file: "api/user/dashboard/todays-followups/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
     }
 }

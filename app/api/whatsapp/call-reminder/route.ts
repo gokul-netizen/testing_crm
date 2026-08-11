@@ -110,8 +110,13 @@ export async function GET(req: Request) {
     } catch (error: any) {
 
         logger.error({
-            message: "Error occured while triggering one hour before follow up whatsapp message:",
-            error: error.message
+
+            message: "Fail to send call reminder",
+            file: "api/whatsapp/call-reminder/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
 
         return NextResponse.json({ message: error.message }, { status: 500 });

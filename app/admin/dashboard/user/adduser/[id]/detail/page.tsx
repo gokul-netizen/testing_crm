@@ -4,14 +4,6 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { AiOutlineClockCircle } from "react-icons/ai";
-import { BiUser } from "react-icons/bi";
-import { FiKey } from "react-icons/fi";
-import { BsHash } from "react-icons/bs";
-import { IoTrendingUpOutline } from "react-icons/io5";
-import { MdOutlineDelete, MdOutlineMailOutline, MdOutlinePhone } from "react-icons/md";
-import { FaRegImage } from "react-icons/fa";
-import { TbWorld } from "react-icons/tb";
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);

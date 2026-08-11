@@ -20,7 +20,17 @@ export async function GET(req: Request, { params }: ParamsProps) {
 
         return NextResponse.json(service, { status: 200 });
     } catch (error: any) {
-        logger.error({error : error.message },"error when adding service");
+        
+        logger.error({
+            
+            message: "Fail to get the service",
+            file: "api/sub-user/inquiry/view/[domainId]/service/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: error.message }, { status: 500 })
 
     }

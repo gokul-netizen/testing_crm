@@ -88,9 +88,15 @@ export async function POST(req: Request, { params }: ParamsPros) {
     } catch (error: any) {
 
         logger.error({
-            message: "Error in verifying the otp on user side app/api/user-otp/[phonenumber]",
-            error: error.message
+
+            message: "Fail to verify user otp",
+            file: "api/user-otp/[phonenumber]/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
+
         return NextResponse.json({ message: error.message }, { status: 500 });
 
     }

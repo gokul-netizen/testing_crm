@@ -78,10 +78,15 @@ export async function POST(req: Request) {
         return response;
 
     } catch (error: any) {
+
         logger.error({
-            message : "User login issue on file api/user-login/route.ts",
-            error : error.message
-        })
+            message: "User login failed",
+            file: "api/user-login/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+        });
+
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

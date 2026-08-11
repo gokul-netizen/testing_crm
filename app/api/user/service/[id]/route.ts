@@ -30,10 +30,16 @@ export async function GET(req: Request, { params }: ParamsProps) {
 
         return NextResponse.json(service, { status: 200 });
     } catch (error: any) {
-        logger.error({
-            message : "Error when fetching service by id app/api/user/service/[id]",
-            error : error.message
+       logger.error({
+
+            message: "Fail to get the service detail",
+            file: "api/user/service/[id]/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
+
         return NextResponse.json({ error: error.message }, { status: 500 })
 
     }
@@ -67,9 +73,15 @@ export async function PUT(req:Request , {params} : ParamsProps) {
 
     } catch (error : any) {
        logger.error({
-            message : "Error when updating service by id app/api/user/service/[id]",
-            error : error.message
+
+            message: "Fail to update the service",
+            file: "api/user/service/[id]/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
+
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }

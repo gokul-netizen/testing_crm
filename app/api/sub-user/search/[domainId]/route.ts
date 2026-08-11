@@ -98,9 +98,15 @@ export async function GET(req: Request, { params }: Props) {
 
     } catch (error: any) {
         logger.error({
-            message : "Error On Search Api on sub user side",
-            error : { error: error.message },
+            
+            message: "Fail to search inquiry",
+            file: "api/sub-user/search/[domainId]/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
+
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
