@@ -17,7 +17,7 @@ import { TbXboxX } from "react-icons/tb";
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/count-domain", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard", fetcher);
 
     return (
         <section className="p-4">

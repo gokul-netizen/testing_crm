@@ -107,8 +107,13 @@ export async function GET(req: Request) {
     } catch (error: any) {
 
         logger.error({
-            message: "Error occured while triggering follow up reminder whatsapp message:",
-            error: error.message
+
+            message: "Fail to send visit reminder",
+            file: "api/whatsapp/visit-reminder/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
 
         return NextResponse.json({ message: error.message }, { status: 500 });

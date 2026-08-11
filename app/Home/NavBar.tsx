@@ -16,12 +16,9 @@ export default function Navbar() {
 
   return (
     <header
-       
-    
       className="sticky top-0 z-50 bg-[#7367f0] shadow-md"
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
-
   
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -39,8 +36,6 @@ export default function Navbar() {
             />
           </Link>
         </motion.div>
-
-
        
         <motion.div
           className="hidden items-center gap-4 md:flex"
@@ -79,7 +74,7 @@ export default function Navbar() {
         </motion.div>
 
 
-        {/* Mobile Menu Button */}
+        
         <motion.button
           whileTap={{ scale: 0.85 }}
           onClick={() => setOpen(!open)}

@@ -34,7 +34,7 @@ export default function Page() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
-  const { data, error, isLoading } = useSWR("/api/domain", fetcher);
+  const { data, error, isLoading } = useSWR("/api/admin/master/domain", fetcher);
 
   if (isLoading) return <SpinnerCircle4 />;
   if (error) return <p>Failed to load domains {error.message}</p>;
@@ -57,7 +57,7 @@ export default function Page() {
     }
     try {
       await updateDomainStatus(ids, "Active");
-      mutate("/api/domain");
+      mutate("/api/admin/master/domain");
       setSelectedRows({});
       toast.success("Status updated successfully");
     } catch (error) {
@@ -74,7 +74,7 @@ export default function Page() {
     }
     try {
       await updateDomainStatus(ids, "Blocked");
-      mutate("/api/domain");
+      mutate("/api/admin/master/domain");
       setSelectedRows({});
       toast.success("Status updated successfully");
     } catch (error) {
@@ -97,7 +97,7 @@ export default function Page() {
           if (!res.ok) {
             throw new Error("Failed to delete record");
           }
-          mutate("/api/domain");
+          mutate("/api/admin/master/domain");
           toast.success(`Domain "${item.domainName}" deleted`);
         },
       });
@@ -124,7 +124,7 @@ export default function Page() {
             throw new Error("Failed to delete record");
           }
 
-          mutate("/api/domain");
+          mutate("/api/admin/master/domain");
           toast.success("Domain deleted");
         } catch (err) {
           console.error(err);

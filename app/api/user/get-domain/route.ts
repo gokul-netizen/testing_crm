@@ -1,4 +1,5 @@
 import { userSession } from "@/lib/jwt";
+import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -36,7 +37,17 @@ export async function GET(req: Request) {
         return NextResponse.json(domainIdAndName);
 
     } catch (error) {
-        console.error("GET_DOMAIN_IDS_ERROR:", error);
+        
+        logger.error({
+
+            message: "Fail to get domain ",
+            file: "api/user/get-domain/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json(
             { message: "Internal Server Error" },
             { status: 500 }

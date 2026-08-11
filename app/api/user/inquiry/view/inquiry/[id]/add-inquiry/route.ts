@@ -140,9 +140,14 @@ export async function POST(req: Request, { params }: ParamsProps) {
         return NextResponse.json({ message: "Created successfully" }, { status: 200 });
     } catch (error: any) {
 
-        logger.error({
-            message : "Fail to add new inquiry",
-            error: error.message,
+         logger.error({
+
+            message: "Fail to add inquiry",
+            file: "api/user/inquiry/view/inquiry/[id]/add-inquiry/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
 
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

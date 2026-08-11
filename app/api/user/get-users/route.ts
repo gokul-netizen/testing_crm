@@ -36,9 +36,14 @@ export async function GET(req: Request) {
     } catch (error : any) {
         
         logger.error({
-            message : "Error gettting users on user admin side",
-            error : error.message
-        })
+
+            message: "Fail to get users ",
+            file: "api/user/get-users/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
         
         return NextResponse.json(
             { message: "Internal Server Error" },

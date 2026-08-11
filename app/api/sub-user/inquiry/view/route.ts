@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
     try {
-        
+
         const decoded = await userSession();
         const userId = decoded?.id;
         const userType = decoded?.userType;
@@ -54,10 +54,22 @@ export async function GET(req: Request) {
         });
 
 
+       
+
+
         return NextResponse.json(domainNames);
 
     } catch (error: any) {
-        logger.error(error.message, "Internal server error during inquiry processing");
+        logger.error({
+
+            message: "Fail to get Domain count",
+            file: "api/sub-user/inquiry/view/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: "Failed to fetch domains" }, { status: 500 });
     }
 }

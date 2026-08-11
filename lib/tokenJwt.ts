@@ -62,6 +62,18 @@ export async function VerifyAdminToken() {
     }
 }
 
+export default async function getSession() {
+  const cookieStore = await cookies();  
+  const token = cookieStore.get("authtoken")?.value;
+  if (!token) return null;
+
+  const JWT_SECRET = process.env.JWT_SECRET;
+  if (!JWT_SECRET) throw new Error("JWT_SECRET not defined");
+
+  const secret = new TextEncoder().encode(JWT_SECRET);
+  const { payload } = await jwtVerify(token, secret);
+  return payload;  
+}
 
 export async function deleteUserSession(){
   const cookieStore = await cookies();

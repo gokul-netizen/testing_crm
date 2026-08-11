@@ -2,16 +2,12 @@
 
 import { fetcher } from "@/lib/fetcherSwr";
 import useSWR, { mutate } from "swr";
- 
 import { useState } from "react";
 import { toast } from "sonner";
 import { confirmAction } from "@/app/components/ConfirmSooner";
 import SpinnerCircle4 from "@/components/spinner-10";
-import { exportExcelData } from "@/lib/export-excel-data";
-import { useRouter } from "next/navigation";
 import DataTableComponent, { Column } from "@/app/components/DataTable";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
-import Link from "next/link";
 import CopyText from "@/app/components/CopyText";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -24,76 +20,49 @@ type DataItem = {
   domainName: string;
   accessToken: string;
   status: string;
-  addedOn: string;
+  isDeletedOn: string;
 };
 
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/admin-deleted/domain", fetcher);
-    const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
+  const { data, error, isLoading } = useSWR("/api/admin/master/deleted-domain", fetcher);
+  const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
-    if (isLoading)
-        return <SpinnerCircle4 />;
+  if (isLoading)
+    return <SpinnerCircle4 />;
 
-    if (error)
-        return <p className="p-8 text-red-500">Failed to load data.</p>;
+  if (error)
+    return <p className="p-8 text-red-500">Failed to load data.</p>;
 
-    if (!data)
-        return <p className="p-8 text-gray-600">No data found.</p>;
+  if (!data)
+    return <p className="p-8 text-gray-600">No data found.</p>;
 
 
-    const getSelectedIds = () => {
+  const getSelectedIds = () => {
     return Object.keys(selectedRows).filter((id) => selectedRows[Number(id)]).map(Number)
   }
 
- 
+  const handleUndo = async () => {
 
- 
-    const handleUndo = async () => {
+    const ids = getSelectedIds();
 
-        const ids = getSelectedIds();
- 
+    if (ids.length === 0) {
+      return toast.error("Please select a record first");
+    }
 
-        if (ids.length === 0) {
-            return toast.error("Please select a record first");
-        }
-
-        confirmAction({
-            title: "Undo Record",
-            description: "Are you sure you want to undo this record?",
-            confirmLabel: "Confirm",
-            variant: "primary",
-            onConfirm: async () => {
-                const res = await fetch(`/api/admin-deleted/domain`, {
-                    method: "PATCH",
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ ids })
-                });
-
-                if (!res.ok) {
-                    const errData = await res.json();
-                    throw new Error(errData.error || "Failed to undo");
-                }
-
-                toast.success("Record undo successfully");
-                mutate(`/api/admin-deleted/domain`);
-            }
-        });
-    };
-
-     const handleUndoById = async (item: DataItem) => {
     confirmAction({
       title: "Undo Record",
-      description: `Are you sure you want to restore the record for "${item.domainName || 'this item'}"?`,
+      description: "Are you sure you want to undo this record?",
       confirmLabel: "Confirm",
       variant: "primary",
-      // Marked as async to handle the fetch promise
       onConfirm: async () => {
-        const res = await fetch(`/api/admin-deleted/domain/${item.id}`, {
-          method: "PUT",
+        const res = await fetch(`/api/admin/master/deleted-domain`, {
+          method: "PATCH",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ids })
         });
 
         if (!res.ok) {
@@ -101,51 +70,77 @@ export default function Page() {
           throw new Error(errData.error || "Failed to undo");
         }
 
-        toast.success("Record restored successfully");
-        mutate(`/api/admin-deleted/domain`);
-      },
+        toast.success("Record undo successfully");
+        mutate(`/api/admin/master/deleted-domain`);
+      }
     });
   };
 
+  const handleUndoById = async (item : DataItem) => {
 
-     const columns: Column<DataItem>[] = [
-        {
-          header: "Domain Name",
-          accessor: (item) => (
-            <div className="flex items-center gap-2 group">
-              
-                <span className="truncate">{item.domainName}</span>
-             
-              <CopyText text={item.domainName} />
-            </div>
-          ),
-        },
-        {
-          header: "Access Token",
-          accessor: (item) => (
-            <div className="flex items-center gap-2 group">
-               
-                <span className="truncate">{item.accessToken}</span>
-    
-        
-              <CopyText text={String(item.accessToken)} />
-            </div>
-          ),
-        },
-         
-        {
-          header: "Added On",
-          accessor: (item) => (
-            
-    
-              <span>{dayjs(item.addedOn).utc().format('DD-MM-YYYY h:mm A')}</span>
-          
-          ),
-          className: "truncate"
-        },
-      ];
+    confirmAction({
+      title: "Undo Record",
+      description: "Are you sure you want to undo this record?",
+      confirmLabel: "Confirm",
+      variant: "primary",
+      onConfirm: async () => {
+        const res = await fetch(`/api/admin/master/deleted-domain`, {
+          method: "PATCH",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ids : [item.id] })
+        });
 
- return (
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.error || "Failed to undo");
+        }
+
+        toast.success("Record undo successfully");
+        mutate(`/api/admin/master/deleted-domain`);
+      }
+    });
+  };
+
+  const columns: Column<DataItem>[] = [
+    {
+      header: "Domain Name",
+      accessor: (item) => (
+        <div className="flex items-center gap-2 group">
+
+          <span className="truncate">{item.domainName}</span>
+
+          <CopyText text={item.domainName} />
+        </div>
+      ),
+    },
+    {
+      header: "Access Token",
+      accessor: (item) => (
+        <div className="flex items-center gap-2 group">
+
+          <span className="truncate">{item.accessToken}</span>
+
+
+          <CopyText text={String(item.accessToken)} />
+        </div>
+      ),
+    },
+
+    {
+      header: "Deleted On",
+      accessor: (item) => (
+
+
+        <span>{dayjs(item.isDeletedOn).utc().format('DD-MM-YYYY h:mm A')}</span>
+
+      ),
+      className: "truncate"
+    },
+  ];
+
+  return (
     <section className="p-4">
 
       <div className="flex justify-end py-2 px-3">
@@ -159,7 +154,7 @@ export default function Page() {
 
       <div >
         <DataTableComponent
-          title="Active Domains"
+          title="Deleted Domains"
           columns={columns}
           data={data?.data ?? []}
           selectedRows={selectedRows}
@@ -167,7 +162,9 @@ export default function Page() {
           placeholder="Seach By Domain"
           onUndo={handleUndo}
           undoById={(item) => handleUndoById(item)}
-          
+          detail={(item)=> `/admin/dashboard/masters/deleted-domains/${item.id}/detail`}
+          onEdit={(item)=> `/admin/dashboard/masters/deleted-domains/${item.id}/edit`}
+
         />
       </div>
     </section>

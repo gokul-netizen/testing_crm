@@ -86,14 +86,20 @@ export async function POST(req: Request) {
 
     } catch (error: any) {
         logger.error({
-            message: error.message,
-            error: error.message,
-        }, "CREATE_SUBUSER_ERROR");
+
+            message: "Fail to create sub user",
+            file: "api/user/user-management/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
     try {
 
         const decoded = await userSession();
@@ -132,10 +138,15 @@ export async function GET(request: Request) {
     } catch (error: any) {
 
         logger.error({
-            message: error?.message,
-            stack: error?.stack,
-            error,
-        }, "Error occured when fetching subuser ");
+
+            message: "Fail to list all sub user",
+            file: "api/user/user-management/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json(
             { message: "Internal Server Error" },
             { status: 500 }

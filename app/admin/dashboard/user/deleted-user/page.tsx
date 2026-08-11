@@ -24,7 +24,7 @@ type DataItem = {
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/admin-deleted/user", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/user-management/deleted-user", fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     if (isLoading)
@@ -46,7 +46,7 @@ export default function Page() {
           header: "Name",
           accessor: (item) => (
             <div className="flex items-center gap-2 group">
-              <Link href={`/admin/dashboard/user/adduser/${item.id}/detail`}>
+              <Link href={`/admin/dashboard/user/deleted-user/${item.id}/detail`}>
                 <span className="truncate">{item.name}</span>
               </Link>
               <CopyText text={item.name} />
@@ -57,7 +57,7 @@ export default function Page() {
           header: "email",
           accessor: (item) => (
             <div className="flex items-center gap-2 group">
-              <Link href={`/admin/dashboard/user/adduser/${item.id}/detail`}>
+              <Link href={`/admin/dashboard/user/deleted-user/${item.id}/detail`}>
                 <span className="truncate">{item.email}</span>
               </Link>
               <CopyText text={item.email} />
@@ -69,7 +69,7 @@ export default function Page() {
         {
           header: "Added On",
           accessor: (item) => (
-            <Link href={`/admin/dashboard/user/adduser/${item.id}/detail`}>
+            <Link href={`/admin/dashboard/user/deleted-user/${item.id}/detail`}>
     
               <span>{dayjs(item.isDeletedOn).utc().format('DD-MM-YYYY h:mm A')}</span>
             </Link>
@@ -92,7 +92,7 @@ export default function Page() {
             confirmLabel: "Confirm",
             variant: "primary",
             onConfirm: async () => {
-                const res = await fetch(`/api/admin-deleted/user`, {
+                const res = await fetch(`/api/admin/user-management/deleted-user`, {
                     method: "PATCH",
                     headers: {
                         'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export default function Page() {
                 }
 
                 toast.success("Record undo successfully");
-                mutate(`/api/admin-deleted/user`);
+                mutate(`/api/admin/user-management/deleted-user`);
             }
         });
     };
@@ -118,7 +118,7 @@ export default function Page() {
           confirmLabel: "Confirm",
           variant: "primary",
           onConfirm: async () => {
-            const res = await fetch(`/api/admin-deleted/user`, {
+            const res = await fetch(`/api/admin/user-management/deleted-user`, {
               method: "PATCH",
               headers: {
                 'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ export default function Page() {
             }
     
             toast.success("Record restored successfully");
-            mutate(`/api/admin-deleted/user`);
+            mutate(`/api/admin/user-management/deleted-user`);
           },
         });
       };
@@ -156,6 +156,8 @@ export default function Page() {
                 placeholder="Seach By Name"
                 onUndo={handleUndo}
                 undoById={(item) => handleUndoById(item)}
+                onEdit={(item) => `/admin/dashboard/user/deleted-user/${item.id}/edit`}
+                detail={(item) => `/admin/dashboard/user/deleted-user/${item.id}/detail`}
             />
         </section>
     )

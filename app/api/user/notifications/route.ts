@@ -9,7 +9,7 @@ dayjs.extend(customParseFormat);
 
 
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
     try {
 
         const decoded = await userSession();
@@ -66,7 +66,15 @@ export async function GET(request: Request) {
         return NextResponse.json({ data: totalInquiry, message: "Successfully fetch data" }, { status: 200 });
 
     } catch (error: any) {
-        logger.error(error.message);
+        logger.error({
+
+            message: "Fail to get the notification",
+            file: "api/user/notifications/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

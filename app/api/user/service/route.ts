@@ -52,9 +52,15 @@ export async function POST(req: Request) {
 
     } catch (error: any) {
         logger.error({
-            message : "Error when creating new service app/api/user/service",
-            error : error.message
+
+            message: "Fail to add new service",
+            file: "api/user/service/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
+
         return NextResponse.json({ error: error.message }, { status: 500 })
 
     }
@@ -94,9 +100,15 @@ export async function GET(req: Request) {
         return NextResponse.json(service, { status: 200 });
     } catch (error: any) {
         logger.error({
-            message : "Error when fetching service app/api/user/service",
-            error : error.message
+
+            message: "Fail to get service",
+            file: "api/user/service/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
         });
+
         return NextResponse.json({ error: error.message }, { status: 500 })
 
     }

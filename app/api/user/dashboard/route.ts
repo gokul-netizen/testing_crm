@@ -14,16 +14,13 @@ dayjs.extend(customParseFormat);
 
  
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
     try {
 
 
         const decoded = await userSession();
         const userId = decoded?.id;
         const userType = decoded?.userType;
-
- 
-        
      
 
         const today = dayjs();
@@ -93,7 +90,18 @@ export async function GET(request: Request) {
         return NextResponse.json({ totalInquiry, todayFollowup, upComing, pending, notInterested, closed, totalTodayActivityCount });
 
     } catch (error: any) {
-        logger.error({ error: error.message }, "Failed to get count of inquiries");
+        
+        logger.error({
+
+            message: "Fail to get count of followups ",
+            file: "api/user/dashboard/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
+
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

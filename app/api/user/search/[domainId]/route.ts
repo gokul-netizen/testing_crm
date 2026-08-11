@@ -86,7 +86,17 @@ export async function GET(req: Request, { params }: Props) {
         return NextResponse.json(data, { status: 200 });
 
     } catch (error: any) {
-        logger.error({ error: error.message }, "error when adding service");
+        
+        logger.error({
+
+            message: "Fail to search the inquiry",
+            file: "api/user/search/[domainId]/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

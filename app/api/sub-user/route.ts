@@ -30,7 +30,17 @@ export async function GET(req: Request) {
         });
         return NextResponse.json(profile, { status: 200 })
     } catch (error: any) {
-        logger.error("Error when getting user profile", error.message)
+       
+        logger.error({
+            
+            message: "Fail to get user profile",
+            file: "api/sub-user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }
@@ -81,16 +91,25 @@ export async function PUT(req: Request) {
             updatedData.user_image = existingUser.user_image;
         }
 
-        const updatedUser = await prisma.user.update({
+        await prisma.user.update({
             where: { id: Number(userId) },
             data: updatedData
         });
 
-        return NextResponse.json(updatedUser, { status: 200 });
+        return NextResponse.json({message : "Profile Update Successfully"}, { status: 200 });
 
-    } catch (error) {
-        logger.error(error);
-        return NextResponse.json({ error: error });
+    } catch (error : any ) {
+
+        logger.error({
+            
+            message: "Fail to update user profile",
+            file: "api/sub-user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+        });
+
+        return NextResponse.json({ message: "Something went wrong" }, {status : 500});
     }
 }
 

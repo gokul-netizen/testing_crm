@@ -13,7 +13,7 @@ export default function Page() {
 
     const params = useParams();
     const id = params.id;
-    const { data, error, isLoading } = useSWR(`/api/days/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/inquiries/view/${id}`, fetcher);
 
 
     if (isLoading)

@@ -1,4 +1,5 @@
 import { userSession } from "@/lib/jwt";
+import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -43,7 +44,19 @@ export async function GET(req: Request, { params }: ParamsProps) {
         );
 
     } catch (error) {
-        console.error("Error fetching inquiries:", error);
+       
+
+
+        logger.error({
+            
+            message: "Fail to get the assign names",
+            file: "api/sub-user/inquiry/view/[domainId]/assign-names/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

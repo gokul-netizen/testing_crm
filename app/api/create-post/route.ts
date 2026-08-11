@@ -55,11 +55,19 @@ export async function POST(req: Request) {
       }
     });
 
-    logger.info({ name : result.name }, "Succesfully posted");
-    
+    logger.info({ name: result.name }, "Succesfully posted");
+
     return NextResponse.json({ message: "Created post successfully" });
   } catch (error) {
-    logger.error(error, "Internal server error during inquiry processing");
+    logger.error({
+
+      message: "Fail to create post",
+      file: "api/create-post/route.ts",
+      method: req.method,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+
+    });
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

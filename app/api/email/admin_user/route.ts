@@ -52,7 +52,7 @@ export async function GET(req: Request) {
                 distinct: ["inquiryID"],
                 select: { date: true, followUpStatus: true, inquiryID: true }
             });
- 
+
 
             const todayFollowup = followups.filter((f: any) => f.date && dayjs(f.date, "DD-MM-YYYY").isSame(today, "day")).length;
             const upComing = followups.filter((f: any) => f.date && dayjs(f.date, "DD-MM-YYYY").isAfter(today, "day")).length;
@@ -73,8 +73,16 @@ export async function GET(req: Request) {
 
         return NextResponse.json({ message: "Email sent to admin user" }, { status: 200 });
 
-    } catch (error:any) {
-        logger.error({error : error.message},"Failed to send email's to admin user");
+    } catch (error: any) {
+        logger.error({
+
+            message: "Fail to send every day email to user admin",
+            file: "api/email/admin_user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
         return NextResponse.json({ message: "failed to send email's to admin user" }, { status: 500 })
     }
 }

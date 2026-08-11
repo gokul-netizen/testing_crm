@@ -119,7 +119,8 @@ export default function DataTableComponent<T extends { [key: string]: any }>({
         item?.service?.toLowerCase().includes(q) ||
         item?.username?.toLowerCase().includes(q) ||
         item?.jobTitle?.toLowerCase().includes(q) ||
-        item?.domainName?.toLowerCase().includes(q)
+        item?.domainName?.toLowerCase().includes(q) ||
+        item?.source?.toLowerCase().includes(q)
 
       );
     }

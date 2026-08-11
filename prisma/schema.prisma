@@ -39,9 +39,6 @@ model User {
  
   designation     Designation[]
   followups Followup[]
-
- 
-   
 }
 
 model InquiryDomain {
@@ -144,6 +141,13 @@ model Source {
   id        Int      @id @default(autoincrement())
   source    String   @unique
   status    String   @default("Active")
+  isDeleted  Boolean @default(false)
+  isDeletedOn  DateTime?
+  isDeletedBy  Int?
+
+  isUpdateOn    DateTime?
+  isUpdatedBy   Int?
+  
   createdAt DateTime @default(now())
 }
 

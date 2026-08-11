@@ -1,3 +1,4 @@
+import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -8,10 +9,10 @@ interface ParamsProps {
 }
 
 
-export async function GET(request: Request, { params }: ParamsProps) {
+export async function GET(req: Request, { params }: ParamsProps) {
   try {
 
-    const {domainId}  = await params;
+    const { domainId } = await params;
 
     const response = await prisma.domainResponse.findMany({
       where: {
@@ -25,15 +26,15 @@ export async function GET(request: Request, { params }: ParamsProps) {
         phone: true,
         followUpStatus: true,
         createdAt: true,
-        service : true,
-         
+        service: true,
+
         followups: {
           select: {
             date: true,
             time: true,
-            createdAt : true,
-            remarks : true,
-            assignToName : true,
+            createdAt: true,
+            remarks: true,
+            assignToName: true,
             followUpStatus: true,
           },
           orderBy: {
@@ -44,8 +45,8 @@ export async function GET(request: Request, { params }: ParamsProps) {
           select: {
             assignDate: true,
             assignTime: true,
-            createdAt : true,
-            remarks : true
+            createdAt: true,
+            remarks: true
           },
           orderBy: {
             createdAt: "desc"
@@ -60,7 +61,16 @@ export async function GET(request: Request, { params }: ParamsProps) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("API Error:", error);
+    logger.error({
+
+      message: "Fail to get inquiry",
+      file: "api/user/inquiry/view/[domainId]/route.ts",
+      method: req.method,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+
+    });
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

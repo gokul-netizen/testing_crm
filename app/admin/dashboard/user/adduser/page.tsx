@@ -5,9 +5,7 @@ import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import { confirmAction } from "@/app/components/ConfirmSooner";
 import { toast } from "sonner";
-import { updateUserStatus } from "@/lib/update-status";
 import SpinnerCircle4 from "@/components/spinner-10";
-import { exportExcelData } from "@/lib/export-excel-data";
 import DataTableComponent, { Column } from "@/app/components/DataTable";
 import Link from "next/link";
 import CopyText from "@/app/components/CopyText";
@@ -16,14 +14,12 @@ import utc from "dayjs/plugin/utc";
 import { AddUser } from "./add-user";
 dayjs.extend(utc);
 
-
-
 type DataItem = {
   id: number;
   name: string;
   email: string;
   status: string;
-  addedOn: string;
+  added_on: string;
   inquiryDomain: { domainName: string };
 };
 
@@ -34,7 +30,7 @@ export default function Page() {
   const [selectedRows, setSelectedRows] = useState<Record<number, boolean>>({});
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const { data, error, isLoading } = useSWR("/api/add-user", fetcher);
+  const { data, error, isLoading } = useSWR("/api/admin/user-management/add-user", fetcher);
 
   if (isLoading) return <SpinnerCircle4 />;
   if (error) return <p className="p-4 text-red-500">Error loading data</p>;
@@ -43,40 +39,26 @@ export default function Page() {
     return Object.keys(selectedRows).filter((id) => selectedRows[Number(id)]).map(Number)
   }
 
-
-  const handleDelete = async (item: DataItem) => {
-    confirmAction({
-      title: `Delete user "${item.name}"?`,
-      description: "This action cannot be undone.",
-      confirmLabel: "Delete",
-      variant: "danger",
-      onConfirm: async () => {
-        const res = await fetch(`/api/add-user/${item.id}`, {
-          method: "DELETE",
-        });
-
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || "Failed to delete user");
-        }
-
-        toast.success("Deleted successfully");
-        mutate("/api/add-user");
-      },
-    });
-  };
-
   const handleActive = async () => {
     const ids = getSelectedIds();
     if (ids.length === 0) {
       return toast.error("Selection Required", {
-        description: "Please select at least one record to update status.",
+        description: "Please select at least one record to update.",
       });
     }
     try {
-      await updateUserStatus(ids, "Active");
-      mutate("/api/add-user");
+
+      const response = await fetch(`/api/admin/user-management/add-user`,{
+       method: "PATCH",
+       body: JSON.stringify({ ids, status : "Active"}),
+      });
+
+      if (!response.ok){
+        toast.error("Error occured. Can't delete the user");
+      }
+
       setSelectedRows({});
+      mutate("/api/admin/user-management/add-user");
       toast.success("Status updated successfully");
     } catch (error) {
       toast.error("Failed to update status");
@@ -91,41 +73,70 @@ export default function Page() {
       });
     }
     try {
-      await updateUserStatus(ids, "Blocked");
-      mutate("/api/add-user");
+
+      const response = await fetch(`/api/admin/user-management/add-user`,{
+       method: "PATCH",
+       body: JSON.stringify({ ids, status : "Blocked"}),
+      });
+
+      if (!response.ok){
+        toast.error("Error occured. Can't delete the user");
+      }
+
       setSelectedRows({});
+      mutate("/api/admin/user-management/add-user");
       toast.success("Status updated successfully");
     } catch (error) {
       toast.error("Failed to update status");
     }
   };
 
-  const handleAllDelete = async () => {
+  const handleDelete = async () => {
     const ids = getSelectedIds();
     if (ids.length === 0) return toast.error("No users selected");
 
     confirmAction({
-      title: `Are you sure you want to delete ${ids.length} users?`,
-      description: "This will remove them from the database forever.",
+      title: `Are you sure you want to delete the users?`,
+      description: "",
       confirmLabel: "Delete All",
       variant: "danger",
       onConfirm: async () => {
-        const res = await fetch(`/api/admin-deleted/user/user-delete`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+        const res = await fetch(`/api/admin/user-management/add-user`, {
+          method: "DELETE",
           body: JSON.stringify({ ids }),
         });
 
         if (!res.ok) throw new Error("Failed to delete users");
 
-        mutate("/api/add-user");
+        mutate("/api/admin/user-management/add-user");
         setSelectedRows({});
-        toast.success(`${ids.length} users deleted`);
+        toast.success(`Users Deleted Successfully`);
       },
     });
   };
 
+  const handleDeleteUserById = async (item: DataItem) => {
+    confirmAction({
+      title: `Delete user "${item.name}"?`,
+      description: "",
+      confirmLabel: "Delete",
+      variant: "danger",
+      onConfirm: async () => {
+        const res = await fetch(`/api/admin/user-management/add-user`, {
+          method: "DELETE",
+          body : JSON.stringify({ids : [item.id]})
+        });
 
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || "Failed to delete user");
+        }
+
+        mutate("/api/admin/user-management/add-user");
+        toast.success("Deleted Successfully");
+      },
+    });
+  };
 
   const columns: Column<DataItem>[] = [
     {
@@ -165,7 +176,7 @@ export default function Page() {
       accessor: (item) => (
         <Link href={`/admin/dashboard/user/adduser/${item.id}/detail`}>
 
-          <span>{dayjs(item.addedOn).utc().format('DD-MM-YYYY h:mm A')}</span>
+          <span>{dayjs(item.added_on).utc().format('DD-MM-YYYY h:mm A')}</span>
         </Link>
       ),
       className: "truncate"
@@ -184,10 +195,10 @@ export default function Page() {
         detail={(item) => `/admin/dashboard/user/adduser/${item.id}/detail`}
         placeholder="Seach By Name"
         onAdd={() => setOpenDrawer(true)}
-        onDelete={handleAllDelete}
+        onDelete={handleDelete}
         onBlock={handleBlock}
         onActivate={handleActive}
-        deleteById={(item) => handleDelete(item)}
+        deleteById={(item) => handleDeleteUserById(item)}
       />
 
 

@@ -1,3 +1,4 @@
+import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -38,6 +39,16 @@ export async function POST(req: Request) {
         return NextResponse.json({ exist: false }, { status: 200})
 
     } catch (error) {
+        logger.error({
+
+            message: "Fail to check inquiry exist ",
+            file: "api/user/inquiry/inquiry-exist/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({exist : false} , {status : 200})
     }
 }

@@ -81,13 +81,20 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "User created successfully" }, { status: 201 });
 
   } catch (error: any) {
-    logger.error(error.message, "Something went wrong when creating the main user");
+   logger.error({
+
+            message: "Fail to add user admin",
+            file: "api/add-user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
 
-
-export async function GET() {
+export async function GET(req:Request) {
   try {
     const users = await prisma.user.findMany({
       where: { isDeleted: false },
@@ -110,11 +117,18 @@ export async function GET() {
 
     return NextResponse.json(users, { status: 200 });
   } catch (error) {
-    console.error("an error occurred", error);
+    logger.error({
+
+            message: "Fail to get user admin",
+            file: "api/add-user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
-
 
 export async function PATCH(req: Request) {
 
@@ -145,7 +159,15 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ message: "Status updated successfully" }, { status: 200 })
 
   } catch (error) {
-    console.error("Error while updating user status");
+    logger.error({
+
+            message: "Fail to update the follow up ",
+            file: "api/add-user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
     return NextResponse.json({ error: error }, { status: 500 })
   }
 

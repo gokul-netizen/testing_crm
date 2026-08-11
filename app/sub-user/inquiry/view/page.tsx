@@ -33,6 +33,7 @@ export default function Page() {
         if (!data) return [];
         return Array.isArray(data) ? data : data?.subUsers || [];
     }, [data]);
+    
 
     useEffect(() => {
         if (domainList.length === 1) {

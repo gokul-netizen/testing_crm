@@ -3,7 +3,7 @@ import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(req: Request) {
     try {
 
         const decoded = await userSession();
@@ -84,7 +84,16 @@ export async function GET(request: Request) {
 
 
     } catch (error: any) {
-        logger.error("Error in total inquiries", error.message);
+        logger.error({
+
+            message: "Fail to get total followups ",
+            file: "api/user/dashboard/total-followups/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }

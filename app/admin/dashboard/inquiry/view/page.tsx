@@ -16,11 +16,15 @@ dayjs.extend(utc);;
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 type DataItem = {
+
     id: number;
-    count: number;
     domainName: string;
-    logo: string;
-};
+    logo: string | null;
+    _count: { domainResponse: number; };
+
+    };
+
+
 
 
 export default function DomainsPage() {
@@ -28,7 +32,7 @@ export default function DomainsPage() {
 
 
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
-    const { data, error, isLoading } = useSWR("/api/days", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/inquiries/view", fetcher);
 
     if (isLoading)
         return <SpinnerCircle4 />;
@@ -72,7 +76,7 @@ export default function DomainsPage() {
                     <Link href={`/admin/dashboard/inquiry/view/${item.id}`}
                      onClick={() => handleDomainClick(item)}
                     >
-                        <span className="truncate">{item.count}</span>
+                        <span className="truncate">{item._count.domainResponse}</span>
 
                     </Link>
 
@@ -91,7 +95,7 @@ export default function DomainsPage() {
                 <DataTableComponent
                     title="Domian List"
                     columns={columns}
-                    data={data ?? []}
+                    data={data?.data ?? []}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     placeholder="Seach By Domain Name"

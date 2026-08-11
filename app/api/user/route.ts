@@ -1,80 +1,10 @@
 import { prisma } from "@/lib/prisma";
-import { SignJWT } from "jose";
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import { getCurrentUTCFromIST } from "@/lib/date-time";
 import { userSession } from "@/lib/jwt";
 import logger from "@/lib/logs";
 import { uploadFile } from "@/lib/uploadFile";
 
-export async function POST(req: Request) {
-    try {
-        const body = await req.json();
-        const { username, password } = body;
-
-        if (!username || !password) {
-            return NextResponse.json({ error: "All fields are required" }, { status: 400 });
-        }
-
-        const user = await prisma.user.findUnique({
-            where: { username }
-        });
-
-        if (!user) {
-            return NextResponse.json({ error: "Invalid username " }, { status: 401 });
-        }
-
-        const hashedPassword = crypto.createHash("md5").update(password).digest("hex");
-
-        if (hashedPassword !== user.password) {
-            return new Response(JSON.stringify({ error: "Invalid  password" }), { status: 401 });
-        }
-
-        const JWT_SECRET = process.env.JWT_SECRET;
-        if (!JWT_SECRET) throw new Error("JWT_SECRET is not defined");
-
-        const secret = new TextEncoder().encode(JWT_SECRET);
-
-        const token = await new SignJWT({ id: user.id, username: user.username })
-            .setProtectedHeader({ alg: "HS256" })
-            .setExpirationTime("7h")
-            .setSubject(user.id.toString())
-            .sign(secret);
-
-
-        await prisma.user.update({
-            where: { id: user.id },
-            data: {
-                last_login: getCurrentUTCFromIST(),
-                last_loginip: req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "127.0.0.1"
-            },
-        });
-
-
-        const response = NextResponse.json({
-            success: true,
-            message: "Login successful",
-            user: {
-                id: user.id,
-                username: user.username,
-            },
-        }, { status: 200 });
-
-        response.cookies.set("token", token, {
-            httpOnly: true,
-            path: "/",
-            maxAge: 7 * 24 * 60 * 60,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-        });
-
-        return response;
-
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
-    }
-}
 
 export async function GET(req: Request) {
     try {
@@ -101,7 +31,15 @@ export async function GET(req: Request) {
         });
         return NextResponse.json(profile, { status: 200 })
     } catch (error: any) {
-        logger.error("Error when getting user profile", error.message)
+        logger.error({
+
+            message: "Fail to get  user profile ",
+            file: "api/user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
         return NextResponse.json({ error: error.message }, { status: 500 })
     }
 }
@@ -160,7 +98,16 @@ export async function PUT(req: Request) {
         return NextResponse.json(updatedUser, { status: 200 });
 
     } catch (error) {
-        logger.error(error);
+        logger.error({
+
+            message: "Fail to get update user profile ",
+            file: "api/user/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: error });
     }
 }

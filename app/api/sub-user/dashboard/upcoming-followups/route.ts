@@ -62,7 +62,7 @@ export async function GET(req: Request) {
         });
 
         const upcoming = inquiries
-            .map((inquiry : any) => {
+            .map((inquiry: any) => {
                 const latestFollowup = inquiry.followups[0];
                 if (!latestFollowup) return null;
 
@@ -86,12 +86,12 @@ export async function GET(req: Request) {
                     }
                 };
             })
-            .filter((item : any): item is NonNullable<typeof item> => {
+            .filter((item: any): item is NonNullable<typeof item> => {
                 if (!item || !item.date) return false;
                 const itemDate = dayjs(item.date, "DD-MM-YYYY");
                 return itemDate.isValid() && itemDate.isAfter(today, "day");
             })
-            .sort((a : any, b : any) => {
+            .sort((a: any, b: any) => {
                 const dateA = dayjs(a.date, "DD-MM-YYYY");
                 const dateB = dayjs(b.date, "DD-MM-YYYY");
                 return dateA.diff(dateB);
@@ -100,7 +100,18 @@ export async function GET(req: Request) {
         return NextResponse.json({ upcoming }, { status: 200 });
 
     } catch (error: any) {
-        logger.error("Error when getting count of inquiries in sub user", error);
+
+
+        logger.error({
+
+            message: "Fail to get upcoming inquiry ",
+            file: "api/sub-user/dashboard/upcoming-followups/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+
+        });
+
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

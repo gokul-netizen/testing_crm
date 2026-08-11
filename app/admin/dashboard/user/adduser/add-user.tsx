@@ -43,9 +43,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
         emailTriggerOption: "Yes"
     });
 
-    const { data, error, isLoading } = useSWR("/api/drop-down-domain", fetcher);
-
-
+    const { data, error, isLoading } = useSWR("/api/admin/drop-down-domain", fetcher);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -78,7 +76,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
         }
 
         try {
-            const res = await fetch("/api/add-user", {
+            const res = await fetch("/api/admin/user-management/add-user", {
                 method: "POST",
                 body: formData,
                 credentials: "include",
@@ -92,8 +90,8 @@ export function AddUser({ open, onClose }: AddUserProps) {
             }
 
             toast.success(data.message || "User created successfully!");
-            mutate(`/api/add-user`);
-            mutate(`/api/drop-down-domain`);
+            mutate(`/api/admin/user-management/add-user`);
+            mutate(`/api/admin/drop-down-domain`);
 
             setForm({
                 roleId: "",
@@ -158,7 +156,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
 
                 <form onSubmit={handleSubmit} className="space-y-4 px-6 py-4">
 
-                    {/* Role ID */}
+             
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Role ID</label>
                         <div className="flex items-center border rounded">
@@ -176,7 +174,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* Name */}
+            
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Name</label>
                         <div className="flex items-center border rounded">
@@ -194,7 +192,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* Username */}
+            
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Username</label>
                         <div className="flex items-center border rounded">
@@ -212,7 +210,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* Email */}
+        
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Email</label>
                         <div className="flex items-center border rounded">
@@ -230,7 +228,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* Email Ration buttons */}
+               
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Wants to trigger email notification for this profile?</label>
                         <div className="flex gap-4">
@@ -259,7 +257,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* Password */}
+             
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Password</label>
                         <div className="flex items-center border rounded">
@@ -277,7 +275,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* Mobile Number */}
+             
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Mobile No</label>
                         <div className="flex items-center border rounded">
@@ -294,7 +292,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* User Image (File Upload) */}
+                
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">User Image</label>
                         <div className="flex items-center border rounded px-3 py-2">
@@ -308,7 +306,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* Joining Date */}
+              
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Joining Date</label>
                         <div className="flex items-center border rounded">
@@ -325,7 +323,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </div>
                     </div>
 
-                    {/* Status */}
+          
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Status</label>
                         <div className="flex gap-4">
@@ -356,7 +354,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
 
 
 
-                    {/* Domains */}
+        
                     <div>
                         <label className="block text-gray-500 text-sm font-medium mb-1">Select Domains</label>
                         <MultiSelect
@@ -379,7 +377,7 @@ export function AddUser({ open, onClose }: AddUserProps) {
                         </MultiSelect>
                     </div>
 
-                    {/* Buttons */}
+          
                     <div className="flex gap-2 mt-4">
                         <button
                             type="submit"
