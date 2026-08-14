@@ -57,7 +57,7 @@ export default function Page() {
 
     if (error) return <div> Error : {error.message}</div>;
   
-    const tableData: DataItem[] = data?.inquiryDomain?.domainResponse ?? [];
+    
 
 
     const columns: Column<DataItem>[] = [
@@ -197,7 +197,7 @@ export default function Page() {
                 <DataTableComponent
                     title="Closed"
                     columns={columns}
-                    data={tableData}
+                    data={data}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     detail={(item: DataItem) => `/sub-user/closed-followups/${item.id}`}

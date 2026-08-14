@@ -22,9 +22,8 @@ export default function Page() {
     const params = useParams();
     const { id } = params
 
-    const { data, error, isLoading } = useSWR(`/api/active-domain/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/dashboard/active-domain/${id}`, fetcher);
     const detailData = data?.data;
-    
  
 
     useEffect(() => {
@@ -43,7 +42,7 @@ export default function Page() {
      
 
         try {
-            const res = await fetch(`/api/active-domain/${id}`, {
+            const res = await fetch(`/api/admin/dashboard/active-domain/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

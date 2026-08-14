@@ -24,7 +24,7 @@ type DataItem = {
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/active-domain", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard/active-domain", fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     if (isLoading) return <SpinnerCircle4 />

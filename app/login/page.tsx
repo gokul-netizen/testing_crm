@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "sonner";
 import { motion } from "motion/react";
-import {  useUser } from "../context/userContext";
+import { useUser } from "../context/userContext";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [isOtp, setIsOtp] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -24,74 +24,92 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+
     setIsLoading(true);
 
     try {
       const res = await fetch("/api/user-login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ username, password }),
       });
 
       const data = await res.json();
 
-      setUsername(data?.user?.username);
-      setUserImage(data?.user?.image);
-
       if (!res.ok) {
-        setError(data.error || "Invalid username or password ❌");
-      } else if (data.success) {
+        toast.error(data?.message || "Login failed");
+
+        return;
+      }
+
+      setUsername(data?.user?.username || "");
+      setUserImage(data?.user?.image || "");
+
+      toast.success(data?.message || "Login successful");
+
+      if (data.success) {
         const { userType } = data.user;
 
         if (userType === "AdminUser") {
-          router.replace(`/user`);
+          router.replace("/user");
         } else if (userType === "User") {
-          router.replace(`/sub-user`);
+          router.replace("/sub-user");
         }
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError("Connection error. Please try again!");
+      toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSendOtp = async () => {
-    if (phoneNumber.trim().length !== 10) {
+    const phone = phoneNumber.trim();
+
+    if (phone.length !== 10) {
       toast.error("Please enter a valid 10-digit phone number");
       return;
     }
 
-    const res = await fetch(`/api/user-otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ phoneNumber }),
-    });
+    try {
+      const res = await fetch("/api/user-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ phoneNumber: phone }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      toast.error(data.message || "Internal Issues while sending OTP");
-      return;
+      if (!res.ok) {
+        toast.error(data?.message || "Failed to send OTP");
+        return;
+      }
+
+      toast.success(data?.message || "OTP sent successfully");
+
+      setShowOtpVerify(true);
+      setIsOtpButtonDisabled(true);
+
+      setTimeout(() => {
+        setIsOtpButtonDisabled(false);
+      }, 5000);
+
+      setTimeout(() => {
+        otpRef.current?.focus();
+      }, 0);
+    } catch (error) {
+      console.error("Send OTP error:", error);
+      toast.error("Something went wrong. Please try again.");
     }
-
-    toast.success(data.message);
-    setShowOtpVerify(true);
-
-
-    setIsOtpButtonDisabled(true);
-    setTimeout(() => {
-      setIsOtpButtonDisabled(false);
-    }, 5000);
-
-    setTimeout(() => {
-      otpRef.current?.focus();
-    }, 0);
   };
 
   const handleVerifyOtp = async () => {
+
     const res = await fetch(`/api/user-otp/${phoneNumber}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -228,9 +246,7 @@ export default function LoginPage() {
                 </span>
               </div>
 
-              {error && (
-                <p className="text-red-600 mt-2 text-sm font-medium">{error}</p>
-              )}
+
 
               <button
                 type="submit"

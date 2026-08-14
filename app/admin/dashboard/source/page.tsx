@@ -26,7 +26,7 @@ type DataItem = {
 
 export default function Page() {
     const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({});
-    const { data, error, isLoading } = useSWR("/api/source", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard/source", fetcher);
 
     if (isLoading) return <SpinnerCircle4 />;
     if (error) return <p>Failed to load domains </p>;
@@ -76,7 +76,7 @@ export default function Page() {
                 data={data ?? []}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
-                onAdd={() => console.log("Add new domain")}
+               
                 onEdit={(item) => `/admin/dashboard/source/${item.id}/edit`}
                 detail={(item) => `/admin/dashboard/source/${item.id}/detail`}
             />

@@ -24,7 +24,7 @@ type DataItem = {
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/block-user", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard/blocked-user", fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     if (isLoading) return <SpinnerCircle4 />
@@ -70,9 +70,7 @@ export default function Page() {
         },
     ];
 
-    const handleUndo = async () => {
-        console.log("Undo")
-    }
+ 
 
     return (
         <section className="p-4">
@@ -89,12 +87,13 @@ export default function Page() {
             <div >
                 <DataTableComponent
                     title="Blocked Users"
+                    placeholder="Search by name"
                     columns={columns}
                     data={data ?? []}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     onEdit={(item) => `/admin/dashboard/block-user/${item.id}/edit`}
-                    onBlock={handleUndo}
+                 
                     detail={(item) => `/admin/dashboard/block-user/${item.id}/detail`}
                 />
             </div>

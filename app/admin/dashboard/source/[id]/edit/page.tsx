@@ -23,7 +23,7 @@ export default function Page() {
     const [loading, setLoading] = useState(false);
 
     const { data, isLoading } = useSWR(
-        `/api/source/${id}`,
+        `/api/admin/dashboard/source/${id}`,
         fetcher
     );
 
@@ -43,7 +43,7 @@ export default function Page() {
 
         try {
 
-            const res = await fetch(`/api/source/${id}`, {
+            const res = await fetch(`/api/admin/dashboard/source/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ source, status }),

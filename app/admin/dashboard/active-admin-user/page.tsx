@@ -19,21 +19,18 @@ type DataItem = {
     name: string;
     email: string;
     status: string;
-    inquiryDomain : { domainName : string}
+    inquiryDomain: { domainName: string }
     added_on: string;
 };
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/active-admin-user", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard/active-admin-user", fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
-    
+    if (isLoading) return <SpinnerCircle4 />
 
-    if(isLoading) return <SpinnerCircle4/>
-
-    if(error) return <div> Error : {error.message}</div>
-
+    if (error) return <div> Error : {error.message}</div>
 
     const columns: Column<DataItem>[] = [
         {
@@ -41,7 +38,7 @@ export default function Page() {
             accessor: (item) => (
                 <div className="flex items-center gap-2 group">
                     <Link href={`/admin/dashboard/active-admin-user/${item.id}/detail`}><span className="truncate">{item.name}</span></Link>
-                    
+
                     <CopyText text={item.name} />
                 </div>
             ),
@@ -51,68 +48,67 @@ export default function Page() {
             accessor: (item) => (
                 <div className="flex items-center gap-2 group">
                     <Link href={`/admin/dashboard/active-admin-user/${item.id}/detail`}>
-                    
-                    <span className="truncate">{item.email}</span>
+
+                        <span className="truncate">{item.email}</span>
                     </Link>
                     <CopyText text={String(item.email)} />
                 </div>
             ),
         },
-        { header: "Status", accessor: (item)=>(
-            <Link href={`/admin/dashboard/active-admin-user/${item.id}/detail`}>
+        {
+            header: "Status", accessor: (item) => (
+                <Link href={`/admin/dashboard/active-admin-user/${item.id}/detail`}>
 
-                <div className="text-blue-400">{item.status}</div>
-            </Link>
-        ) },
+                    <div className="text-blue-400">{item.status}</div>
+                </Link>
+            )
+        },
 
-        { 
+        {
             header: "Domain",
-            
-            accessor:(item)=>(
-            <Link href={`/admin/dashboard/active-admin-user/${item.id}/detail`}>
 
-                <div>{item.inquiryDomain?.domainName}</div>
-            </Link>
-        ) },
+            accessor: (item) => (
+                <Link href={`/admin/dashboard/active-admin-user/${item.id}/detail`}>
+
+                    <div>{item.inquiryDomain?.domainName}</div>
+                </Link>
+            )
+        },
 
         {
             header: "Added On",
-            accessor: (item) =>(
+            accessor: (item) => (
                 <Link href={`/admin/dashboard/active-admin-user/${item.id}/detail`}>
-                     {dayjs(item.added_on).utc().format('DD-MM-YYYY h:mm A')}
+                    {dayjs(item.added_on).utc().format('DD-MM-YYYY h:mm A')}
                 </Link>
-               ),
+            ),
             className: "truncate"
         },
     ];
 
-    const handleUndo = async()=>{
-        console.log("Undo")
-    }
-
     return (
         <section className="p-4">
-
-
+            
             <div className="flex justify-end py-2 px-3">
-                       <CustomBreadcrumb
-                           paths={[
-                               { label: "Dashboard", href: `/admin/dashboard/` },
-                                { label: "Active Admin   User", isPage: true },
-                           ]}
-                       />
-                       </div>
+                <CustomBreadcrumb
+                    paths={[
+                        { label: "Dashboard", href: `/admin/dashboard/` },
+                        { label: "Active Admin   User", isPage: true },
+                    ]}
+                />
+            </div>
 
             <div >
                 <DataTableComponent
-                title="Active Admin Users"
-                columns={columns}
-                data={data ?? []}
-                selectedRows={selectedRows}
-                setSelectedRows={setSelectedRows}
-                onEdit={(item) => `/admin/dashboard/active-admin-user/${item.id}/edit`}
-                onBlock={handleUndo}
-                detail={(item) => `/admin/dashboard/active-admin-user/${item.id}/detail`}
+                    title="Active Admin Users"
+                    columns={columns}
+                    data={data ?? []}
+                    placeholder="Search name"
+                    selectedRows={selectedRows}
+                    setSelectedRows={setSelectedRows}
+                    onEdit={(item) => `/admin/dashboard/active-admin-user/${item.id}/edit`}
+
+                    detail={(item) => `/admin/dashboard/active-admin-user/${item.id}/detail`}
                 />
             </div>
         </section>

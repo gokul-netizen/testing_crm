@@ -34,7 +34,7 @@ type DataItem = {
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR(`/api/pending`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/dashboard/pending-followup`, fetcher);
 
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 

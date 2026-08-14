@@ -13,10 +13,6 @@ import CustomBreadcrumb from "@/app/components/BreadCrumb";
 
 dayjs.extend(utc);
 
-
-
-
-
 type DataItem = {
     id: number;
     domainName: string;
@@ -28,7 +24,7 @@ type DataItem = {
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/admin-deleted/domain", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard/deleted-domain", fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
 

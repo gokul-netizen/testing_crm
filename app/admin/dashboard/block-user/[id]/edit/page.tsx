@@ -23,7 +23,7 @@ export default function Page() {
     const params = useParams();
     const { id } = params
 
-    const { data, error, isLoading } = useSWR(`/api/active-user/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/dashboard/active-user/${id}`, fetcher);
     const detailData = data?.data;
 
  
@@ -45,7 +45,7 @@ export default function Page() {
         setLoading(true);
         
         try {
-            const res = await fetch(`/api/active-user/${id}`, {
+            const res = await fetch(`/api/admin/dashboard/active-user/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

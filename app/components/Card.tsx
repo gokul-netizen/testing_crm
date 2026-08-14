@@ -31,8 +31,8 @@ export default function StatCard({
 
       
       <div className="flex flex-col gap-1">
-        <h3 className="text-sm md:text-xl font-medium text-[#444050]">{title}</h3>
-        <p className="text-sm md:text-base   text-gray-400">{subTitle1}</p>
+        <h3 className="text-sm md:text-lg font-medium text-[#444050]">{title}</h3>
+        <p className="text-sm md:text-base text-gray-400">{subTitle1}</p>
         {subTitle2 && (
           <p className=" text-base md:text-lg  mt-1">{subTitle2} </p>
         )}

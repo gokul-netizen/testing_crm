@@ -30,15 +30,8 @@ export async function GET(req: Request) {
                 domain_id: domainId.domain,
                 status: 1,
                 followUpStatus: "Not Interested",
-                OR: [
-                    { assignId: userId },
-                    {
-                        AND: [
-                            { assignId: null },
-                            { addedBy: String(userId) }
-                        ]
-                    }
-                ]
+                addedBy: String(userId)
+
             },
             select: {
                 id: true,
@@ -69,6 +62,7 @@ export async function GET(req: Request) {
 
 
         return NextResponse.json(notInterested, { status: 200 });
+        
     } catch (error: any) {
         
         logger.error({

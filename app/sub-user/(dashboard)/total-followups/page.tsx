@@ -195,7 +195,7 @@ export default function Page() {
     const handleDelete = async (inquiryIds: number[]) => {
         try {
 
-            console.log(inquiryIds);
+         
 
             const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
                 method: "DELETE",

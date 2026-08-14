@@ -1,8 +1,7 @@
+
 import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-
-
 
 interface ParamsProps {
   params: Promise<{
@@ -18,7 +17,6 @@ export async function GET(req: Request, { params }: ParamsProps) {
         const user = await prisma.user.findUnique({
             where: {
                 id : Number(id),
-                
             },
             select: {
                 

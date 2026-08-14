@@ -29,6 +29,9 @@ export async function POST(req: Request) {
                 type: true,
                 user_image: true,
                 password: true,
+                status: true,
+                isDeleted: true,
+
             }
         });
 
@@ -36,13 +39,21 @@ export async function POST(req: Request) {
         const userImage = user?.user_image;
 
         if (!user) {
-            return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
+            return NextResponse.json({ message: "Invalid username or password" }, { status: 401 });
         }
 
         const hashedPassword = crypto.createHash("md5").update(password).digest("hex");
 
         if (hashedPassword !== user.password) {
-            return NextResponse.json({ error: "Invalid username or password" }, { status: 401 });
+            return NextResponse.json({ message: "Invalid username or password" }, { status: 401 });
+        }
+
+        if(user.status === "Blocked"){
+            return NextResponse.json({message : "You were blocked by admin"} , {status : 400});
+        }
+
+        if(user.isDeleted){
+            return NextResponse.json({message : "This user is deleted contact admin"} , {status : 400});
         }
 
         const token = await GenerateTokenUser({ id: user.id, username: user.username, userType: user.type, image: user.user_image });
@@ -87,6 +98,6 @@ export async function POST(req: Request) {
             stack: error instanceof Error ? error.stack : undefined,
         });
 
-        return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+        return NextResponse.json({ message : "Something went wrong" }, { status: 500 });
     }
 }

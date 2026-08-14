@@ -15,9 +15,9 @@ dayjs.extend(utc);
 export default function OverView() {
 
     const params = useParams();
-    const { id } = params
+    const { id } = params;
 
-    const { data, error, isLoading } = useSWR(`/api/active-domain/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/dashboard/active-domain/${id}`, fetcher);
 
     const detailData = data?.data;
 
@@ -66,9 +66,7 @@ export default function OverView() {
                                 </div>
                             ))}
                     </div>
-
                 </>
-
 
                 <Link
                     href={`/admin/dashboard/active-domain/`}

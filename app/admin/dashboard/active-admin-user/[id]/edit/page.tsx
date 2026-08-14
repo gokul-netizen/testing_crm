@@ -23,12 +23,8 @@ export default function Page() {
     const params = useParams();
     const { id } = params
 
-    const { data, error, isLoading } = useSWR(`/api/active-user/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/dashboard/active-user/${id}`, fetcher);
     const detailData = data?.data;
-
- 
-    
- 
 
     useEffect(() => {
     if (detailData) {
@@ -36,7 +32,7 @@ export default function Page() {
         setEmail(detailData.email ?? '');
         setStatus(detailData.status ?? '');
         setMobile(detailData.mobile_no ?? '');
-        setIsEmail(detailData.emailTriggerOption ?? false);
+        setIsEmail(detailData.emailTriggerOption === "Yes");
     }
 }, [detailData]);
 
@@ -45,7 +41,7 @@ export default function Page() {
         setLoading(true);
         
         try {
-            const res = await fetch(`/api/active-user/${id}`, {
+            const res = await fetch(`/api/admin/dashboard/active-user/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,7 +50,7 @@ export default function Page() {
                     name,
                     email,
                     status,
-                    emailTriggerOption : isEmail,
+                    emailTriggerOption: isEmail ? "Yes" : "No",
                 }),
             });
 
@@ -70,7 +66,7 @@ export default function Page() {
 
             toast.success('Domain updated successfully');
 
-            router.push(`/admin/dashboard/active-user   `);
+            router.push(`/admin/dashboard/active-admin-user`);
              
         } catch (error: any) {
             toast.error(error.message);
@@ -89,7 +85,7 @@ export default function Page() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
-                    {/* Domain Name */}
+                    
                     <div className="flex flex-col gap-1">
                         <label className="text-gray-500 text-sm">
                              Name
@@ -113,7 +109,7 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* email */}
+             
                     <div className="flex flex-col gap-1">
                         <label className="text-gray-500 text-sm">
                             Email 
@@ -161,7 +157,7 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* Status */}
+               
                     <div className="flex flex-col gap-2">
                         <label className="text-sm text-gray-500">
                             Status
@@ -198,7 +194,7 @@ export default function Page() {
                         </div>
                     </div>
 
-                    {/* email trigger Status */}
+               
                     <div className="flex flex-col gap-2">
                         <label className="text-sm text-gray-500">
                             Email Trigger

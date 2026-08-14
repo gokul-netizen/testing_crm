@@ -71,6 +71,7 @@ model DomainResponse {
   email          String?
   website        String?
   phone          String?
+  address        String?
   phoneSecondary           String?
   response       Json?
   createdAt      DateTime      @default(now())

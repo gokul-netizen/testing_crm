@@ -15,14 +15,14 @@ import { useState } from 'react';
 
 interface Props {
 
-    
- 
+
+
     inquiryId: string | number;
     url?: string;
 
 }
 
-export default function SubUserTimeLine({   inquiryId, url }: Props) {
+export default function SubUserTimeLine({ inquiryId, url }: Props) {
 
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
     const [openAllRemarks, setOpenAllRemarks] = useState(false);
@@ -62,7 +62,7 @@ export default function SubUserTimeLine({   inquiryId, url }: Props) {
                     <button className="text-[#a5a3ae] hover:text-gray-600">
                         <MoreVertical size={20} />
                     </button>
-                    <SubUserFollowUpPanel   inquiryId={inquiryId} />
+                    <SubUserFollowUpPanel inquiryId={inquiryId} />
                 </div>
             </div>
 
@@ -75,15 +75,36 @@ export default function SubUserTimeLine({   inquiryId, url }: Props) {
                     <p><span className="text-white font-semibold">Email:</span> {inquiryDetail.email || "No email"}</p>
                     <p><span className="text-white font-semibold">Added On:</span> {dayjs(inquiryDetail.createdAt).utc().format("DD-MM-YYYY hh : mm A")}</p>
 
+
                 </div>
                 <div>
+
+                    {inquiryDetail.address ? (
+                        <p className="text-white">
+                            <span className="font-semibold">Address:</span>{" "}
+                            <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                                    inquiryDetail.address
+                                )}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+
+                            >
+                                {inquiryDetail.address}
+                            </a>
+                        </p>
+                    ) : (
+                        ""
+                    )}
+
+
                     {
                         inquiryDetail?.followups[0]?.address ? <Link
                             href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(inquiryDetail?.followups[0]?.address)}`}
                             target="_blank"
                             rel="noopener noreferrer"
 
-                        ><span className="text-white font-semibold">Address: {inquiryDetail?.followups[0]?.address}</span> </Link> : ""
+                        ><span className="text-white font-semibold">Visit Address: {inquiryDetail?.followups[0]?.address}</span> </Link> : ""
                     }
                 </div>
 
@@ -104,7 +125,7 @@ export default function SubUserTimeLine({   inquiryId, url }: Props) {
                 {timeLine?.length > 0 ? (
                     timeLine.map((item: any, index: number) => (
                         <div key={index} className="flex gap-5 relative group">
-                            
+
                             <div className="flex flex-col items-center">
                                 <div
                                     className={`w-3.5 h-3.5 rounded-full mt-1.5 z-10 ${getDotColor(index)} border-2 border-white ring-1 ring-gray-100`}
