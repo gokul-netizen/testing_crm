@@ -10,6 +10,7 @@ import { MdPendingActions } from "react-icons/md";
 import { TbXboxX } from "react-icons/tb";
 import { FiInbox } from "react-icons/fi";
 import { FaUserGroup } from "react-icons/fa6";
+import { IoNewspaperOutline } from "react-icons/io5";
 
 interface IncomingData {
 
@@ -20,6 +21,7 @@ interface IncomingData {
     pending : number;
     upcoming : number;
     assign : number;
+    assignedFollowupCount : number;
 
 }
 
@@ -35,6 +37,7 @@ export default function Page() {
             <div className="space-y-6 max-w-[1200px] mx-auto" >
 
                 <div className="grid grid-cols-2  md:grid-cols-3 lg:grid-cols-4  gap-4">
+                    
                     <Link href={`/sub-user/total-followups`}>
                         <StatCard
                             icon={FiInbox }
@@ -46,6 +49,19 @@ export default function Page() {
                              
                         />
                     </Link>
+
+                    <Link href={`/sub-user/new-assigned-followups`}>
+                        <StatCard
+                            icon={IoNewspaperOutline  }
+                            iconColor="text-blue-600"
+                            iconBgColor="bg-blue-100"
+                            title="New Assigned Follow-up"
+                            subTitle1="Latest Update"
+                            subTitle2={data?.assignedFollowupCount}
+                             
+                        />
+                    </Link>
+
 
                     <Link href={`/sub-user/todays-followups`}>
                         <StatCard

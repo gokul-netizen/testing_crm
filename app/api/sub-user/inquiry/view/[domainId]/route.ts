@@ -111,7 +111,7 @@ export async function POST(req: Request, { params }: { params: Promise<UserId> }
             normalizedData[cleanKey] = value;
         });
 
-        const { companyname, name, email, website, phone, secondaryphonenumber, source, service, followup, date, time, remarks, assign, assigntype, assignname, ispublic, reminder, contactmode, address } = normalizedData;
+        const { companyname, name, email, website, phone, secondaryphonenumber, source, service, followup, date, time, remarks, assign, assigntype, assignname, ispublic, reminder, contactmode, address, clientaddress } = normalizedData;
 
 
         const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
@@ -173,6 +173,7 @@ export async function POST(req: Request, { params }: { params: Promise<UserId> }
                 followUpStatus: followup.join(", "),
                 assignId: assignId,
                 addedType: "User",
+                address : clientaddress,
                 response: {
                     body: formattedBody,
                     Domain_Name: domain.domainName,

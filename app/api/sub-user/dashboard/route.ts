@@ -8,15 +8,17 @@ import { userSession } from "@/lib/jwt";
 
 dayjs.extend(customParseFormat);
 
-export async function GET(req: Request ) {
+export async function GET(req: Request) {
 
 
     let todayFollowup = 0;
     let upcoming = 0;
     let pending = 0;
-    let notInterested = 0;
-    let closed = 0;
+
+
     let totalInquiries = 0;
+
+
 
 
     const decoded = await userSession();
@@ -27,75 +29,44 @@ export async function GET(req: Request ) {
 
     try {
 
-
-        const follows = await prisma.user.findUnique({
+        const follows = await prisma.domainResponse.findMany({
             where: {
-                id: userId,
-                emailTriggerOption: "Yes",
-                status: "Active",
-                type: userType
+                status: 1,
+                OR: [
+                    { assignId: userId },
+                    {
+                        AND: [
+                            { assignId: null },
+                            { addedBy: String(userId) }
+                        ]
+                    }
+                ]
             },
             select: {
                 id: true,
-                username: true,
-                name: true,
-                mobile_no: true,
-                inquiryDomain: {
+
+                followups: {
+                    distinct: ["inquiryID"],
+                    orderBy: {
+                        createdAt: "desc"
+                    },
+
                     select: {
                         id: true,
-                        domainName: true,
+                        date: true,
+                        time: true,
+                        followUpStatus: true,
 
-                        domainResponse: {
-                            where: {
-                                status: 1,
-                                OR: [
-                                    { assignId: userId },
-                                    {
-                                        AND: [
-                                            { assignId: null },
-                                            { addedBy: String(userId) }
-                                        ]
-                                    }
-                                ]
-                            },
-                            select: {
-                                id: true,
-
-                                followups: {
-                                    distinct: ["inquiryID"],
-                                    orderBy: {
-                                        createdAt: "desc"
-                                    },
-
-                                    select: {
-                                        id: true,
-                                        date: true,
-                                        time: true,
-                                        followUpStatus: true,
-
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
-            },
+            }
         });
 
-
-        for (const domainResponse of follows.inquiryDomain.domainResponse) {
+        for (const domainResponse of follows) {
 
             totalInquiries += domainResponse.followups.length;
 
             for (const followup of domainResponse.followups) {
-
-                if (followup.followUpStatus === "Not Interested") {
-                    notInterested++;
-                }
-
-                if (followup.followUpStatus === "Closed") {
-                    closed++;
-                }
 
                 if (!followup.date) continue;
 
@@ -112,57 +83,41 @@ export async function GET(req: Request ) {
             }
         }
 
-
-        const assigned = await prisma.user.findUnique({
+        const assign = await prisma.domainResponse.count({
             where: {
-                id: userId,
-                emailTriggerOption: "Yes",
-                status: "Active",
-                type: "User"
-            },
-            select: {
-                id: true,
-                username: true,
-                name: true,
-                mobile_no: true,
-                inquiryDomain: {
-                    select: {
-                        id: true,
-                        domainName: true,
-
-                        domainResponse: {
-                            where: {
-                                status: 1,
-                                addedBy: String(userId),
-                                assignId: {
-                                    not: null,
-                                },
-                            },
-                            select: {
-                                id: true,
-
-                                followups: {
-                                    distinct: ["inquiryID"],
-                                    orderBy: {
-                                        createdAt: "desc"
-                                    },
-
-                                    select: {
-                                        id: true,
-                                        followUpStatus: true
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                status: 1,
+                addedBy: String(userId),
+                assignId: {
+                    not: null,
+                },
             },
         });
 
+        const assignedFollowupCount = await prisma.domainResponse.count({
+            where: {
+                status: 1,
+                assignId: userId,
+                followUpStatus: "Assign To",
+            },
+        });
 
+        const notInterested = await prisma.domainResponse.count({
+            where: {
+                status: 1,
+                addedBy: String(userId),
+                followUpStatus: "Not Interested",
 
-        const assign = assigned?.inquiryDomain?.domainResponse?.length ?? 0;
+            },
+        });
 
+        const closed = await prisma.domainResponse.count({
+            where: {
+                status: 1,
+                addedBy: String(userId),
+                followUpStatus: "Closed",
+
+            },
+        });
 
         return NextResponse.json({
             totalInquiries,
@@ -171,14 +126,16 @@ export async function GET(req: Request ) {
             pending,
             notInterested,
             closed,
-            assign
+            assign,
+            assignedFollowupCount
 
         }, { status: 200 });
+
 
     } catch (error: any) {
 
         logger.error({
-            
+
             message: "Fail to get dashboard counts",
             file: "api/sub-user/dashboard/route.ts",
             method: req.method,

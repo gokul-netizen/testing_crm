@@ -21,13 +21,10 @@ export default function Page() {
     const [loading, setLoading] = useState(false);
 
     const params = useParams();
-    const { id } = params
+    const { id } = params;
 
-    const { data, error, isLoading } = useSWR(`/api/active-user/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/dashboard/active-user/${id}`, fetcher);
     const detailData = data?.data;
-
- 
-    
  
 
     useEffect(() => {
@@ -36,7 +33,7 @@ export default function Page() {
         setEmail(detailData.email ?? '');
         setStatus(detailData.status ?? '');
         setMobile(detailData.mobile_no ?? '');
-        setIsEmail(detailData.emailTriggerOption ?? false);
+        setIsEmail(detailData.emailTriggerOption === "Yes");
     }
 }, [detailData]);
 
@@ -45,7 +42,7 @@ export default function Page() {
         setLoading(true);
         
         try {
-            const res = await fetch(`/api/active-user/${id}`, {
+            const res = await fetch(`/api/admin/dashboard/active-user/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -54,7 +51,7 @@ export default function Page() {
                     name,
                     email,
                     status,
-                    emailTriggerOption : isEmail,
+                    emailTriggerOption: isEmail ? "Yes" : "No",
                 }),
             });
 
@@ -69,8 +66,7 @@ export default function Page() {
             mutate(`/api/active-user`);
 
             toast.success('Domain updated successfully');
-
-            router.push(`/admin/dashboard/active-user   `);
+            router.push(`/admin/dashboard/active-user`);
              
         } catch (error: any) {
             toast.error(error.message);
@@ -250,9 +246,7 @@ export default function Page() {
                         Go Back
                         <IoIosArrowRoundBack />
                     </Link>
-
                 </div>
-
             </div>
         </div>
     );

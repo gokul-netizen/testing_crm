@@ -1,83 +1,72 @@
 import { userSession } from "@/lib/jwt";
 import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
+import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 
 
 
- 
 
-export async function GET(req: Request ) {
+
+export async function GET(req: Request) {
     try {
         const decoded = await userSession();
-                const userId = decoded?.id;
-                const userType = decoded?.userType;
+        const userId = decoded?.id;
+        const userType = decoded?.userType;
 
-        const closedFollowups = await prisma.user.findUnique({
+        const closedFollowups = await prisma.domainResponse.findMany({
             where: {
-                id: userId,
+
+                followUpStatus: "Closed",
+                status: 1,
+                addedBy: String(userId)
+
             },
             select: {
                 id: true,
-                inquiryDomain: {
+                name: true,
+                phone: true,
+                createdAt: true,
+                companyName: true,
+                followups: {
+                    where: {
+                        followUpStatus: "Closed",
+                    },
+
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+
+                    take: 1,
+
+
                     select: {
-                        id: true,
-                        domainResponse: {
-                            where: {
-
-                                followUpStatus: "Closed",
-                                status: 1,
-                                OR: [
-                                    { assignId: userId },
-                                    {
-                                        AND: [
-                                            { assignId: null },
-                                            { addedBy: String(userId) }
-                                        ]
-                                    }
-                                ]
-                            },
-                            select: {
-                                id: true,
-                                name: true,
-                                phone: true,
-                                createdAt: true,
-                                companyName: true,
-                                followups: {
-                                    where: {
-                                        followUpStatus: "Closed",
-                                    },
-
-                                    orderBy: {
-                                        createdAt: "desc",
-                                    },
-
-                                    distinct: ["inquiryID"],
-                                    select: {
-                                        date: true,
-                                        time: true,
-                                        remarks: true,
-                                        assignToName: true,
-                                        followUpStatus: true,
-                                        createdAt: true,
-                                        isPublic: true,
-                                        addedBy: true,
-                                        assignTo: true,
-                                    }
-                                }
-                            }
-                        }
+                        date: true,
+                        time: true,
+                        remarks: true,
+                        assignToName: true,
+                        followUpStatus: true,
+                        createdAt: true,
+                        isPublic: true,
+                        addedBy: true,
+                        assignTo: true,
                     }
                 }
             }
         });
 
-         
 
-        return NextResponse.json(closedFollowups, { status: 200 });
+        const sortedClosedFollowup = closedFollowups.sort((a: any, b: any) => {
+            const dateA = a.followups[0]?.createdAt ? dayjs(a.followups[0].createdAt).valueOf() : 0;
+            const dateB = b.followups[0]?.createdAt ? dayjs(b.followups[0].createdAt).valueOf() : 0;
+            return dateB - dateA;
+        });
+
+
+        return NextResponse.json(sortedClosedFollowup);
+
     } catch (error: any) {
-       
-        
+
         logger.error({
 
             message: "Fail to get closed followups ",

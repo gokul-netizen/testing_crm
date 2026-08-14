@@ -25,7 +25,7 @@ type DataItem = {
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/active-user", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard/active-user", fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
  
 

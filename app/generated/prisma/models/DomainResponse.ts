@@ -48,6 +48,7 @@ export type DomainResponseMinAggregateOutputType = {
   email: string | null
   website: string | null
   phone: string | null
+  address: string | null
   phoneSecondary: string | null
   createdAt: Date | null
   status: number | null
@@ -71,6 +72,7 @@ export type DomainResponseMaxAggregateOutputType = {
   email: string | null
   website: string | null
   phone: string | null
+  address: string | null
   phoneSecondary: string | null
   createdAt: Date | null
   status: number | null
@@ -94,6 +96,7 @@ export type DomainResponseCountAggregateOutputType = {
   email: number
   website: number
   phone: number
+  address: number
   phoneSecondary: number
   response: number
   createdAt: number
@@ -135,6 +138,7 @@ export type DomainResponseMinAggregateInputType = {
   email?: true
   website?: true
   phone?: true
+  address?: true
   phoneSecondary?: true
   createdAt?: true
   status?: true
@@ -158,6 +162,7 @@ export type DomainResponseMaxAggregateInputType = {
   email?: true
   website?: true
   phone?: true
+  address?: true
   phoneSecondary?: true
   createdAt?: true
   status?: true
@@ -181,6 +186,7 @@ export type DomainResponseCountAggregateInputType = {
   email?: true
   website?: true
   phone?: true
+  address?: true
   phoneSecondary?: true
   response?: true
   createdAt?: true
@@ -293,6 +299,7 @@ export type DomainResponseGroupByOutputType = {
   email: string | null
   website: string | null
   phone: string | null
+  address: string | null
   phoneSecondary: string | null
   response: runtime.JsonValue | null
   createdAt: Date
@@ -341,6 +348,7 @@ export type DomainResponseWhereInput = {
   email?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   website?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   phone?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
+  address?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   phoneSecondary?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   response?: Prisma.JsonNullableFilter<"DomainResponse">
   createdAt?: Prisma.DateTimeFilter<"DomainResponse"> | Date | string
@@ -370,6 +378,7 @@ export type DomainResponseOrderByWithRelationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneSecondary?: Prisma.SortOrderInput | Prisma.SortOrder
   response?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -402,6 +411,7 @@ export type DomainResponseWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   website?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   phone?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
+  address?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   phoneSecondary?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   response?: Prisma.JsonNullableFilter<"DomainResponse">
   createdAt?: Prisma.DateTimeFilter<"DomainResponse"> | Date | string
@@ -431,6 +441,7 @@ export type DomainResponseOrderByWithAggregationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneSecondary?: Prisma.SortOrderInput | Prisma.SortOrder
   response?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -464,6 +475,7 @@ export type DomainResponseScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"DomainResponse"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"DomainResponse"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"DomainResponse"> | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"DomainResponse"> | string | null
   phoneSecondary?: Prisma.StringNullableWithAggregatesFilter<"DomainResponse"> | string | null
   response?: Prisma.JsonNullableWithAggregatesFilter<"DomainResponse">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DomainResponse"> | Date | string
@@ -487,6 +499,7 @@ export type DomainResponseCreateInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -516,6 +529,7 @@ export type DomainResponseUncheckedCreateInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -542,6 +556,7 @@ export type DomainResponseUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -571,6 +586,7 @@ export type DomainResponseUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -599,6 +615,7 @@ export type DomainResponseCreateManyInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -622,6 +639,7 @@ export type DomainResponseUpdateManyMutationInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -647,6 +665,7 @@ export type DomainResponseUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -682,6 +701,7 @@ export type DomainResponseCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   phoneSecondary?: Prisma.SortOrder
   response?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -714,6 +734,7 @@ export type DomainResponseMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   phoneSecondary?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -737,6 +758,7 @@ export type DomainResponseMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
   phone?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   phoneSecondary?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -854,6 +876,7 @@ export type DomainResponseCreateWithoutDomainInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -881,6 +904,7 @@ export type DomainResponseUncheckedCreateWithoutDomainInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -938,6 +962,7 @@ export type DomainResponseScalarWhereInput = {
   email?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   website?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   phone?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
+  address?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   phoneSecondary?: Prisma.StringNullableFilter<"DomainResponse"> | string | null
   response?: Prisma.JsonNullableFilter<"DomainResponse">
   createdAt?: Prisma.DateTimeFilter<"DomainResponse"> | Date | string
@@ -961,6 +986,7 @@ export type DomainResponseCreateWithoutFollowupsInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -989,6 +1015,7 @@ export type DomainResponseUncheckedCreateWithoutFollowupsInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1030,6 +1057,7 @@ export type DomainResponseUpdateWithoutFollowupsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1058,6 +1086,7 @@ export type DomainResponseUncheckedUpdateWithoutFollowupsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1083,6 +1112,7 @@ export type DomainResponseCreateWithoutAssignsInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1111,6 +1141,7 @@ export type DomainResponseUncheckedCreateWithoutAssignsInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1152,6 +1183,7 @@ export type DomainResponseUpdateWithoutAssignsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1180,6 +1212,7 @@ export type DomainResponseUncheckedUpdateWithoutAssignsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1205,6 +1238,7 @@ export type DomainResponseCreateWithoutIncentivesInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1233,6 +1267,7 @@ export type DomainResponseUncheckedCreateWithoutIncentivesInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1274,6 +1309,7 @@ export type DomainResponseUpdateWithoutIncentivesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1302,6 +1338,7 @@ export type DomainResponseUncheckedUpdateWithoutIncentivesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1328,6 +1365,7 @@ export type DomainResponseCreateManyDomainInput = {
   email?: string | null
   website?: string | null
   phone?: string | null
+  address?: string | null
   phoneSecondary?: string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
@@ -1351,6 +1389,7 @@ export type DomainResponseUpdateWithoutDomainInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1378,6 +1417,7 @@ export type DomainResponseUncheckedUpdateWithoutDomainInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1405,6 +1445,7 @@ export type DomainResponseUncheckedUpdateManyWithoutDomainInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSecondary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   response?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1479,6 +1520,7 @@ export type DomainResponseSelect<ExtArgs extends runtime.Types.Extensions.Intern
   email?: boolean
   website?: boolean
   phone?: boolean
+  address?: boolean
   phoneSecondary?: boolean
   response?: boolean
   createdAt?: boolean
@@ -1509,6 +1551,7 @@ export type DomainResponseSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   email?: boolean
   website?: boolean
   phone?: boolean
+  address?: boolean
   phoneSecondary?: boolean
   response?: boolean
   createdAt?: boolean
@@ -1535,6 +1578,7 @@ export type DomainResponseSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   email?: boolean
   website?: boolean
   phone?: boolean
+  address?: boolean
   phoneSecondary?: boolean
   response?: boolean
   createdAt?: boolean
@@ -1561,6 +1605,7 @@ export type DomainResponseSelectScalar = {
   email?: boolean
   website?: boolean
   phone?: boolean
+  address?: boolean
   phoneSecondary?: boolean
   response?: boolean
   createdAt?: boolean
@@ -1578,7 +1623,7 @@ export type DomainResponseSelectScalar = {
   addedType?: boolean
 }
 
-export type DomainResponseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "domain_id" | "companyName" | "name" | "email" | "website" | "phone" | "phoneSecondary" | "response" | "createdAt" | "status" | "isDeletedBy" | "isDeletedOn" | "addedBy" | "oldData" | "updatedBy" | "updatedOn" | "source" | "service" | "followUpStatus" | "assignId" | "addedType", ExtArgs["result"]["domainResponse"]>
+export type DomainResponseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "domain_id" | "companyName" | "name" | "email" | "website" | "phone" | "address" | "phoneSecondary" | "response" | "createdAt" | "status" | "isDeletedBy" | "isDeletedOn" | "addedBy" | "oldData" | "updatedBy" | "updatedOn" | "source" | "service" | "followUpStatus" | "assignId" | "addedType", ExtArgs["result"]["domainResponse"]>
 export type DomainResponseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   domain?: boolean | Prisma.InquiryDomainDefaultArgs<ExtArgs>
   followups?: boolean | Prisma.DomainResponse$followupsArgs<ExtArgs>
@@ -1609,6 +1654,7 @@ export type $DomainResponsePayload<ExtArgs extends runtime.Types.Extensions.Inte
     email: string | null
     website: string | null
     phone: string | null
+    address: string | null
     phoneSecondary: string | null
     response: runtime.JsonValue | null
     createdAt: Date
@@ -2058,6 +2104,7 @@ export interface DomainResponseFieldRefs {
   readonly email: Prisma.FieldRef<"DomainResponse", 'String'>
   readonly website: Prisma.FieldRef<"DomainResponse", 'String'>
   readonly phone: Prisma.FieldRef<"DomainResponse", 'String'>
+  readonly address: Prisma.FieldRef<"DomainResponse", 'String'>
   readonly phoneSecondary: Prisma.FieldRef<"DomainResponse", 'String'>
   readonly response: Prisma.FieldRef<"DomainResponse", 'Json'>
   readonly createdAt: Prisma.FieldRef<"DomainResponse", 'DateTime'>

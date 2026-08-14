@@ -17,12 +17,8 @@ export default function OverView() {
 
     const params = useParams();
     const { id } = params
-
-    const { data, error, isLoading } = useSWR(`/api/block-domain/${id}`, fetcher);
-
+    const { data, error, isLoading } = useSWR(`/api/admin/dashboard/active-domain/${id}`, fetcher);
     const detailData = data?.data;
-
-
 
     if (isLoading) {
         return <div className="p-6 text-gray-500">Loading...</div>;
@@ -31,8 +27,7 @@ export default function OverView() {
     if (error) {
         return <div className="p-6 text-red-500">Failed to load response.</div>;
     }
-
-
+    
     return (
         <section className="px-3">
             <div className="flex justify-end py-2 px-3">

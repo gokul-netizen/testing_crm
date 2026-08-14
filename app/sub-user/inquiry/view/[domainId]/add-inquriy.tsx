@@ -19,10 +19,10 @@ import { TiMessages } from "react-icons/ti";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs, { Dayjs } from "dayjs";
 import { useParams } from "next/navigation";
- 
+
 import SourceDropDown from "@/app/components/SourceDropDown";
 import { FaRegBuilding } from "react-icons/fa";
- 
+
 import { confirmAction } from "@/app/components/ConfirmSooner";
 import TimePickerDemo from "@/app/components/Time";
 import utc from "dayjs/plugin/utc";
@@ -67,6 +67,7 @@ export default function Inquiry({ open, onClose }: Props) {
     const [isPublic, setIsPublic] = useState(true);
     const [callVisit, setCallVisit] = useState("Call");
     const [reminderTime, setReminderTime] = useState<Dayjs | null>(null);
+    const [inquiryAddress , setInquiryAddress] = useState("");
     const [address, setAddress] = useState("");
 
     const Remindertime = reminderTime?.toDate().toTimeString().split(" ")[0];
@@ -77,7 +78,7 @@ export default function Inquiry({ open, onClose }: Props) {
 
 
     const domainID = Number(domainId)
-   
+
 
     const formatToDMY = (dateStr: any) => {
         if (!dateStr) return "";
@@ -207,6 +208,7 @@ export default function Inquiry({ open, onClose }: Props) {
                 "IsPublic": isPublic,
                 "Contact Mode": callVisit,
                 "Reminder": reminderTime ? reminderDateTime : null,
+                "Client Address" : inquiryAddress,
                 "Address": address
             }
 
@@ -521,12 +523,27 @@ export default function Inquiry({ open, onClose }: Props) {
                         </div>
 
 
+                        <div className="flex-1 w-full">
+                            <label className="block mb-2 text-sm font-medium text-gray-700">
+                                Address
+                            </label>
+
+                            <textarea
+                                value={inquiryAddress}
+                                onChange={(e) => setInquiryAddress(e.target.value)}
+                                placeholder="Enter visit address..."
+                                rows={2}
+                                className="w-full rounded-md border border-gray-300 p-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                            />
+                        </div>
+
+
                         <div className="grid grid-cols-2 gap-2">
 
                             <SourceDropDown value={source} onChange={setSource} />
 
-                            {domainID  && (
-                                <SerivceDropDown value={service} onChange={setService} domainId={domainID}  />
+                            {domainID && (
+                                <SerivceDropDown value={service} onChange={setService} domainId={domainID} />
                             )}
 
                         </div>
@@ -689,7 +706,7 @@ export default function Inquiry({ open, onClose }: Props) {
                                         <div>
 
                                             <AssignToDropDown
-                                               
+
                                                 domainId={domainID}
                                                 value={assign}
                                                 onChange={setAssign}

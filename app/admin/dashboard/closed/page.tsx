@@ -118,9 +118,7 @@ export default function Page() {
 
     ];
 
-    const handleUndo = async () => {
-        console.log("Undo")
-    }
+   
 
     return (
         <section className="p-4 ">

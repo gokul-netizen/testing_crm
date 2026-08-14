@@ -72,27 +72,34 @@ ORDER BY "createdAt" DESC;
         phone: true,
         addedBy: true,
         createdAt: true,
+        address: true,
+
         domain: {
           select: {
             id: true,
             domainName: true,
-          }
+          },
         },
 
         followups: {
-
           where: {
             address: {
               not: null,
             },
           },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
           select: {
             id: true,
             address: true,
           },
-        }
-      }
+        },
+      },
     });
+
+  
 
     return NextResponse.json(
       { history, inquiryDetail },

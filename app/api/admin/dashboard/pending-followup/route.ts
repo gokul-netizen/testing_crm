@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import logger from "@/lib/logs";
 dayjs.extend(customParseFormat);
 
 
@@ -30,10 +31,10 @@ export async function GET(req: Request) {
                 createdAt: true,
                 assignToName: true,
 
-                addedByUser : {
-                    select : {
-                        id : true,
-                        name : true,
+                addedByUser: {
+                    select: {
+                        id: true,
+                        name: true,
                     }
                 },
 
@@ -45,11 +46,11 @@ export async function GET(req: Request) {
                         phone: true,
                         companyName: true,
                         createdAt: true,
-                        domain : {
-                            select : {
-                                id : true,
-                                domainName : true,
-                                 
+                        domain: {
+                            select: {
+                                id: true,
+                                domainName: true,
+
                             }
                         }
                     },
@@ -68,10 +69,16 @@ export async function GET(req: Request) {
 
         });
 
-        
-
         return NextResponse.json(pending, { status: 200 })
     } catch (error: any) {
+        logger.error({
+            message: "Fail to fetch pending inquirie ",
+            file: "api/admin/dashboard/pending-followup/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+        });
+
         return NextResponse.json({ error: error.message })
     }
 }

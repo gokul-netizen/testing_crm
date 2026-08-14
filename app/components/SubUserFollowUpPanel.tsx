@@ -57,8 +57,6 @@ export default function SubUserFollowUpPanel({
     const [address, setAddress] = useState("");
 
 
-
-
     const assignApi = `/api/sub-user/assign-names`;
     const updateApi = `/api/create-post/${inquiryId}`;
     const todaysFollowupApi = `/api/user/inquiry/view/inquiry/${inquiryId}/timeline`;
@@ -89,7 +87,6 @@ export default function SubUserFollowUpPanel({
 
     const handleSubmit = async () => {
         try {
-
             let reminder: string | null = null;
             if (callVisit === "Visit" && reminderTime) {
                 const targetDate = followUp.includes("Assign To") && assignDate ? assignDate : date;
@@ -99,10 +96,6 @@ export default function SubUserFollowUpPanel({
                     reminder = `${now.format("YYYY-MM-DD")}T${reminderTime.format("HH:mm:ss")}Z`;
                 }
             }
-
-          
-
-            setLoading(true);
 
             if (!followUp.length) {
                 toast.error("Select Follow Up status");
@@ -146,68 +139,108 @@ export default function SubUserFollowUpPanel({
             }
 
 
-            const payload: Record<string, any> = {
-                "Follow Up": followUp,
-                "Remarks": remarks,
-                "isPublic": isPublic,
-                "Contact Mode": callVisit,
-                "Reminder": reminder,
-                "Address": address
+            const activeDate = followUp.includes("Assign To") ? assignDate : date;
+            const activeTime = followUp.includes("Assign To") ? assignTime : time;
+
+
+            const executeSave = async () => {
+                setLoading(true);
+                try {
+                    const payload: Record<string, any> = {
+                        "Follow Up": followUp,
+                        "Remarks": remarks,
+                        "isPublic": isPublic,
+                        "Contact Mode": callVisit,
+                        "Reminder": reminder,
+                        "Address": address
+                    };
+
+                    if (followUp.includes("Follow Up")) {
+                        payload["Date"] = formatToDMY(date);
+                        payload["Time"] = dayjs(time, "hh:mm A").format("h:mm A");
+                    }
+
+                    if (followUp.includes("Not Interested")) {
+                        payload["Incentive"] = incentiveOption;
+                    }
+
+                    const selectedAssign = assignTo[0] || null;
+                    const selectedData = selectedAssign ? JSON.parse(selectedAssign) : null;
+
+                    if (followUp.includes("Assign To") && selectedData) {
+                        payload["AssignId"] = selectedData.id;
+                        payload["AssignName"] = selectedData.name;
+                        payload["AssignType"] = selectedData.type;
+                        payload["Date"] = formatToDMY(assignDate);
+                        payload["Time"] = dayjs(assignTime, "hh:mm A").format("h:mm A");
+                    }
+
+                    const res = await fetch(updateApi, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload),
+                    });
+
+                    if (!res.ok) throw new Error("Failed to update");
+
+                    mutate(updateApi);
+                    mutate(todaysFollowupApi);
+
+                    toast.success("Follow up updated");
+                    setOpen(false);
+
+                    setFollowUp([]);
+                    setDate("");
+                    setTime("");
+                    setAssignTo([]);
+                    setAssignDate("");
+                    setAssignTime("");
+                    setRemarks("");
+                    setIncentiveOption("");
+                    setCallVisit("Call");
+                    setReminderTime(null);
+                    setAddress("");
+                } catch (err) {
+
+                    toast.error("Error updating follow up");
+                } finally {
+                    setLoading(false);
+                }
             };
 
-            if (followUp.includes("Follow Up")) {
-                payload["Date"] = formatToDMY(date);
-                payload["Time"] = dayjs(time, "hh:mm A").format("h:mm A");
-            }
 
-            if (followUp.includes("Not Interested")) {
-                payload["Incentive"] = incentiveOption;
-            }
+            toast("Are you sure you want to save changes?", {
+                description:
+                    followUp.includes("Not Interested") || followUp.includes("Closed")
+                        ? followUp.join(", ")
+                        : activeDate && activeTime
+                            ? `Scheduled for: ${activeDate} at ${activeTime}`
+                            : followUp.join(", "),
 
-            const selectedAssign = assignTo[0] || null;
-            const selectedData = selectedAssign ? JSON.parse(selectedAssign) : null;
+                className:
+                    "!w-[520px] !max-w-[520px] bg-[#7367f0] text-white border-none [&_[data-button]]:!ml-8",
 
-            if (followUp.includes("Assign To") && selectedData) {
-                payload["AssignId"] = selectedData.id;
-                payload["AssignName"] = selectedData.name;
-                payload["AssignType"] = selectedData.type;
-                payload["Date"] = formatToDMY(assignDate);
-                payload["Time"] = dayjs(assignTime, "hh:mm A").format("h:mm A");
-            }
+                descriptionClassName: "text-white/80",
 
-            const res = await fetch(updateApi, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
+                duration: Infinity,
+
+                action: {
+                    label: "Save",
+                    onClick: () => executeSave(),
+                },
+
+                cancel: {
+                    label: "Cancel",
+                    onClick: () => console.log("Cancelled"),
+                },
             });
-
-            if (!res.ok) throw new Error("Failed to update");
-
-            mutate(updateApi);
-            mutate(todaysFollowupApi);
-
-            toast.success("Follow up updated");
-            setOpen(false);
-
-            setFollowUp([]);
-            setDate("");
-            setTime("");
-            setAssignTo([]);
-            setAssignDate("");
-            setAssignTime("");
-            setRemarks("");
-            setIncentiveOption("");
-            setCallVisit("Call");
-            setReminderTime(null);
-            setAddress("");
 
         } catch (err) {
             console.log(err);
-            toast.error("Error updating follow up");
-        } finally {
-            setLoading(false);
+            toast.error("Validation error");
         }
     };
+
 
     return (
         <>

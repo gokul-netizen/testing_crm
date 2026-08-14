@@ -23,7 +23,7 @@ type DataItem = {
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/active-inquiry", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard/active-inquiries", fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     if (isLoading) return <SpinnerCircle4 />
@@ -66,10 +66,7 @@ export default function Page() {
         { header: "phone", accessor: "phone" },
 
     ];
-
-    const handleUndo = async () => {
-        console.log("Undo")
-    }
+ 
 
     return (
         <section className="p-4">
@@ -91,7 +88,7 @@ export default function Page() {
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     onEdit={() => "edit page"}
-                    onActivate={handleUndo}
+                     
                 />
             </div>
         </section>

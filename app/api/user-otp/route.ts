@@ -28,6 +28,15 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Can't find your phone number" }, { status: 400 })
         }
 
+         if(userExist.status === "Blocked"){
+            return NextResponse.json({message : "You were blocked by admin"} , {status : 400});
+        }
+
+        if(userExist.isDeleted){
+            return NextResponse.json({message : "This user is deleted contact admin"} , {status : 400});
+        }
+
+
         const otp = GenerateOtp();
         const hashedOtp = crypto.createHash("md5").update(String(otp)).digest("hex");
 

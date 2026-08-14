@@ -140,6 +140,7 @@ export const DomainResponseScalarFieldEnum = {
   email: 'email',
   website: 'website',
   phone: 'phone',
+  address: 'address',
   phoneSecondary: 'phoneSecondary',
   response: 'response',
   createdAt: 'createdAt',

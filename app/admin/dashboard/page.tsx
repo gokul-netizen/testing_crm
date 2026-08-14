@@ -124,7 +124,7 @@ export default function Page() {
                         />
                     </Link>
 
-                    <Link href={`/admin/dashboard/inquiry/deleted-view`}>
+                    <Link href={`/admin/dashboard/deleted-inquiries`}>
                         <StatCard
                             icon={LuFileSpreadsheet}
                             iconColor="text-red-600"

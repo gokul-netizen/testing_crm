@@ -24,7 +24,7 @@ type DataItem = {
 
 export default function Page() {
 
-    const { data, error, isLoading } = useSWR("/api/block-domain", fetcher);
+    const { data, error, isLoading } = useSWR("/api/admin/dashboard/blocked-domain", fetcher);
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     if (isLoading) return <SpinnerCircle4 />
@@ -91,7 +91,7 @@ export default function Page() {
                 <DataTableComponent
                     title="Blocked Domains"
                     columns={columns}
-                    data={data ?? []}
+                    data={data?.blockedDomain ?? []}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     onEdit={(item) => `/admin/dashboard/block-domain/${item.id}/edit`}
