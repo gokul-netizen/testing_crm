@@ -13,6 +13,7 @@ type Props = {
 export default function SerivceDropDown({ value, onChange, domainId , userId }: Props) {
 
     const { data } = useSWR(`/api/user/service`, fetcher);
+
     const servicehandling = (newValues: string[]) => {
         onChange(newValues);
 

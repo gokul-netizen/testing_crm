@@ -25,12 +25,12 @@ import {
 dayjs.extend(customParseFormat);
 
 type Props = {
- 
+
   inquiryId: string | number;
   usersApi?: string;
 };
 
-export default function FollowUpPanel({   inquiryId, usersApi = `/api/user/get-users`, }: Props) {
+export default function FollowUpPanel({ inquiryId, usersApi = `/api/user/get-users`, }: Props) {
   const [open, setOpen] = useState(false);
   const [followUp, setFollowUp] = useState<string[]>([]);
   const [date, setDate] = useState("");
@@ -51,9 +51,9 @@ export default function FollowUpPanel({   inquiryId, usersApi = `/api/user/get-u
 
   const followUpStatus = ["Follow Up", "Not Interested", "Assign To", "Closed"];
 
-  const AssignDateAndTimeFormate = dayjs(`${assignDate} ${assignTime}`,"YYYY-MM-DD HH:mm A");
+  const AssignDateAndTimeFormate = dayjs(`${assignDate} ${assignTime}`, "YYYY-MM-DD HH:mm A");
 
-  const followUpDateAndTimeFormate = dayjs( `${date} ${time}`, "YYYY-MM-DD HH:mm A" );
+  const followUpDateAndTimeFormate = dayjs(`${date} ${time}`, "YYYY-MM-DD HH:mm A");
 
   const now = dayjs();
 
@@ -71,58 +71,16 @@ export default function FollowUpPanel({   inquiryId, usersApi = `/api/user/get-u
     setAssignTime(`${hour}-${minute}-${ampm}`);
   }, [hour, minute, ampm]);
 
-  
 
 
-  const handleSubmit = async () => {
+  const executeSave = async () => {
     try {
-
       setLoading(true);
 
-      if (!followUp.length) {
-        toast.error("Select Follow Up status");
-        return;
-      }
-
-      if (followUp.includes("Follow Up") && (!date || !time)) {
-        toast.error("Date & Time required for Follow Up");
-        return;
-      }
-
-      if (followUpDateAndTimeFormate.isBefore(now)) {
-        toast.error("Can't select past date and time");
-        return;
-      }
-
-
-      if (followUp.includes("Assign To") && assignTo.length === 0) {
-        toast.error("Select a user to assign");
-        return;
-      }
-
-      if (followUp.includes("Assign To") && (!assignDate || !assignTime)) {
-        toast.error("Date & Time required for assign ");
-        return;
-      }
-
-      if (AssignDateAndTimeFormate.isBefore(now)) {
-        toast.error("Can't select past date and time.");
-        return;
-      }
-
-      if (!remarks.trim()) {
-        toast.error("Remarks required");
-        return;
-      }
-     
-
       const payload: Record<string, any> = {
-
         "Follow Up": followUp,
         Remarks: remarks,
-         
-        isPublic : isPublic,
-
+        isPublic,
       };
 
       if (followUp.includes("Follow Up")) {
@@ -134,26 +92,27 @@ export default function FollowUpPanel({   inquiryId, usersApi = `/api/user/get-u
         payload["Incentive"] = incentiveOption;
       }
 
-     const selectedAssign = assignTo[0] ||  null;
-     
+      const selectedAssign = assignTo[0] || null;
 
       if (followUp.includes("Assign To") && selectedAssign) {
-        payload["AssignId"] = selectedAssign?.id;
-        payload["AssignName"] = selectedAssign?.username;
-        payload["AssignType"] = selectedAssign?.type;
+        payload["AssignId"] = selectedAssign.id;
+        payload["AssignName"] = selectedAssign.username;
+        payload["AssignType"] = selectedAssign.type;
         payload["Date"] = formatToDMY(assignDate);
         payload["Time"] = dayjs(assignTime, "hh:mm A").format("h:mm A");
       }
 
-   
-
       const res = await fetch(`/api/create-post/${inquiryId}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Failed to update");
+      if (!res.ok) {
+        throw new Error("Failed to update");
+      }
 
       mutate(`/api/user/inquiry/view/inquiry/${inquiryId}/timeline`);
 
@@ -168,11 +127,93 @@ export default function FollowUpPanel({   inquiryId, usersApi = `/api/user/get-u
       setAssignTime("");
       setRemarks("");
       setIncentiveOption("");
+
     } catch (err) {
       console.log(err);
       toast.error("Error updating follow up");
     } finally {
       setLoading(false);
+    }
+  };
+
+
+
+  const handleSubmit = async () => {
+    try {
+      if (!followUp.length) {
+        toast.error("Select Follow Up status");
+        return;
+      }
+
+      if (followUp.includes("Follow Up") && (!date || !time)) {
+        toast.error("Date & Time required for Follow Up");
+        return;
+      }
+
+      if (followUp.includes("Assign To") && assignTo.length === 0) {
+        toast.error("Select a user to assign");
+        return;
+      }
+
+      if (followUp.includes("Assign To") && (!assignDate || !assignTime)) {
+        toast.error("Date & Time required for assign");
+        return;
+      }
+
+      if (followUp.includes("Follow Up") && followUpDateAndTimeFormate.isBefore(now)) {
+        toast.error("Can't select past date and time");
+        return;
+      }
+
+      if (followUp.includes("Assign To") && AssignDateAndTimeFormate.isBefore(now)) {
+        toast.error("Can't select past date and time.");
+        return;
+      }
+
+      if (!remarks.trim()) {
+        toast.error("Remarks required");
+        return;
+      }
+
+
+      const activeDate = followUp.includes("Assign To")
+        ? assignDate
+        : date;
+
+      const activeTime = followUp.includes("Assign To")
+        ? assignTime
+        : time;
+
+
+      toast("Are you sure you want to save changes?", {
+        description:
+          followUp.includes("Not Interested") || followUp.includes("Closed")
+            ? followUp.join(", ")
+            : activeDate && activeTime
+              ? `Scheduled for: ${activeDate} at ${activeTime}`
+              : followUp.join(", "),
+
+        className:
+          "!w-[520px] !max-w-[520px] bg-[#7367f0] text-white border-none [&_[data-button]]:!ml-6",
+
+        descriptionClassName: "text-white/80",
+
+        duration: Infinity,
+
+        action: {
+          label: "Save",
+          onClick: () => executeSave(),
+        },
+
+        cancel: {
+          label: "Cancel",
+          onClick: () => console.log("Cancelled"),
+        },
+      });
+
+    } catch (err) {
+      console.log(err);
+      toast.error("Error validating follow up");
     }
   };
 
@@ -227,7 +268,7 @@ export default function FollowUpPanel({   inquiryId, usersApi = `/api/user/get-u
             </div>
           </div>
 
-          {/* Incentive */}
+         
           {followUp.includes("Not Interested") && (
             <div className="flex gap-8">
               <label className="flex items-center gap-2">
@@ -346,7 +387,7 @@ export default function FollowUpPanel({   inquiryId, usersApi = `/api/user/get-u
             </div>
           )}
 
-        
+
           {followUp.includes("Follow Up") && (
             <div className="grid grid-cols-2 gap-2">
               <div>
@@ -421,28 +462,28 @@ export default function FollowUpPanel({   inquiryId, usersApi = `/api/user/get-u
           </div>
 
           <div className="flex flex-col md:flex-row items-start gap-2 md:items-center md:gap-6">
-                <label className="flex items-center gap-2 cursor-pointer ">
-                  <input
-                    type="radio"
-                    name="visibility"
-                    checked={isPublic}
-                    onChange={() => setIsPublic(true)}
-                    className="h-4 w-4"
-                  />
-                  <span className="text-sm font-medium text-gray-600 shrink-0">You wants remarks to be public?</span>
-                </label>
+            <label className="flex items-center gap-2 cursor-pointer ">
+              <input
+                type="radio"
+                name="visibility"
+                checked={isPublic}
+                onChange={() => setIsPublic(true)}
+                className="h-4 w-4"
+              />
+              <span className="text-sm font-medium text-gray-600 shrink-0">You wants remarks to be public?</span>
+            </label>
 
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="visibility"
-                    checked={!isPublic}
-                    onChange={() => setIsPublic(false)}
-                    className="h-4 w-4"
-                  />
-                  <span className="text-sm font-medium text-gray-600 shrink-0">You wants remarks to be private?</span>
-                </label>
-              </div>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="visibility"
+                checked={!isPublic}
+                onChange={() => setIsPublic(false)}
+                className="h-4 w-4"
+              />
+              <span className="text-sm font-medium text-gray-600 shrink-0">You wants remarks to be private?</span>
+            </label>
+          </div>
 
           {/* Buttons */}
           <div className="space-x-4">

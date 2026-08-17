@@ -21,6 +21,7 @@ interface InquiryItem {
     phone?: string | number;
     phoneSecondary?: string | number;
     email?: string;
+    createdAt?: string;
     service?: string;
     source?: string;
     followUpStatus?: string;
@@ -60,8 +61,9 @@ export const ExportInquiryData = (data: InquiryItem[]) => {
                 "Follow Up Status": String(
                     followUp?.followUpStatus ?? item.followUpStatus ?? ""
                 ),
+                "Inquiry Created At": String(dayjs.utc(item?.createdAt).format("DD-MM-YYYY : hh:mm A")) ? String(dayjs.utc(item?.createdAt).format("DD-MM-YYYY : hh:mm A")) : "",
+                "Latest Follow Up Created At": String(dayjs.utc(followUp?.createdAt).format("DD-MM-YYYY : hh:mm A")) ? String(dayjs.utc(followUp?.createdAt).format("DD-MM-YYYY : hh:mm A")) : "",
                 "Follow up count": item._count?.followups ?? "",
-                "Created At": String(dayjs.utc(followUp?.createdAt).format("DD-MM-YYYY : hh:mm A")) ? String(dayjs.utc(followUp?.createdAt).format("DD-MM-YYYY : hh:mm A")) : "",
                 Remarks: String(followUp?.remarks ?? ""),
                 "Follow Up Date": followUp?.date ? String(followUp.date) : "",
                 "Follow Up Time": followUp?.time ? String(followUp.time) : "",
