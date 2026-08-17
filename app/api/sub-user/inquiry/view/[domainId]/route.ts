@@ -45,6 +45,7 @@ export async function GET(req: Request, { params }: { params: Promise<UserId> })
                 companyName: true,
                 phone: true,
                 service: true,
+                source: true,
                 createdAt: true,
                 followUpStatus: true,
                 domain_id: true,

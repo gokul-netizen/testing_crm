@@ -73,9 +73,9 @@ export async function GET(req: Request) {
 
         const decoded = await userSession();
         const userId = decoded?.id;
-        const userType = decoded?.usertype;
+        
 
-        const service = await prisma.user.findUnique({
+        const data = await prisma.user.findUnique({
             where: {
                 id: userId
             },
@@ -97,7 +97,10 @@ export async function GET(req: Request) {
             }
         });
 
+        const service =  data.inquiryDomain?.service;
+
         return NextResponse.json(service, { status: 200 });
+
     } catch (error: any) {
         logger.error({
 

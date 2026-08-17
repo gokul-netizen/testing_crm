@@ -48,12 +48,31 @@ export async function GET(req: Request, { params }: Props) {
             where,
             select: {
                 id: true,
-                name: true,
                 companyName: true,
+                email: true,
+                name: true,
                 phone: true,
+                phoneSecondary: true,
                 followUpStatus: true,
                 createdAt: true,
                 service: true,
+                source: true,
+
+
+
+                _count: {
+                    select: {
+                        followups: {
+                            where: {
+                                createdAt: {
+                                    gte: dayjs(fromDate).startOf("day").toDate(),
+                                    lte: dayjs(toDate).endOf("day").toDate(),
+                                },
+                            },
+                        },
+                    },
+                },
+
 
                 followups: {
                     select: {
@@ -86,7 +105,7 @@ export async function GET(req: Request, { params }: Props) {
         return NextResponse.json(data, { status: 200 });
 
     } catch (error: any) {
-        
+
         logger.error({
 
             message: "Fail to search the inquiry",

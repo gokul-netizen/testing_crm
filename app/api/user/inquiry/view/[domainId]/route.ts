@@ -27,6 +27,13 @@ export async function GET(req: Request, { params }: ParamsProps) {
         followUpStatus: true,
         createdAt: true,
         service: true,
+        source: true,
+
+        _count: {
+          select: {
+            followups: true,
+          },
+        },
 
         followups: {
           select: {
