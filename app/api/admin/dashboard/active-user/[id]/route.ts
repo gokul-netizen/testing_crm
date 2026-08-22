@@ -37,7 +37,8 @@ export async function GET(req: Request, { params }: ParamsProps) {
 
         });
 
-        return NextResponse.json({ data: user }, { status: 200 })
+        return NextResponse.json({ data: user }, { status: 200 });
+
     } catch (error: any) {
         logger.error({
             message: "Fail to fetch user",
@@ -46,7 +47,7 @@ export async function GET(req: Request, { params }: ParamsProps) {
             errorMessage: error instanceof Error ? error.message : String(error),
             stack: error instanceof Error ? error.stack : undefined,
         });
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
 

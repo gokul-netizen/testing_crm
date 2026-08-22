@@ -16,20 +16,13 @@ dayjs.extend(utc);;
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 type DataItem = {
-
     id: number;
     domainName: string;
     logo: string | null;
     _count: { domainResponse: number; };
-
     };
 
-
-
-
 export default function DomainsPage() {
-
-
 
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
     const { data, error, isLoading } = useSWR("/api/admin/inquiries/view", fetcher);

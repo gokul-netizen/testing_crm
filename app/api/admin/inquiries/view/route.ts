@@ -18,7 +18,11 @@ export async function GET(req: Request) {
 
                 _count: {
                     select: {
-                        domainResponse: true,
+                        domainResponse: {
+                            where: {
+                                status: 1,
+                            },
+                        },
                     },
                 },
             },
@@ -27,6 +31,7 @@ export async function GET(req: Request) {
                 addedOn: "desc",
             },
         });
+
 
 
         return NextResponse.json({ message: "Successfully fetched all domain", data }, { status: 200 });

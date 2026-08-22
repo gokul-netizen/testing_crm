@@ -54,8 +54,8 @@ export default function RightSideDrawerInquiry({ open, onClose, domainId }: Prop
 
  
 
-  // this for to get source
-  const { data } = useSWR(`/api/source`, fetcher);
+   
+  const { data } = useSWR(`/api/admin/master/source`, fetcher);
 
   const followUpStatus = ["Follow Up", "Not Interested", "Assisgn To", "Closed"];
 

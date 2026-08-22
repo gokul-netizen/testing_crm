@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Pencil, EllipsisVertical, Upload, ChevronDown } from "lucide-react";
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -80,6 +80,10 @@ export default function DataTable({
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
   const [add, setAdd] = useState(false);
+
+
+  const params = useParams();
+  const id = params.id;
 
 
 
@@ -181,12 +185,16 @@ export default function DataTable({
   const handleDelete = async (item: DataItem) => {
     confirmAction({
       title: `Delete "${item.name}"?`,
-      description: " ",
+      description: "Are you sure you want to delete it?",
       confirmLabel: "Delete",
       variant: "danger",
       onConfirm: async () => {
-        const res = await fetch(`/api/days/${item.id}/${item.domain_id}`, {
-          method: "DELETE",
+        const res = await fetch(`/api/admin/inquiries/deleted-inquiries`, {
+          method: "PATCH",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ids: [item.id] })
         });
 
         if (!res.ok) {
@@ -194,13 +202,13 @@ export default function DataTable({
           throw new Error(errorData.message || "Failed to delete user");
         }
 
-        toast.success("Deleted successfully");
-        mutate(`/api/days/${item.domain_id}`);
+        toast.success(`Deleted successfully..!`);
+        mutate(`/api/admin/inquiries/view/${id}`);
       },
     });
   };
 
-  // bulk delete function 
+  
   const selectedIds = Object.keys(selectedRows).filter((id) => selectedRows[id]).map(Number)
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) {
@@ -210,20 +218,17 @@ export default function DataTable({
 
     confirmAction({
       title: `Delete ${selectedIds.length} record(s)?`,
-      description: "This action cannot be undone",
+      description: "Are you sure you want to delete it?",
       confirmLabel: "Delete",
       variant: "danger",
       onConfirm: async () => {
-        const domainId = currentData[0]?.domain_id;
-
-        const res = await fetch(`/api/days/${domainId}`, {
-          method: "DELETE",
+    
+        const res = await fetch(`/api/admin/inquiries/deleted-inquiries`, {
+         method: "PATCH",
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            ids: selectedIds,
-          }),
+          body: JSON.stringify({ ids : selectedIds })
         });
 
         if (!res.ok) {
@@ -231,9 +236,9 @@ export default function DataTable({
           throw new Error(errorData.message || "Bulk delete failed");
         }
 
-        toast.success(`${selectedIds.length} records deleted`);
+        toast.success(`Deleted successfully..!`);
         setSelectedRows({});
-        mutate(`/api/days/${domainId}`);
+        mutate(`/api/admin/inquiries/view/${id}`);
       },
     });
   };
@@ -486,7 +491,7 @@ export default function DataTable({
                     <div className="absolute bottom-0 right-3 py-2  flex items-center gap-2">
                       <span className="text-sm font-medium">
                         {startIndex + index + 1}
-                      </span> 
+                      </span>
 
                       <input
                         type="checkbox"
@@ -494,13 +499,13 @@ export default function DataTable({
                         onChange={(e) => toggleSelectRow(item.id, e.target.checked)}
                         className="w-5 h-5 accent-[#7367f0] cursor-pointer"
                       />
-                  
+
 
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button
                             className="bg-white hover:bg-gray-200 rounded-full"
-                             
+
                           >
                             <EllipsisVertical className="w-5 h-5 text-gray-600" />
                           </button>
@@ -536,7 +541,7 @@ export default function DataTable({
                       {onEdit && (
                         <button
                           className="bg-white hover:bg-gray-100 "
-                          
+
                           onClick={() =>
                             router.push(
                               `/admin/dashboard/inquiry/view/${item.domain_id}/${item.id}/edit`

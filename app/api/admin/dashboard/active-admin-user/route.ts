@@ -30,7 +30,8 @@ export async function GET(req: Request) {
             },
         });
 
-        return NextResponse.json(activeDomain, { status: 200 })
+        return NextResponse.json(activeDomain, { status: 200 });
+
     } catch (error: any) {
        logger.error({
             message: "Fail to fetch active admin user domain ",
@@ -40,6 +41,6 @@ export async function GET(req: Request) {
             stack: error instanceof Error ? error.stack : undefined,
         });
 
-        return NextResponse.json({ error: error.message }, { status: 500 })
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

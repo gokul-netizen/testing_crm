@@ -8,7 +8,6 @@ import utc from 'dayjs/plugin/utc';
 import useSWR from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
-import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { timeSince } from "@/lib/time-ago";

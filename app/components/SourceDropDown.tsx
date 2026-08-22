@@ -12,7 +12,7 @@ type Props = {
 export default function SourceDropDown({ value, onChange }: Props) {
      
 
-    const { data } = useSWR(`/api/source`, fetcher);
+    const { data } = useSWR(`/api/sub-user/source`, fetcher);
 
     const sourcehandling = (newValues: string[]) => {
         if (newValues.length > 1) {

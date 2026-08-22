@@ -6,19 +6,18 @@ import { useParams } from "next/navigation";
 export default function page(){
 
     const params = useParams();
-    const {detail , inqyiry , id} = params;
-    const inquiryId = detail as string;
-    const statusId = inqyiry as string;
+    const {inquiry , followupId , id} = params;
+    const inquiryId = inquiry as string;
+    const statusId = followupId as string;
     const userId =  id as string;
 
     return (
         <section>
         
-        <FollowUpStatusEdit inquiryId={inquiryId} statusId={statusId} userId={userId}
+        <FollowUpStatusEdit inquiryId={inquiryId} followupid={statusId} userId={userId}
         
         backUrl={`/sub-user/${userId}/total-inquiries/${inquiryId}`}
-
-
+        
         />
 
         </section>

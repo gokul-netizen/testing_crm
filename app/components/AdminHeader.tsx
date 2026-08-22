@@ -38,7 +38,7 @@ export default function AdminHeader() {
 
   const router = useRouter();
 
-  const { data, error, isLoading } = useSWR(`/api/admin-notification`, fetcher);
+  const { data, error, isLoading } = useSWR(`/api/admin/notifications`, fetcher);
 
 
   const langRef = useRef<HTMLDivElement>(null);

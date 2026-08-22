@@ -23,7 +23,7 @@ export default function Page() {
     const pathname = usePathname();
  
 
-    const { data, error, isLoading } = useSWR(`/api/admin-profile`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/profile`, fetcher);
 
     const adminDetail = data?.data
      
@@ -83,7 +83,7 @@ export default function Page() {
             form.append("user_image", selectedFile);
         }
 
-        const res = await fetch("/api/admin-profile", {
+        const res = await fetch("/api/admin/profile", {
             method: "PATCH",
             credentials: "include",
             body: form,

@@ -9,6 +9,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
+import Link from "next/link";
 
 dayjs.extend(utc);
 
@@ -31,13 +32,12 @@ export default function Page() {
 
     if (error) return <div> Error : {error.message}</div>
 
-
     const columns: Column<DataItem>[] = [
         {
             header: "Name",
             accessor: (item) => (
                 <div className="flex items-center gap-2 group">
-                    <span className="truncate">{item.name}</span>
+                    <Link href={`/admin/dashboard/block-user/${item.id}/detail`}><span className="truncate">{item.name}</span></Link>
                     <CopyText text={item.name} />
                 </div>
             ),
@@ -46,20 +46,20 @@ export default function Page() {
             header: "Email",
             accessor: (item) => (
                 <div className="flex items-center gap-2 group">
-                    <span className="truncate">{item.email}</span>
+                    <Link href={`/admin/dashboard/block-user/${item.id}/detail`}><span className="truncate">{item.email}</span></Link>
                     <CopyText text={String(item.email)} />
                 </div>
             ),
         },
         {
             header: "Status", accessor: (item) => (
-                <div className="text-red-600">{item.status}</div>
+                <Link href={`/admin/dashboard/block-user/${item.id}/detail`}><span className="text-red-600">{item.status}</span></Link>
             )
         },
 
         {
             header: "Domain", accessor: (item) => (
-                <div>{item.inquiryDomain?.domainName}</div>
+                <Link href={`/admin/dashboard/block-user/${item.id}/detail`}><span>{item.inquiryDomain?.domainName}</span></Link>
             )
         },
 
@@ -70,11 +70,8 @@ export default function Page() {
         },
     ];
 
- 
-
     return (
         <section className="p-4">
-
             <div className="flex justify-end py-2 px-3">
                 <CustomBreadcrumb
                     paths={[
@@ -84,7 +81,7 @@ export default function Page() {
                 />
             </div>
 
-            <div >
+            <div>
                 <DataTableComponent
                     title="Blocked Users"
                     placeholder="Search by name"
@@ -93,7 +90,6 @@ export default function Page() {
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     onEdit={(item) => `/admin/dashboard/block-user/${item.id}/edit`}
-                 
                     detail={(item) => `/admin/dashboard/block-user/${item.id}/detail`}
                 />
             </div>

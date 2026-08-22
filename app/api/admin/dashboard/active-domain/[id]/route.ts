@@ -72,7 +72,7 @@ export async function PATCH(req: Request, { params }: ParamsProps) {
 
     } catch (error: any) {
         logger.error({
-            message: "Fail to update active domain ",
+            message: "Fail to update domain ",
             file: "api/admin/dashboard/active-domain/[id].route.ts",
             method: req.method,
             errorMessage: error instanceof Error ? error.message : String(error),

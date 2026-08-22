@@ -41,7 +41,7 @@ export default function Page() {
                 header: "Name",
                 accessor: (item) => (
                     <div className="flex items-center gap-2 group">
-                        <Link href={`/admin/dashboard/deleted-domain/${item.id}/detail`}>
+                        <Link href={`/admin/dashboard/deleted-user/${item.id}/detail`}>
                             <span className="truncate">{item.name}</span>
                         </Link>
                         <CopyText text={item.name} />
@@ -52,7 +52,7 @@ export default function Page() {
                 header: "Email",
                 accessor: (item) => (
                     <div className="flex items-center gap-2 group">
-                        <Link href={`/admin/dashboard/deleted-domain/${item.id}/detail`}>
+                        <Link href={`/admin/dashboard/deleted-user/${item.id}/detail`}>
                             <span className="truncate">{item.email}</span>
     
                         </Link>
@@ -64,7 +64,7 @@ export default function Page() {
                 header: "mobile_no",
                 accessor: (item) => (
                     <div className="flex items-center gap-2 group">
-                        <Link href={`/admin/dashboard/deleted-domain/${item.id}/detail`}>
+                        <Link href={`/admin/dashboard/deleted-user/${item.id}/detail`}>
                             <span className="truncate">{item.mobile_no}</span>
     
                         </Link>
@@ -76,7 +76,7 @@ export default function Page() {
             {
                 header: "Deleted On",
                 accessor: (item) => (
-                    <Link href={`/admin/dashboard/deleted-domain/${item.id}/detail`}>
+                    <Link href={`/admin/dashboard/deleted-user/${item.id}/detail`}>
     
                         <span>{dayjs(item.isDeletedOn).utc().format('DD-MM-YYYY h:mm A')}</span>
                     </Link>

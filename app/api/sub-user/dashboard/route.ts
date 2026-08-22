@@ -14,8 +14,6 @@ export async function GET(req: Request) {
     let todayFollowup = 0;
     let upcoming = 0;
     let pending = 0;
-
-
     let totalInquiries = 0;
 
 

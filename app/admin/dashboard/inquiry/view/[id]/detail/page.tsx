@@ -1,6 +1,3 @@
-// Domain Detail Page
-
-
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import dayjs from "dayjs";

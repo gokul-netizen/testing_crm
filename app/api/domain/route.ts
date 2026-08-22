@@ -1,11 +1,10 @@
+import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
-import { subscribe } from "diagnostics_channel";
 import { NextResponse } from "next/server";
 
 
 export async function GET(req : Request){
     try {
-       
 
         const domains = await prisma.inquiryDomain.findMany({
                 where : {
@@ -26,7 +25,15 @@ export async function GET(req : Request){
         return NextResponse.json({message : "Successfull" , data : domains} , {status : 200} );
         
     } catch (error) {
-        console.error("Something occured while fetching domain data" , error);
+       
+        logger.error({
+            message: "Fail to fetch domain inquiries",
+            file: "api/admin/dashboard/active-inquiries/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+        });
+
         return NextResponse.json({message : "fail" ,  error: error instanceof Error ? error.message : "Unknown error"},{ status: 500 })
     }
 }

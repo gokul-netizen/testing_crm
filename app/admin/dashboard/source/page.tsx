@@ -73,10 +73,10 @@ export default function Page() {
              <DataTableComponent
                 title="Source"
                 columns={columns}
+                placeholder="search by source"
                 data={data ?? []}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
-               
                 onEdit={(item) => `/admin/dashboard/source/${item.id}/edit`}
                 detail={(item) => `/admin/dashboard/source/${item.id}/detail`}
             />

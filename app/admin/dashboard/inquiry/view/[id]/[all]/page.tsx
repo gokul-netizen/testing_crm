@@ -7,9 +7,6 @@ import TimeLineAdminSide from "@/app/components/TimeLineAdminSide";
 import CustomBreadcrumb from '@/app/components/BreadCrumb';
 import { useParams } from 'next/navigation';
 
-
-
-
 export default function Page() {
 
   const [followup, setFollowup] = useState(false);

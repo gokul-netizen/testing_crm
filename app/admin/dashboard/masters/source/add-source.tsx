@@ -30,7 +30,7 @@ export default function RightSideDrawerSource({ open, onClose }: Props) {
         setLoading(true);
 
         try {
-            const res = await fetch("/api/source", {
+            const res = await fetch("/api/admin/master/source", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ source, status })
@@ -40,7 +40,7 @@ export default function RightSideDrawerSource({ open, onClose }: Props) {
 
             if (res.ok) {
                 toast.success("Saved Successfully");
-                mutate("/api/source");
+                mutate("/api/admin/master/source");
                 onClose();
                 setSource("");
                 setStatus("Active");
@@ -62,7 +62,7 @@ export default function RightSideDrawerSource({ open, onClose }: Props) {
         multiSetLoading(true);
 
         try {
-            const res = await fetch("/api/source", {
+            const res = await fetch("/api/admin/master/source", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ source, status })
@@ -72,7 +72,7 @@ export default function RightSideDrawerSource({ open, onClose }: Props) {
 
             if (res.ok) {
                 toast.success("Saved Successfully");
-                mutate("/api/source");
+                mutate("/api/admin/master/source");
                 setSource("");
                 setStatus("Active");
                 setMessage(null);

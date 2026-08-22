@@ -82,9 +82,7 @@ export default function Page() {
         },
     ];
 
-    const handleUndo = async()=>{
-        console.log("Undo")
-    }
+  
 
     return (
         <section className="p-4">
@@ -103,11 +101,12 @@ export default function Page() {
                 <DataTableComponent
                 title="Active Users"
                 columns={columns}
+                placeholder="search by name"
                 data={data ?? []}
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
                 onEdit={(item) => `/admin/dashboard/active-user/${item.id}/edit`}
-                onBlock={handleUndo}
+                 
                 detail={(item) => `/admin/dashboard/active-user/${item.id}/detail`}
                 />
             </div>

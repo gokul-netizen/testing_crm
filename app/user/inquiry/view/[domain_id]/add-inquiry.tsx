@@ -504,7 +504,7 @@ export default function Inquiry({ open, onClose }: Props) {
 
               <SerivceDropDown value={service} onChange={setService} domainId={domainId} userId={userId} />
 
-            </div>
+            </div>  
    
             <div>
               <label className="text-sm text-gray-500 font-medium">Requirment</label>

@@ -32,6 +32,8 @@ export default function Page() {
 
     if (error) return <div> Error : {error.message}</div>
 
+   
+
     const columns: Column<DataItem>[] = [
         {
             header: "Name",

@@ -11,7 +11,7 @@ export async function GET(req: Request) {
             where: {
                 inquiry: {
                     status: 1
-                }
+                },
             },
             orderBy: {
                 createdAt: "desc",

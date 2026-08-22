@@ -51,9 +51,7 @@ export default function EditDomainForm({ domain }: Props) {
         const imagePreview = URL.createObjectURL(selectedFile);
         setPreview(imagePreview)
     };
-
-
-
+    
     const router = useRouter();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -75,7 +73,7 @@ export default function EditDomainForm({ domain }: Props) {
                 fd.append("logo", formData.logo);
                 }
 
-            const res = await fetch(`/api/records/${domain.id}`, {
+            const res = await fetch(`/api/admin/master/domain/${domain.id}`, {
                 method: "PUT",
                 credentials: "include",
                 body:  fd,
@@ -87,6 +85,7 @@ export default function EditDomainForm({ domain }: Props) {
                 toast.success("updated successful");
                 
             } else {
+
                 toast.error("Failed to update domain");
             }
         } catch (error) {

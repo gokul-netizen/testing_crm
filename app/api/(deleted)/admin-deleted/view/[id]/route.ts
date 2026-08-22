@@ -18,8 +18,6 @@ export async function GET(req: Request, { params }: { params: Params }) {
                 name: true,
                 email: true,
                 phone: true,
-                 
-                
                 createdAt: true
             }
         });

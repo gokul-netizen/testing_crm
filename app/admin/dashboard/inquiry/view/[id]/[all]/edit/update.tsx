@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 
 export default function Update({ inquiry, domainId, inquiryID }: { inquiry: any, domainId: number, inquiryID: number }) {
 
-  const { data } = useSWR(`/api/source`, fetcher);
+  const { data } = useSWR(`/api/admin/master/source`, fetcher);
   const [inquiryData, setInquiryData] = useState(inquiry);
   const [source, setSource] = useState<string[]>([]);
 
