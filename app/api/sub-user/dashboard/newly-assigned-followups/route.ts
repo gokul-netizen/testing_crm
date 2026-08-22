@@ -18,7 +18,7 @@ export async function GET(req: Request) {
         const newlyassignedFollowups = await prisma.user.findUnique({
             where: {
                 id: userId,
-                status: "Active",
+                
             },
             select: {
                 inquiryDomain: {

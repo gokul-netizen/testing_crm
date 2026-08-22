@@ -18,7 +18,7 @@ export default function Page() {
     const { id } = params;
     const active = `/api/user/${id}/profile`
 
-    const { data, error, isLoading } = useSWR(`/api/admin-profile`, fetcher);
+    const { data, error, isLoading } = useSWR(`/api/admin/profile`, fetcher);
 
     const adminDetail = data?.data
 

@@ -44,16 +44,17 @@ export default function Page() {
         try {
 
             const res = await fetch(`/api/admin/dashboard/source/${id}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ source, status }),
             });
+            
+            const data = await res.json();
 
-            if (!res.ok) throw new Error("Failed to update");
-
+            if (!res.ok) throw new Error(data.message || "Failed to update");
              
             mutate(`/api/source/${id}`)
-            toast.success("Updated Successfully");
+            toast.success(data.message || "Updated Successfully");
             router.push(`/admin/dashboard/source`);
 
 

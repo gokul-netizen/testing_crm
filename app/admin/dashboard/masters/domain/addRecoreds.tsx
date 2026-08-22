@@ -39,7 +39,7 @@ export default function RightSideDrawer({ open, onClose }: Props) {
         if (logo) formData.append("logo", logo);
 
         try {
-            const res = await fetch("/api/inquiry-domain", {
+            const res = await fetch("/api/admin/master/domain", {
                 method: "POST",
                 body: formData,
             });
@@ -48,7 +48,7 @@ export default function RightSideDrawer({ open, onClose }: Props) {
 
             if (res.ok) {
                 toast.success("Saved Successfully");
-                mutate("/api/domain");
+                mutate("/api/admin/master/domain");
                 onClose();
                 setDomainName("");
                 setLogo(null);
@@ -73,7 +73,7 @@ export default function RightSideDrawer({ open, onClose }: Props) {
         if (logo) formData.append("logo", logo);
 
         try {
-            const res = await fetch("/api/inquiry-domain", {
+            const res = await fetch("/api/admin/master/domain", {
                 method: "POST",
                 body: formData,
             });
@@ -82,7 +82,7 @@ export default function RightSideDrawer({ open, onClose }: Props) {
 
             if (res.ok) {
                 toast.success("Saved Successfully");
-                mutate("/api/domain");
+                mutate("/api/admin/master/domain");
                 setDomainName("");
                 setLogo(null);
                 setStatus("Active");

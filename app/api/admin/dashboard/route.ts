@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import dayjs from "dayjs";
 import { NextResponse } from "next/server";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import logger from "@/lib/logs";
 dayjs.extend(customParseFormat);
 
 
@@ -70,16 +71,16 @@ export async function GET(req: Request) {
                 where: {
                     date: today,
                 },
-                
+
                 orderBy: {
                     createdAt: "desc",
                 },
                 select: {
-                        id: true,
-                        inquiryID: true,
-                        createdAt: true,
-                        remarks : true
-                    },
+                    id: true,
+                    inquiryID: true,
+                    createdAt: true,
+                    remarks: true
+                },
             }),
 
             await prisma.DomainResponse.count({
@@ -99,7 +100,7 @@ export async function GET(req: Request) {
                     inquiry: {
                         status: 1,
                     },
-                    followUpStatus : "Follow Up",
+                    followUpStatus: "Follow Up",
                 },
                 distinct: ["inquiryID"],
                 orderBy: {
@@ -125,7 +126,7 @@ export async function GET(req: Request) {
         const pendingData = followupInquiries.filter((item: any) => {
 
             if (!item.date) return false;
-            const itemDate = dayjs(item.date, "DD-MM-YYYY");
+            const itemDate = dayjs(item.date, "DD-MM-YYYY" );
             if (!itemDate.isValid()) return false;
             return itemDate.isBefore(todaysDate, "day");
 
@@ -141,13 +142,33 @@ export async function GET(req: Request) {
 
         });
 
+        const todaysFollowUpData = followupInquiries.filter((item: any) => {
+            if (!item.date) return false;
+
+            const itemDate = dayjs(item.date, "DD-MM-YYYY", true);
+
+            if (!itemDate.isValid()) return false;
+
+            return itemDate.isSame(todaysDate, "day");
+        });
+
         const pendingCount = pendingData.length;
         const upcomingCount = UpcomingData.length;
-        const todaysFollowUp = todaysfollowup.length;
+        const todaysFollowUp = todaysFollowUpData.length;
 
 
         return NextResponse.json({ activeCount, blockCount, deleteCount, sourceCount, activeUser, blockUser, deleteUser, activeInquiry, deletedInquiry, todaysFollowUp, upcomingCount, notInterested, closed, pendingCount, adminUser }, { status: 200 });
     } catch (error) {
+
+
+        logger.error({
+            message: "Fail to get count of domain, user and followups",
+            file: "api/admin/dashboard/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+        });
+
         return NextResponse.json({ error: error }, { status: 500 });
     }
 }

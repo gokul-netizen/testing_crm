@@ -1,6 +1,5 @@
 'use client';
 
-
 import useSWR, { mutate } from "swr";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -12,7 +11,6 @@ import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { useState } from "react";
 import RightSideDrawer from "./addRecoreds";
 import { toast } from "sonner";
-import { updateDomainStatus } from "@/lib/update-status";
 import { confirmAction } from "@/app/components/ConfirmSooner";
 dayjs.extend(utc);
 
@@ -40,8 +38,6 @@ export default function Page() {
   if (error) return <p>Failed to load domains {error.message}</p>;
   if (!data) return <p>No data</p>;
 
- 
-
   const getSelectedIds = () => {
     return Object.keys(selectedRows).filter((id) => selectedRows[Number(id)]).map(Number)
   }
@@ -56,7 +52,20 @@ export default function Page() {
       });
     }
     try {
-      await updateDomainStatus(ids, "Active");
+
+      const res = await fetch("/api/admin/master/domain", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids, status: "Active" }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to update status");
+      }
+
       mutate("/api/admin/master/domain");
       setSelectedRows({});
       toast.success("Status updated successfully");
@@ -73,7 +82,18 @@ export default function Page() {
       });
     }
     try {
-      await updateDomainStatus(ids, "Blocked");
+      const res = await fetch("/api/admin/master/domain", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids, status: "Blocked" }),
+      });
+
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || "Failed to update status");
+      }
       mutate("/api/admin/master/domain");
       setSelectedRows({});
       toast.success("Status updated successfully");
@@ -84,24 +104,29 @@ export default function Page() {
 
 
   const handleDelete = async (item: DataItem) => {
-      confirmAction({
-        title: `Delete "${item.domainName}"?`,
-        description: "",
-        confirmLabel: "Delete",
-        variant: "danger",  
-        onConfirm: async () => {
-          const res = await fetch(`/api/records/${item.id}`, {
-            method: "DELETE",
-          });
-  
-          if (!res.ok) {
-            throw new Error("Failed to delete record");
-          }
-          mutate("/api/admin/master/domain");
-          toast.success(`Domain "${item.domainName}" deleted`);
-        },
-      });
-    };
+    confirmAction({
+      title: `Are you sure you want to delete it?`,
+      description: "",
+      confirmLabel: "Delete",
+      variant: "danger",
+      onConfirm: async () => {
+        const res = await fetch(`/api/admin/master/domain`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ids: [item.id] }),
+
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to delete record");
+        }
+        mutate("/api/admin/master/domain");
+        toast.success(`Domain "${item.domainName}" deleted`);
+      },
+    });
+  };
 
   const handleAllDelete = async () => {
     const ids = getSelectedIds();
@@ -112,12 +137,13 @@ export default function Page() {
       variant: "danger",
       onConfirm: async () => {
         try {
-          const res = await fetch("/api/records/", {
-            method: "PATCH",
-            body: JSON.stringify({ ids }),
+          const res = await fetch(`/api/admin/master/domain`, {
+            method: "DELETE",
             headers: {
               "Content-Type": "application/json",
             },
+            body: JSON.stringify({ ids }),
+
           });
 
           if (!res.ok) {
@@ -194,7 +220,7 @@ export default function Page() {
 
       <div >
         <DataTableComponent
-          title="Active Domains"
+          title="Domains"
           columns={columns}
           data={data?.data ?? []}
           selectedRows={selectedRows}

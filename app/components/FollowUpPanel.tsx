@@ -30,7 +30,7 @@ type Props = {
   usersApi?: string;
 };
 
-export default function FollowUpPanel({ inquiryId, usersApi = `/api/user/get-users`, }: Props) {
+export default function FollowUpPanel({ inquiryId, usersApi = `/api/admin/get-users`, }: Props) {
   const [open, setOpen] = useState(false);
   const [followUp, setFollowUp] = useState<string[]>([]);
   const [date, setDate] = useState("");
@@ -115,6 +115,7 @@ export default function FollowUpPanel({ inquiryId, usersApi = `/api/user/get-use
       }
 
       mutate(`/api/user/inquiry/view/inquiry/${inquiryId}/timeline`);
+      mutate(`/api/admin/timeline/${inquiryId}`);
 
       toast.success("Follow up updated");
       setOpen(false);

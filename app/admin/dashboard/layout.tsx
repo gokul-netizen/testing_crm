@@ -16,7 +16,7 @@ export default function RootLayout({ children }: Props) {
 
   return (
     <>
-      {/* SIDEBAR */}
+     
       <Sidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
@@ -26,7 +26,7 @@ export default function RootLayout({ children }: Props) {
         setIsMobileOpen={setIsMobileOpen}
       />
 
-      {/* MAIN CONTENT */}
+      
       <main
         className={`flex-1 overflow-auto transition-all  duration-300 bg-[#f8f7fa] ${
           desktopCollapsed ? "lg:ml-20" : "lg:ml-72"

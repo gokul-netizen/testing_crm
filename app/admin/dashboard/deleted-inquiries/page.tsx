@@ -31,8 +31,6 @@ export default function Page() {
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
     const { data, error, isLoading } = useSWR("/api/admin/dashboard/deleted-inquiries", fetcher);
 
-    
-
     if (isLoading)
         return <SpinnerCircle4 />;
 
@@ -100,9 +98,6 @@ export default function Page() {
 
     const handleUndo = async () => {
         const ids = selectedIds();
-
-        
-
         if (ids.length === 0) {
             return toast.error("Please select a record first");
         }

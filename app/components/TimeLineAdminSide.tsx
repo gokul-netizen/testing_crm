@@ -18,10 +18,10 @@ dayjs.extend(utc);
 type Props = {
     id: string | number;
     userId?: string | number;
-    apiUrl?: string;
+     
 };
 
-export default function TimeLineAdminSide({ id, userId, apiUrl }: Props) {
+export default function TimeLineAdminSide({ id, userId }: Props) {
     const [openAllRemarks, setOpenAllRemarks] = useState(true);
     const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
@@ -31,7 +31,7 @@ export default function TimeLineAdminSide({ id, userId, apiUrl }: Props) {
     }
     const inquiryId = id;
 
-    const { data, isLoading, error } = useSWR(`/api/todays-followup/${inquiryId}`, fetcher);
+    const { data, isLoading, error } = useSWR(`/api/admin/timeline/${inquiryId}`, fetcher);
 
     const timeLine = data?.history;
     const inquiryDetail = data?.inquiryDetail;
@@ -56,7 +56,7 @@ export default function TimeLineAdminSide({ id, userId, apiUrl }: Props) {
                     <button className="text-[#a5a3ae] hover:text-gray-600">
                         <MoreVertical size={20} />
                     </button>
-                    <FollowUpPanel  inquiryId={inquiryId} usersApi={apiUrl} />
+                    <FollowUpPanel inquiryId={inquiryId}   />
                 </div>
             </div>
 
@@ -79,15 +79,15 @@ export default function TimeLineAdminSide({ id, userId, apiUrl }: Props) {
                     onClick={() => setOpenAllRemarks(prev => !prev)}
                     className="px-4 py-1.5 cursor-pointer rounded-md bg-[#7367f0] text-white text-sm font-medium transition-all duration-200 hover:bg-[#6254e8] active:scale-95 shadow-md"
                 >
-                    {openAllRemarks ? "See All Remarks" : "Close All Remarks"} 
+                    {openAllRemarks ? "See All Remarks" : "Close All Remarks"}
                 </button>
             </div>
 
 
-           <div className="px-2 py-4 md:px-8 md:py-0 pb-8 flex-1 ">
+            <div className="px-2 py-4 md:px-8 md:py-0 pb-8 flex-1 ">
                 {timeLine?.length > 0 ? (
                     timeLine.map((item: any, index: number) => {
-                        
+
 
                         return (
                             <div key={item.id || index} className="flex gap-5 relative group">
@@ -117,7 +117,7 @@ export default function TimeLineAdminSide({ id, userId, apiUrl }: Props) {
                                             )}
 
 
-                                            <div >
+                                            <div className='lg:hidden' >
                                                 <p>{timeSince(item.createdAt)}
 
                                                     <span className="text-[13px] px-2 text-blue-700">
@@ -155,9 +155,7 @@ export default function TimeLineAdminSide({ id, userId, apiUrl }: Props) {
 
                                             </div>
 
-                                            <div className="mt-2">
-
-
+                                            <div className="">
                                                 {
                                                     !openAllRemarks ? (
                                                         <div className="hidden lg:block">

@@ -146,7 +146,7 @@ export default function Page() {
     return (
         <section className="p-4">
             <DataTableComponent
-                title="User List"
+                title="Deleted Users"
                 columns={columns}
                 data={data?.data ?? []}
                 selectedRows={selectedRows}

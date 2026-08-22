@@ -1,4 +1,3 @@
-import { getCurrentUTCFromIST } from "@/lib/date-time";
 import getSession from "@/lib/jwt";
 import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
@@ -53,12 +52,8 @@ export async function PATCH(req: Request) {
         const userId = await getSession();
         if (!userId) return NextResponse.json({ message: "Unauth" }, { status: 401 });
 
-        const Id = userId?.id;
-
         const body = await req.json();
         const { ids } = body;
-
-
 
         if (!Array.isArray(ids) || ids.length === 0) {
             return NextResponse.json(

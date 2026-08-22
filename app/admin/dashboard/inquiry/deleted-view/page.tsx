@@ -3,10 +3,8 @@
 import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
-import { exportExcelData } from "@/lib/export-excel-data";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import DataTableComponent, { Column } from "@/app/components/DataTable";
-import Link from "next/link";
 import CopyText from "@/app/components/CopyText";
 import { useState } from "react";
 import dayjs from "dayjs";
@@ -14,9 +12,6 @@ import utc from "dayjs/plugin/utc";
 import { toast } from "sonner";
 import { confirmAction } from "@/app/components/ConfirmSooner";
 dayjs.extend(utc);
-
-
-
 
 type DataItem = {
     id: number;
@@ -29,9 +24,7 @@ type DataItem = {
 export default function Page() {
 
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
-    const { data, error, isLoading } = useSWR("/api/admin-deleted/view", fetcher);
-
- 
+    const { data, error, isLoading } = useSWR("/api/admin/inquiries/deleted-inquiries", fetcher);
 
     if (isLoading)
         return <SpinnerCircle4 />;
@@ -111,7 +104,7 @@ export default function Page() {
             confirmLabel: "Confirm",
             variant: "primary",
             onConfirm: async () => {
-                const res = await fetch(`/api/admin-deleted/view/deleted-view`, {
+                const res = await fetch(`/api/admin/inquiries/revoke-inquiries`, {
                     method: "PATCH",
                     headers: {
                         'Content-Type': 'application/json',
@@ -125,12 +118,10 @@ export default function Page() {
                 }
 
                 toast.success("Record undo successfully");
-                mutate(`/api/admin-deleted/view`);
+                mutate(`/api/admin/inquiries/deleted-inquiries`);
             }
         });
     };
-
-
 
     const handleUndoById = async (item: DataItem) => {
         confirmAction({
@@ -140,8 +131,12 @@ export default function Page() {
             variant: "primary",
 
             onConfirm: async () => {
-                const res = await fetch(`/api/admin-deleted/view/${item.id}`, {
-                    method: "PUT",
+                const res = await fetch(`/api/admin/inquiries/revoke-inquiries`, {
+                    method: "PATCH",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ids : [item.id] })
                 });
 
                 if (!res.ok) {
@@ -150,14 +145,10 @@ export default function Page() {
                 }
 
                 toast.success("Record restored successfully");
-                mutate(`/api/admin-deleted/view`);
+                mutate(`/api/admin/inquiries/deleted-inquiries`);
             },
         });
     };
-
-
-
-
 
     return (
         <div className="p-6">

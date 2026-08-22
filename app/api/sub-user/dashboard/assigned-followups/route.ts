@@ -19,7 +19,7 @@ export async function GET(req: Request) {
         const assignedFollowups = await prisma.user.findUnique({
             where: {
                 id: userId,
-                status: "Active",
+                
             },
             select: {
                 id: true,
@@ -72,7 +72,7 @@ export async function GET(req: Request) {
             },
         });
 
-        const data = assignedFollowups.inquiryDomain.domainResponse;
+        const data = assignedFollowups?.inquiryDomain?.domainResponse;
 
         return NextResponse.json({ data }, { status: 200 })
 

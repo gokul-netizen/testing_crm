@@ -17,10 +17,6 @@ export default function Page() {
     const [followup, setFollowup] = useState(false);
     const { id } = params;
 
-    
-
-
-
     return (
         <section className="px-3">
 

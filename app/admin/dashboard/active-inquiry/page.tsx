@@ -9,6 +9,7 @@ import useSWR from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
+import Link from "next/link";
 
 dayjs.extend(utc);
 
@@ -36,7 +37,7 @@ export default function Page() {
             header: " Name",
             accessor: (item) => (
                 item.name ? (<div className="flex items-center gap-2 group">
-                    <span className="truncate">{item.name}</span>
+                    <Link href={`/admin/dashboard/active-inquiry/${item.id}`}><span className="truncate">{item.name}</span></Link>
                     <CopyText text={item.name} />
                 </div>) : "-"
             ),
@@ -45,7 +46,8 @@ export default function Page() {
             header: "Domain",
             accessor: (item) => (
                 item.domain ? (<div className="flex items-center gap-2 group">
-                    <span className="truncate">{item.domain?.domainName} </span>
+                    <Link href={`/admin/dashboard/active-inquiry/${item.id}`}><span className="truncate">{item.domain?.domainName} </span></Link>
+
                     <CopyText text={String(item.domain?.domainName)} />
                 </div>
                 ) : "-"
@@ -57,21 +59,34 @@ export default function Page() {
             accessor: (item) => (
                 item.email ? (
                     <div className="flex items-center gap-2 group">
-                        <span className="truncate">{item.email} </span>
+                        <Link href={`/admin/dashboard/active-inquiry/${item.id}`}><span className="truncate">{item.email} </span></Link>
+
                         <CopyText text={String(item.email)} />
                     </div>
                 ) : "-"
             ),
         },
-        { header: "phone", accessor: "phone" },
 
+       { 
+        header: "phone", 
+        accessor: (item) => (
+            item.phone ? (
+                <div className="flex items-center gap-2 group">
+                    <Link href={`/admin/dashboard/active-inquiry/${item.id}`}>
+                        <span className="truncate">{item.phone}</span>
+                    </Link>
+                    <CopyText text={String(item.phone)} />
+                </div>
+            ) : "-"
+        ),
+    },
     ];
- 
+
 
     return (
         <section className="p-4">
 
-             <div className="flex justify-end py-2 px-3">
+            <div className="flex justify-end py-2 px-3">
                 <CustomBreadcrumb
                     paths={[
                         { label: "Dashboard", href: `/admin/dashboard/` },
@@ -87,8 +102,9 @@ export default function Page() {
                     data={data ?? []}
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
-                    onEdit={() => "edit page"}
-                     
+                    
+                    detail={(item)=> `/admin/dashboard/active-inquiry/${item.id}`}
+
                 />
             </div>
         </section>

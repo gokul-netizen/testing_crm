@@ -50,6 +50,13 @@ export async function GET(req: Request, { params }: { params: Promise<UserId> })
                 followUpStatus: true,
                 domain_id: true,
 
+                _count: {
+                    select: {
+                        followups: true,
+                    },
+                },
+
+
                 followups: {
 
                     orderBy: { createdAt: "desc" },
@@ -70,8 +77,8 @@ export async function GET(req: Request, { params }: { params: Promise<UserId> })
 
         return NextResponse.json(inquiry);
     } catch (error: any) {
-         logger.error({
-            
+        logger.error({
+
             message: "Fail to get inquiries",
             file: "api/sub-user/inquiry/view/[domainId]/route.ts",
             method: req.method,
@@ -174,7 +181,7 @@ export async function POST(req: Request, { params }: { params: Promise<UserId> }
                 followUpStatus: followup.join(", "),
                 assignId: assignId,
                 addedType: "User",
-                address : clientaddress,
+                address: clientaddress,
                 response: {
                     body: formattedBody,
                     Domain_Name: domain.domainName,
@@ -207,7 +214,7 @@ export async function POST(req: Request, { params }: { params: Promise<UserId> }
 
     } catch (error: any) {
         logger.error({
-            
+
             message: "Fail to add new inquiry",
             file: "api/sub-user/inquiry/view/[domainId]/route.ts",
             method: req.method,

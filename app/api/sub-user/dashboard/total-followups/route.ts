@@ -17,7 +17,7 @@ export async function GET(req: Request) {
         const followups = await prisma.user.findUnique({
             where: {
                 id: userId,
-                status: "Active"
+               
             },
 
             select: {

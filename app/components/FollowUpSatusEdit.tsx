@@ -27,7 +27,7 @@ dayjs.extend(customParseFormat);
 
 interface IncomingProps {
   inquiryId: string | number;
-  statusId: string | number;
+  followupid: string | number;
   userId: string | number;
   backUrl?: string | any;
 }
@@ -40,7 +40,7 @@ type User = {
 
 export default function FollowUpStatusEdit({
   inquiryId,
-  statusId,
+  followupid,
   userId,
   backUrl
 
@@ -57,12 +57,7 @@ export default function FollowUpStatusEdit({
 
   const route = useRouter();
 
-
- 
-
-  const { data, isLoading } = useSWR(`/api/todays-followup/${inquiryId}/${statusId}`, fetcher);
-
- 
+  const { data, isLoading } = useSWR(`/api/sub-user/inquiry/${followupid}`, fetcher);
 
   const selectedStatus = followUp[0];
 
@@ -129,7 +124,7 @@ export default function FollowUpStatusEdit({
       };
 
       const res = await fetch(
-        `/api/todays-followup/${inquiryId}/${statusId}`,
+        `/api/todays-followup/${inquiryId}/${followupid}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

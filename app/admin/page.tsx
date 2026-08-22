@@ -67,7 +67,7 @@ export default function LoginPage() {
       return;
     }
 
-    const res = await fetch(`/api/admin-otp`, {
+    const res = await fetch(`/api/admin/admin-otp`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ phone: phoneNumber }),
@@ -93,7 +93,7 @@ export default function LoginPage() {
 
   const handleVerifyOtp = async () => {
 
-    const res = await fetch(`/api/admin-otp/${phoneNumber}`, {
+    const res = await fetch(`/api/admin/admin-otp/${phoneNumber}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code: sixDigitsOtp }),
@@ -219,7 +219,7 @@ export default function LoginPage() {
 
               {error && <p className="text-red-600 mt-2">{error}</p>}
 
-              <div className="flex items-center justify-between mb-4">
+              {/* <div className="flex items-center justify-between mb-4">
                 <label className="flex items-center space-x-2 text-gray-700 text-sm">
                   <input
                     type="checkbox"
@@ -234,7 +234,7 @@ export default function LoginPage() {
                 >
                   Forgot password?
                 </Link>
-              </div>
+              </div> */}
 
               <button
                 type="submit"

@@ -1,15 +1,14 @@
-import { prisma, globalForPrisma } from "@/lib/prisma";
-import { SignJWT } from "jose";
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { GenerateToken } from "@/lib/tokenJwt";
 import { headers } from 'next/headers';
 import { getCurrentUTCFromIST } from "@/lib/date-time";
+import logger from "@/lib/logs";
 
 
 export async function POST(req: Request) {
     try {
-
 
         const body = await req.json();
         const { username, password } = body;
@@ -71,7 +70,16 @@ export async function POST(req: Request) {
         return response;
 
     } catch (error) {
-        console.error(error);
+
+        logger.error({
+            message: "Fail to loggin on admin side",
+            file: "api/admin/route.ts",
+            method: req.method,
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+        });
+
+         
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
     }
 }

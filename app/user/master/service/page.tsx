@@ -18,14 +18,10 @@ interface Service {
     service: string;
     status: string;
     createdAt: string;
+    domainId: string | number;
 }
 
-interface ResponseData {
-    inquiryDomain: {
-        domainName: string;
-        service: Service[];
-    };
-}
+type ResponseData = Service[];
 
 export default function Page() {
     const { data, error, isLoading } = useSWR<ResponseData>(
@@ -33,6 +29,7 @@ export default function Page() {
         fetcher
     );
 
+     
 
     const [open, setOpen] = useState(false);
 
@@ -40,46 +37,49 @@ export default function Page() {
         Record<string | number, boolean>
     >({});
 
-    if (isLoading) return <SpinnerCircle4 />;
+    if (isLoading) {
+        return <SpinnerCircle4 />;
+    }
 
-    if (error)
-        return <div className="p-4 text-red-500">Failed to load users.</div>;
+    if (error) {
+        return (
+            <div className="p-4 text-red-500">
+                Failed to load services.
+            </div>
+        );
+    }
 
     const columns = [
         {
             header: "Service",
             accessor: (item: Service) => (
                 <div className="flex items-center gap-2 group">
-                    <Link href={`/user/master/service/${item.id}/detail`}>
-                        <span className="truncate">{item.service}</span>
+                    <Link
+                        href={`/user/master/service/${item.id}/detail`}
+                    >
+                        <span className="truncate">
+                            {item.service}
+                        </span>
                     </Link>
+
                     <CopyText text={item.service} />
                 </div>
             ),
         },
-        {
-            header: "Domain Name",
-            mobileHeader: "DN",
-            accessor: (item: Service) => (
-                <div className="flex items-center gap-2 group">
-                    <Link href={`/user/master/service/${item.id}/detail`}>
-                        <span className="truncate">
-                            {data?.inquiryDomain.domainName}
-                        </span>
-                    </Link>
-                </div>
-            ),
-        },
+
         {
             header: "Status",
             accessor: (item: Service) => (
                 <div className="flex items-center gap-2 group">
-                    <Link href={`/user/master/service/${item.id}/detail`}>
+                    <Link
+                        href={`/user/master/service/${item.id}/detail`}
+                    >
                         <span
-                            className={`truncate ${item.status === "Active"
+                            className={`truncate ${
+                                item.status === "Active"
                                     ? "text-[#00bad1]"
                                     : "text-red-600"
-                                }`}
+                            }`}
                         >
                             {item.status}
                         </span>
@@ -94,20 +94,23 @@ export default function Page() {
             <DataTableComponent
                 title="Service"
                 columns={columns}
-                data={data?.inquiryDomain?.service || []}
+                data={data || []}
                 placeholder="Search by service.."
                 selectedRows={selectedRows}
                 setSelectedRows={setSelectedRows}
-                onEdit={(item: Service) => `/user/master/service/${item.id}/edit`}
+                onEdit={(item: Service) =>
+                    `/user/master/service/${item.id}/edit`
+                }
                 onAdd={() => setOpen(true)}
-                detail={(item: Service) => `/user/master/service/${item.id}/detail`}
+                detail={(item: Service) =>
+                    `/user/master/service/${item.id}/detail`
+                }
             />
 
             {open && (
                 <RightSideDrawerservice
                     open={open}
                     onClose={() => setOpen(false)}
-
                 />
             )}
         </section>

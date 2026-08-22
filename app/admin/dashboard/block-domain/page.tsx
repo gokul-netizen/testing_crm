@@ -28,9 +28,7 @@ export default function Page() {
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     if (isLoading) return <SpinnerCircle4 />
-
     if (error) return <div> Error : {error.message}</div>
-
 
     const columns: Column<DataItem>[] = [
         {
@@ -72,8 +70,6 @@ export default function Page() {
             className: "truncate"
         },
     ];
-
-
 
     return (
         <section className="p-3">

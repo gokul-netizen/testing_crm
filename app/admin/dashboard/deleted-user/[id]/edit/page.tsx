@@ -26,10 +26,6 @@ export default function Page() {
     const { data, error, isLoading } = useSWR(`/api/admin/dashboard/active-user/${id}`, fetcher);
     const detailData = data?.data;
 
- 
-    
- 
-
     useEffect(() => {
     if (detailData) {
         setName(detailData.name ?? '');
@@ -45,7 +41,7 @@ export default function Page() {
         setLoading(true);
         
         try {
-            const res = await fetch(`/api/active-user/${id}`, {
+            const res = await fetch(`/api/admin/dashboard/active-user/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

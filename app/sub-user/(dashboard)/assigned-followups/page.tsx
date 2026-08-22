@@ -19,7 +19,6 @@ dayjs.extend(utc);
 
 
 type FollowUp = {
-
     date: string;
     time: string;
     remarks: string;
@@ -28,17 +27,14 @@ type FollowUp = {
     assignToName: string,
     addedBy: string;
     isPublic: boolean;
-
 }
 
 type DataItem = {
-
     id: number,
     name: string,
     companyName: string,
     phone: number | string
     followups: FollowUp[]
-
 };
 
 
@@ -48,6 +44,8 @@ export default function Page() {
     const { id } = params;
 
     const { data, error, isLoading } = useSWR(`/api/sub-user/dashboard/assigned-followups`, fetcher);
+
+    console.log(data);
 
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
