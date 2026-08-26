@@ -6,7 +6,6 @@ import useSWR from 'swr';
 import { LuLayoutList } from 'react-icons/lu';
 import SpinnerCircle4 from '@/components/spinner-10';
 import { timeSince } from '@/lib/time-ago';
-import SubUserFollowUpPanel from '@/app/components/SubUserFollowUpPanel';
 import dayjs from 'dayjs';
 import { FaRegEdit } from 'react-icons/fa';
 import Link from 'next/link';

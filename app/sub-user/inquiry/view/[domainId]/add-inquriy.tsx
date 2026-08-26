@@ -67,7 +67,7 @@ export default function Inquiry({ open, onClose }: Props) {
     const [isPublic, setIsPublic] = useState(true);
     const [callVisit, setCallVisit] = useState("Call");
     const [reminderTime, setReminderTime] = useState<Dayjs | null>(null);
-    const [inquiryAddress , setInquiryAddress] = useState("");
+    const [inquiryAddress, setInquiryAddress] = useState("");
     const [address, setAddress] = useState("");
 
     const Remindertime = reminderTime?.toDate().toTimeString().split(" ")[0];
@@ -95,6 +95,8 @@ export default function Inquiry({ open, onClose }: Props) {
     useEffect(() => {
         setTime(`${hour}-${minute}-${ampm}`);
     }, [hour, minute, ampm]);
+
+
 
 
     const followUphandling = (newValues: string[]) => {
@@ -208,7 +210,7 @@ export default function Inquiry({ open, onClose }: Props) {
                 "IsPublic": isPublic,
                 "Contact Mode": callVisit,
                 "Reminder": reminderTime ? reminderDateTime : null,
-                "Client Address" : inquiryAddress,
+                "Client Address": inquiryAddress,
                 "Address": address
             }
 
@@ -261,46 +263,29 @@ export default function Inquiry({ open, onClose }: Props) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+
         try {
+            if (!validateForm()) {
+                return;
+            }
 
             const res = await fetch(`/api/user/inquiry/inquiry-exist`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, phone, phoneSecondary })
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    phone,
+                    phoneSecondary,
+                }),
             });
 
             const check = await res.json();
 
-            if (check.exist) {
-                confirmAction({
-                    title: "Inquiry Already Exists",
-                    description: `This inquiry already exists. Added On ${dayjs(check.data.createdAt).utc().format("YYYY-MM-DD HH:mm")} And Follow Up Status is ${check.data.FollowUpStatus}`,
-                    confirmLabel: "Save Anyway",
-                    onConfirm: async () => {
-                        const success = await handSave();
-                        if (success) {
-                            setMessage(null);
-                            setName('');
-                            setCompanyName("");
-                            setPhone('');
-                            setPhoneSecondary('');
-                            setEmail('');
-                            setWebsite('');
-                            setMessageText('');
-                            setSource([]);
-                            setFollowUp([]);
-                            setService([]);
-                            setDate('');
-                            setTime('');
-                            setCallVisit("Call");
-                            setReminderTime(null)
-                            setRemarks('');
-                            onClose();
-                        }
-                    },
-                });
-            } else {
+            const saveInquiry = async () => {
                 const success = await handSave();
+
                 if (success) {
                     setMessage(null);
                     setName('');
@@ -316,15 +301,75 @@ export default function Inquiry({ open, onClose }: Props) {
                     setDate('');
                     setTime('');
                     setCallVisit("Call");
-                    setReminderTime(null)
+                    setReminderTime(null);
                     setRemarks('');
                     onClose();
                 }
+            };
+
+            
+            const noConfirmRequired =
+                followUp.includes("Not Interested") ||
+                followUp.includes("Closed");
+
+            if (noConfirmRequired) {
+                await saveInquiry();
+                return;
             }
+
+             
+            if (check.exist) {
+                confirmAction({
+                    title: "Inquiry Already Exists",
+                    description: `This inquiry already exists. Added On ${dayjs(
+                        check.data.createdAt
+                    )
+                        .utc()
+                        .format("YYYY-MM-DD HH:mm")} And Follow Up Status is ${check.data.FollowUpStatus
+                        }`,
+                    confirmLabel: "Save Anyway",
+                    onConfirm: async () => {
+                        await saveInquiry();
+                    },
+                });
+            } else {
+                 
+                toast("Confirm Save", {
+                    description:
+                        date && time
+                            ? `Are you sure you want to save this inquiry for\n ${formatToDMY(date)} at ${time}?`
+                            : "Are you sure you want to save this inquiry?",
+
+                    className:
+                        "!w-[520px] !max-w-[520px] bg-[#7367f0] text-white border-none [&_[data-button]]:!ml-8",
+
+                    descriptionClassName: "text-white/80",
+
+                    duration: Infinity,
+
+                    action: {
+                        label: "Save",
+                        onClick: async () => {
+                            await saveInquiry();
+                        },
+                    },
+
+                    cancel: {
+                        label: "Cancel",
+                        onClick: () => {
+                            console.log("Cancelled");
+                        },
+                    },
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong");
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleMutliSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -344,7 +389,7 @@ export default function Inquiry({ open, onClose }: Props) {
             setService([]);
             setDate('');
             setCallVisit("Call");
-            setReminderTime(null)
+            setReminderTime(null);
             setTime('');
             setRemarks('');
         };
@@ -364,6 +409,25 @@ export default function Inquiry({ open, onClose }: Props) {
 
             const check = await res.json();
 
+            const saveInquiry = async () => {
+                const success = await handSave();
+
+                if (success) {
+                    resetForm();
+                }
+            };
+
+
+            const noConfirmRequired =
+                followUp.includes("Not Interested") ||
+                followUp.includes("Closed");
+
+            if (noConfirmRequired) {
+                await saveInquiry();
+                return;
+            }
+
+
             if (check.exist) {
                 confirmAction({
                     title: "Inquiry Already Exists",
@@ -371,24 +435,42 @@ export default function Inquiry({ open, onClose }: Props) {
                         check.data.createdAt
                     )
                         .utc()
-                        .format(
-                            "YYYY-MM-DD HH:mm"
-                        )} And Follow Up Status is ${check.data.FollowUpStatus}`,
+                        .format("YYYY-MM-DD HH:mm")} And Follow Up Status is ${check.data.FollowUpStatus
+                        }`,
                     confirmLabel: "Save Anyway",
                     onConfirm: async () => {
-                        const success = await handSave();
-
-                        if (success) {
-                            resetForm();
-                        }
+                        await saveInquiry();
                     },
                 });
             } else {
-                const success = await handSave();
 
-                if (success) {
-                    resetForm();
-                }
+                toast("Confirm Save", {
+                    description:
+                        date && time
+                            ? `Are you sure you want to save this inquiry for ${formatToDMY(date)} at ${time}?`
+                            : "Are you sure you want to save this inquiry?",
+
+                    className:
+                        "!w-[520px] !max-w-[520px] bg-[#7367f0] text-white border-none [&_[data-button]]:!ml-8",
+
+                    descriptionClassName: "text-white/80",
+
+                    duration: Infinity,
+
+                    action: {
+                        label: "Save",
+                        onClick: async () => {
+                            await saveInquiry();
+                        },
+                    },
+
+                    cancel: {
+                        label: "Cancel",
+                        onClick: () => {
+                            console.log("Cancelled");
+                        },
+                    },
+                });
             }
         } catch (error) {
             console.error(error);

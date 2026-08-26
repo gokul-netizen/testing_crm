@@ -22,7 +22,7 @@ export default function OverView() {
         fetcher
     );
 
-    console.log(data);
+   
 
     const detailData = data?.data;
 

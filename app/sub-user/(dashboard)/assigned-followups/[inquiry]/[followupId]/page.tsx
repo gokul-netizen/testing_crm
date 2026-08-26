@@ -18,7 +18,6 @@ export default function page(){
         
         backUrl={`/sub-user/total-followups/${inquiryId}`}
 
-
         />
 
         </section>

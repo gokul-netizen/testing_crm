@@ -209,7 +209,7 @@ export default function SubUserFollowUpPanel({
             };
 
 
-            toast("Are you sure you want to save changes?", {
+            toast("Are you sure you want to save?", {
                 description:
                     followUp.includes("Not Interested") || followUp.includes("Closed")
                         ? followUp.join(", ")

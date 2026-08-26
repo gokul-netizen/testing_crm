@@ -63,7 +63,7 @@ type DataTableProps<T> = {
 
 export default function DataTableComponent<T extends { [key: string]: any }>({
   title = "Data Table",
-  placeholder = "Search by name,company name",
+  placeholder = "Search by name,company name etc..",
   data,
   columns,
   onEdit,
@@ -114,6 +114,8 @@ export default function DataTableComponent<T extends { [key: string]: any }>({
         item.inquiry?.name?.toLowerCase().includes(q) ||
         item?.name?.toLowerCase().includes(q) ||
         item?.companyName?.toLowerCase().includes(q) ||
+        item?.phone?.toString().toLowerCase().includes(q) ||
+        item?.email?.toLowerCase().includes(q) ||
         item.inquiry?.companyName?.toLowerCase().includes(q) ||
         item.inquiry?.phone?.includes(q) ||
         item?.service?.toLowerCase().includes(q) ||

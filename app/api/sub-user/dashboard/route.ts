@@ -81,41 +81,50 @@ export async function GET(req: Request) {
             }
         }
 
-        const assign = await prisma.domainResponse.count({
-            where: {
-                status: 1,
-                addedBy: String(userId),
-                assignId: {
-                    not: null,
-                },
-            },
-        });
 
-        const assignedFollowupCount = await prisma.domainResponse.count({
-            where: {
-                status: 1,
-                assignId: userId,
-                followUpStatus: "Assign To",
-            },
-        });
+        const [assign, assignedFollowupCount, notInterested, closed] =
+            await Promise.all([
+                prisma.domainResponse.count({
+                    where: {
+                        status: 1,
+                        addedBy: String(userId),
+                        assignId: {
+                            not: null,
+                        },
+                    },
+                }),
 
-        const notInterested = await prisma.domainResponse.count({
-            where: {
-                status: 1,
-                addedBy: String(userId),
-                followUpStatus: "Not Interested",
+                prisma.domainResponse.count({
+                    where: {
+                        status: 1,
+                        assignId: userId,
+                        followUpStatus: "Assign To",
+                    },
+                }),
 
-            },
-        });
+                prisma.domainResponse.count({
+                    where: {
+                        status: 1,
+                        OR: [
+                            { addedBy: String(userId) },
+                            { assignId: userId },
+                        ],
+                        followUpStatus: "Not Interested",
+                    },
+                }),
 
-        const closed = await prisma.domainResponse.count({
-            where: {
-                status: 1,
-                addedBy: String(userId),
-                followUpStatus: "Closed",
+                prisma.domainResponse.count({
+                    where: {
+                        status: 1,
 
-            },
-        });
+                        followUpStatus: "Closed",
+                        OR: [
+                            { addedBy: String(userId) },
+                            { assignId: userId },
+                        ]
+                    },
+                }),
+            ]);
 
         return NextResponse.json({
             totalInquiries,

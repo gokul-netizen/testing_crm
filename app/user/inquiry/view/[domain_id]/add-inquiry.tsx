@@ -238,12 +238,14 @@ export default function Inquiry({ open, onClose }: Props) {
       toast.error("Something went wrong.!");
       return false;
     }
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
     try {
+      if (!validateForm()) return;
 
       const res = await fetch(`/api/user/inquiry/inquiry-exist`, {
         method: "POST",
@@ -253,35 +255,9 @@ export default function Inquiry({ open, onClose }: Props) {
 
       const check = await res.json();
 
-      if (check.exist) {
-        confirmAction({
-          title: "Inquiry Already Exists",
-          description: `This inquiry already exists. Added On ${dayjs(check.data.createdAt).utc().format("YYYY-MM-DD HH:mm")} And Follow Up Status is ${check.data.FollowUpStatus}`,
-          confirmLabel: "Save Anyway",
-          onConfirm: async () => {
-            const success = await handSave();
-            if (success) {
-              setMessage(null);
-              setName('');
-              setCompanyName("");
-              setPhone('');
-              setPhoneSecondary('');
-              setEmail('');
-              setWebsite('');
-              setMessageText('');
-              setSource([]);
-              setFollowUp([]);
-              setService([]);
-              setDate('');
-              setTime('');
-              setRemarks('');
-
-              onClose();
-            }
-          },
-        });
-      } else {
+      const saveInquiry = async () => {
         const success = await handSave();
+
         if (success) {
           setMessage(null);
           setName('');
@@ -300,13 +276,59 @@ export default function Inquiry({ open, onClose }: Props) {
 
           onClose();
         }
-      }
+      };
 
+      if (check.exist) {
+        confirmAction({
+          title: "Inquiry Already Exists",
+          description: `This inquiry already exists. Added On ${dayjs(
+            check.data.createdAt
+          ).utc().format("YYYY-MM-DD HH:mm")} And Follow Up Status is ${check.data.FollowUpStatus
+            }`,
+          confirmLabel: "Save Anyway",
+          onConfirm: async () => {
+            await saveInquiry();
+          },
+        });
+      } else {
+        // Toast confirmation before saving
+        toast("Confirm Save", {
+          description:
+            date && time
+              ? `Save inquiry for ${formatToDMY(date)} at ${time}?`
+              : "Save this inquiry?",
+
+          className:
+            "!w-[520px] !max-w-[520px] bg-[#7367f0] text-white border-none [&_[data-button]]:!ml-8",
+
+          descriptionClassName: "text-white/80",
+
+          duration: Infinity,
+
+          action: {
+            label: "Save",
+            onClick: async () => {
+              await saveInquiry();
+            },
+          },
+
+          cancel: {
+            label: "Cancel",
+            onClick: () => {
+              console.log("Save cancelled");
+            },
+          },
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
-  
+
+
   const handleMutliSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     multiSetLoading(true);
@@ -343,7 +365,7 @@ export default function Inquiry({ open, onClose }: Props) {
               setTime('');
               setRemarks('');
 
-               
+
             }
           },
         });
@@ -365,7 +387,7 @@ export default function Inquiry({ open, onClose }: Props) {
           setTime('');
           setRemarks('');
 
-          
+
         }
       }
 
@@ -374,7 +396,7 @@ export default function Inquiry({ open, onClose }: Props) {
     }
   };
 
-  
+
   return (
     <>
       {open && (
@@ -393,11 +415,11 @@ export default function Inquiry({ open, onClose }: Props) {
           <IoClose size={28} className="cursor-pointer text-gray-400" onClick={onClose} />
         </div>
 
-    
+
         <div className="px-6 py-2 my-2  md:py-1 mx-2 md:mx-0 md:p-6  flex-1 overflow-y-auto">
           <form className="flex flex-col space-y-2">
 
-         
+
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="text-sm text-gray-500 font-medium">Company Name</label>
@@ -460,7 +482,7 @@ export default function Inquiry({ open, onClose }: Props) {
             </div>
 
 
-        
+
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="text-sm text-gray-500 font-medium">Contact 1</label>
@@ -497,15 +519,15 @@ export default function Inquiry({ open, onClose }: Props) {
                 </div>
               </div>
             </div>
- 
+
             <div className="grid grid-cols-2 gap-2">
 
               <SourceDropDown value={source} onChange={setSource} />
 
               <SerivceDropDown value={service} onChange={setService} domainId={domainId} userId={userId} />
 
-            </div>  
-   
+            </div>
+
             <div>
               <label className="text-sm text-gray-500 font-medium">Requirment</label>
               <div className="flex border rounded-md">
@@ -602,7 +624,7 @@ export default function Inquiry({ open, onClose }: Props) {
                 followUp.includes("Assign To") && (
                   <div>
                     <div>
-                      <AssignToDropDown value={assign ? [JSON.stringify(assign)] : []} onChange={setAssign}   />
+                      <AssignToDropDown value={assign ? [JSON.stringify(assign)] : []} onChange={setAssign} />
                     </div>
                     <div className="grid grid-cols-2 gap-2 p-1 ">
                       <div>
@@ -674,31 +696,31 @@ export default function Inquiry({ open, onClose }: Props) {
               </div>
             </div>
 
-              <div className="flex flex-col md:flex-row items-start gap-2  md:items-center md:gap-6">
-                <label className="flex items-center gap-2 cursor-pointer ">
-                  <input
-                    type="radio"
-                    name="visibility"
-                    checked={isPublic}
-                    onChange={() => setIsPublic(true)}
-                    className="h-4 w-4"
-                  />
-                  <span className="text-sm font-medium text-gray-600">You wants remarks to be public?</span>
-                </label>
+            <div className="flex flex-col md:flex-row items-start gap-2  md:items-center md:gap-6">
+              <label className="flex items-center gap-2 cursor-pointer ">
+                <input
+                  type="radio"
+                  name="visibility"
+                  checked={isPublic}
+                  onChange={() => setIsPublic(true)}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-medium text-gray-600">You wants remarks to be public?</span>
+              </label>
 
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="visibility"
-                    checked={!isPublic}
-                    onChange={() => setIsPublic(false)}
-                    className="h-4 w-4"
-                  />
-                  <span className="text-sm font-medium text-gray-600">You wants remarks to be private?</span>
-                </label>
-              </div>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="visibility"
+                  checked={!isPublic}
+                  onChange={() => setIsPublic(false)}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm font-medium text-gray-600">You wants remarks to be private?</span>
+              </label>
+            </div>
 
-              
+
 
             {/* Message Display */}
             {message && (

@@ -19,7 +19,10 @@ export async function GET(req: Request) {
 
                 followUpStatus: "Closed",
                 status: 1,
-                addedBy: String(userId)
+                OR: [
+                    { addedBy: String(userId) },
+                    { assignId: userId },
+                ]
 
             },
             select: {

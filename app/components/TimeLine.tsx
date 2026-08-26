@@ -26,8 +26,7 @@ export default function TimeLine({ inquiryId, apiUrl }: Props) {
         `/api/user/inquiry/view/inquiry/${inquiryId}/timeline`,
         fetcher
     );
-
-    console.log("Data :", data);
+ 
 
     const timeLine = data?.history;
     const inquiryDetail = data?.inquiryDetail;

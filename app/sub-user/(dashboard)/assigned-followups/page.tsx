@@ -45,8 +45,6 @@ export default function Page() {
 
     const { data, error, isLoading } = useSWR(`/api/sub-user/dashboard/assigned-followups`, fetcher);
 
-    console.log(data);
-
     const [selectedRows, setSelectedRows] = useState<Record<string | number, boolean>>({});
 
     if (isLoading) return <SpinnerCircle4 />

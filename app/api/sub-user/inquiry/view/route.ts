@@ -34,18 +34,7 @@ export async function GET(req: Request) {
                     select: {
                         domainResponse: {
                             where: {
-                                OR: [
-                                    {
-                                        assigns: {
-                                            some: {
-                                                assignTo: Number(userId),
-                                            }
-                                        }
-                                    },
-                                    {
-                                        addedBy: String(userId),
-                                    }
-                                ]
+                                addedBy: String(userId),
                             }
                         }
                     }
@@ -53,13 +42,10 @@ export async function GET(req: Request) {
             },
         });
 
-
-       
-
-
         return NextResponse.json(domainNames);
 
     } catch (error: any) {
+        
         logger.error({
 
             message: "Fail to get Domain count",
