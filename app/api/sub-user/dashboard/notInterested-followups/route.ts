@@ -30,7 +30,10 @@ export async function GET(req: Request) {
                 domain_id: domainId.domain,
                 status: 1,
                 followUpStatus: "Not Interested",
-                addedBy: String(userId)
+                OR: [
+                    { addedBy: String(userId) },
+                    { assignId: userId },
+                ]
 
             },
             select: {

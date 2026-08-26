@@ -5,7 +5,6 @@ import { LuUsers } from 'react-icons/lu';
 import CustomBreadcrumb from '@/app/components/BreadCrumb';
 import { useParams } from 'next/navigation';
 import OverView from '@/app/components/OverView';
-import SubUserTimeLine from '@/app/components/SubUserTimeLine';
 import TimeLine from './time-line';
 
 export default function Page() {
