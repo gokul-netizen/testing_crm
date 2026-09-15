@@ -5,6 +5,7 @@ import utc from "dayjs/plugin/utc";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import getSession from "@/lib/jwt";
 import { getCurrentUTCFromIST } from "@/lib/date-time";
+import logger from "@/lib/logs";
 
 
 dayjs.extend(utc);
@@ -52,7 +53,15 @@ export async function GET(req: Request, { params }: ParamsPros) {
 
     return NextResponse.json({ data: responses }, { status: 200 });
   } catch (error) {
-    console.error("Error fetching responses:", error);
+    logger.error({
+
+      message: "Fail get days",
+      file: "app/api/days/[id]/[date]/route.ts",
+      method: req.method,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+
+    });
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }
 }

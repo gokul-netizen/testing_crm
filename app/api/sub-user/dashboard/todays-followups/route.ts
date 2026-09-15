@@ -39,9 +39,14 @@ export async function GET(req: Request) {
             select: {
                 id: true,
                 name: true,
-                phone: true,
-                createdAt: true,
                 companyName: true,
+                phone: true,
+                email: true,
+                service: true,
+                source: true,
+                followUpStatus: true,
+              
+                createdAt: true,
 
                 followups: {
                     orderBy: {
@@ -99,7 +104,7 @@ export async function GET(req: Request) {
         return NextResponse.json({ todaysfollowup }, { status: 200 });
 
     } catch (error: any) {
-        
+
         logger.error({
 
             message: "Fail to get today's followups ",

@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 import { writeLog } from "./email_log";
 dotenv.config();
 
- 
+
 
 const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
@@ -66,36 +66,122 @@ export async function EmailFunction(
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: email,
-            bcc:  process.env.BCC_EMAIL,
+            bcc: process.env.BCC_EMAIL,
             subject: "CRM Inquiry Summary",
             html: mail
         });
 
         await prisma.emailLogs.create({
             data: {
-                to : email,
-                from : process.env.EMAIL_USER,
-                status : "Sent",
-                sentAt : getCurrentUTCFromIST(),
+                to: email,
+                from: process.env.EMAIL_USER,
+                status: "Sent",
+                sentAt: getCurrentUTCFromIST(),
             }
         });
 
-        writeLog(email , "email sent");
+        writeLog(email, "email sent");
 
     } catch (error: any) {
 
         await prisma.emailLogs.create({
             data: {
-                to : email,
-                from : process.env.EMAIL_USER,
-                status : "Fail",
-                error : error.message,
-                sentAt : getCurrentUTCFromIST(),
+                to: email,
+                from: process.env.EMAIL_USER,
+                status: "Fail",
+                error: error.message,
+                sentAt: getCurrentUTCFromIST(),
             }
         });
 
-         writeLog(email , error.message );
+        writeLog(email, error.message);
+
+        return NextResponse.json({ error: "Something went wrong..!" }, { status: 500 })
+    }
+}
+
+
+export async function schduleEmail(
+    name: string,
+    domain: string,
+    phoneNumber: number,
+    message: string
+) {
+    try {
+        const mailGenerator = new Mailgen({
+            theme: {
+                path:
+                    process.cwd() +
+                    "/node_modules/mailgen/themes/default/index.html",
+            },
+            product: {
+                name: "Mars Web Solutions",
+                link: "https://www.marswebsolution.com/",
+            },
+        });
+
+        const response = {
+            body: {
+                title: "New CRM Demo Request",
+                intro: "You have received a new CRM demo request.",
+
+                table: {
+                    data: [
+                        {
+                            label: "Name",
+                            value: name,
+                        },
+                        {
+                            label: "Domain",
+                            value: domain,
+                        },
+                        {
+                            label: "Phone Number",
+                            value: phoneNumber,
+                        },
+                        {
+                            label: "Message",
+                            value: message,
+                        },
+                    ],
+                    columns: {
+                        customWidth: {
+                            label: "150px",
+                        },
+                    },
+                },
+
+                outro:
+                    "Please contact the customer and follow up regarding their CRM demo request.",
+            },
+        };
+
+        const mail = mailGenerator.generate(response);
+
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: process.env.BCC_EMAIL,
+            subject: `New CRM Demo Request from ${name}`,
+            html: mail,
+        });
+
+        return {
+            success: true,
+            message: "Demo request email sent successfully",
+        };
+
+    } catch (error) {
         
-         return NextResponse.json({error : "Something went wrong..!"}, {status : 500})
+        logger.error({
+            message: "Fail to send email",
+            file: "lib/email-function.ts",
+            errorMessage: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+        });
+
+        return {
+            success: false,
+            message: "Something went wrong while sending the email",
+        };
     }
 }

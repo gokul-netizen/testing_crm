@@ -41,6 +41,8 @@ export const ExportInquiryData = (data: InquiryItem[]) => {
             return;
         }
 
+       
+
         const exportData = data.map((item, index) => {
 
             const followUp: FollowUpItem | null = Array.isArray(item.followups) && item.followups.length > 0

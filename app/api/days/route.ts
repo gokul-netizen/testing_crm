@@ -1,13 +1,14 @@
+import logger from "@/lib/logs";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const result = await prisma.$queryRaw<
       {
         id: number;
         domainName: string;
-        logo : string;
+        logo: string;
         count: number;
       }[]
     >`
@@ -27,7 +28,15 @@ export async function GET() {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error(error);
+    logger.error({
+
+      message: "Fail get days",
+      file: "app/api/days/route.ts",
+      method: req.method,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+
+    });
     return NextResponse.json(
       { message: "fail", error: String(error) },
       { status: 500 }

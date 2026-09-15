@@ -88,6 +88,7 @@ export async function GET(req: Request) {
             stack: error instanceof Error ? error.stack : undefined,
 
         });
+        
         return NextResponse.json({ error: "Something went wrong" }, { status: 500 })
     }
 }

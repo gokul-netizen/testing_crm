@@ -13,6 +13,7 @@ import Link from "next/link";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { timeSince } from "@/lib/time-ago";
 import { userExcelData } from "@/lib/export-excel-data";
+import { ExportInquiryData } from "@/lib/inquiriesExportExcel";
 
 
 dayjs.extend(utc);
@@ -148,7 +149,7 @@ export default function Page() {
                     selectedRows={selectedRows}
                     setSelectedRows={setSelectedRows}
                     detail={(item) => `/sub-user/new-assigned-followups/${item.id}`}
-                    onExcel={() => userExcelData(data, "Todays follow up")}
+                    onExcel={()=> ExportInquiryData(data?.data)}
                     
                     mobileCall={(item) => String(item?.phone)}
 

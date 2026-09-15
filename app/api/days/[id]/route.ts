@@ -46,7 +46,15 @@ export async function GET(req: Request, { params }: ParamsPros) {
 
     return NextResponse.json({ data: details }, { status: 200 });
   } catch (error : any) {
-    logger.error("Error fetching domain response:", error);
+    logger.error({
+
+      message: "Fail get days",
+      file: "app/api/days/[id]/route.ts",
+      method: req.method,
+      errorMessage: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+
+    });
     return NextResponse.json(
       { error: "Internal Server Error", message: "Failed to retrieve domain responses." },
       { status: 500 }

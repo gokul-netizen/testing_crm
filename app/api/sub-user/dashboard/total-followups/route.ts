@@ -17,7 +17,7 @@ export async function GET(req: Request) {
         const followups = await prisma.user.findUnique({
             where: {
                 id: userId,
-               
+
             },
 
             select: {
@@ -52,12 +52,21 @@ export async function GET(req: Request) {
                             select: {
                                 id: true,
                                 name: true,
+                                companyName: true,
                                 email: true,
                                 phone: true,
                                 service: true,
-                                companyName: true,
+                                source: true,
                                 createdAt: true,
                                 followUpStatus: true,
+
+
+                                _count: {
+                                    select: {
+                                        followups: true,
+                                    },
+                                },
+
                                 assigns: {
                                     orderBy: { createdAt: "desc" },
                                     take: 1,
