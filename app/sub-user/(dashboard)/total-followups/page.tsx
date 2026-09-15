@@ -15,6 +15,7 @@ import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { exportExcelDataInquiry } from "@/lib/export-excel-data";
 import { timeSince } from "@/lib/time-ago";
 import { toast } from "sonner";
+import { ExportInquiryData } from "@/lib/inquiriesExportExcel";
 
 dayjs.extend(utc);
 
@@ -252,7 +253,7 @@ export default function Page() {
                 setSelectedRows={setSelectedRows}
                 onDelete={() => handleDelete(inquiryIds)}
                 deleteById={(item) => handleDeleteById(item.id)}
-                onExcel={() => exportExcelDataInquiry(data ?? [])}
+                onExcel={()=> ExportInquiryData(data)}
                 detail={(item) => `/sub-user/total-followups/${item.id}`}
                 whatsapp={(item) => item.phone}
                 mobileCall={(item) => String(item.phone)}

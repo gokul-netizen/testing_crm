@@ -15,18 +15,11 @@ export async function GET(req: Request) {
     try {
 
         const followups = await prisma.followup.findMany({
-            where: {
-                followUpStatus: "Follow Up",
-                contact_mode: "Call",
-            },
+
             distinct: ["inquiryID"],
-
-            orderBy: [
-
-                {
-                    createdAt: "desc",
-                },
-            ],
+            orderBy: {
+                createdAt: "desc",
+            },
 
             select: {
                 id: true,
@@ -57,6 +50,7 @@ export async function GET(req: Request) {
             }
         });
 
+        console.log(followups)
 
         for (const follow of followups) {
 
@@ -68,6 +62,7 @@ export async function GET(req: Request) {
             const reminderTime = followUpDate.subtract(10, 'minutes');
 
             const shouldTriggerEmail = today.isAfter(reminderTime) && today.isBefore(reminderTime.add(1, "minute"));
+            
 
             if (shouldTriggerEmail) {
 
@@ -104,7 +99,7 @@ export async function GET(req: Request) {
             }
         }
 
-        return NextResponse.json({ message: "Success", }, { status: 200 });
+        return NextResponse.json({    message: "Success", }, { status: 200 });
 
 
     } catch (error: any) {

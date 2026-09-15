@@ -38,9 +38,11 @@ export async function GET(req: Request) {
                                 assignId: {
                                     not: null,
                                 },
+                                 
                             },
+                            
                             select: {
-                                id: true,
+                                id: true,        
                                 name: true,
                                 companyName: true,
                                 email: true,

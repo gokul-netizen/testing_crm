@@ -5,7 +5,7 @@ import DataTableComponent, { Column } from "@/app/components/DataTable";
 import dayjs from "dayjs";
 import { useState } from "react";
 import utc from 'dayjs/plugin/utc';
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
 import { useParams } from "next/navigation";
@@ -17,6 +17,7 @@ import Inquiry from "./add-inquriy";
 import Search from "./search";
 import SliderPanel from "@/app/components/SideSlider";
 import { ExportInquiryData } from "@/lib/inquiriesExportExcel";
+import { toast } from "sonner";
 
 
 dayjs.extend(utc);
@@ -57,6 +58,10 @@ export default function Page() {
     const [searchData, setSearchData] = useState<any[]>([]);
 
     const tableData = searchData.length > 0 ? searchData : data;
+
+    const inquiryIds = Object.keys(selectedRows)
+        .filter(key => selectedRows[key])
+        .map(Number);
 
     if (isLoading) return <SpinnerCircle4 />
 
@@ -169,6 +174,46 @@ export default function Page() {
     ];
 
 
+    const handleDelete = async (inquiryIds: number[]) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: inquiryIds })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate(`/api/sub-user/inquiry/view/${domainId}`);
+            setSelectedRows({});
+
+
+        } catch (error) {
+
+            toast.error("Failed to delete the inquiry")
+
+        }
+    }
+
+    const handleDeleteById = async (inquiryId: string | number) => {
+        try {
+
+            const response = await fetch('/api/sub-user/inquiry/delete-inquiry', {
+                method: "DELETE",
+                body: JSON.stringify({ ids: [inquiryId] })
+            });
+
+            const data = await response.json();
+            toast.success(data.message);
+            mutate(`/api/sub-user/inquiry/view/${domainId}`);
+
+
+        } catch (error) {
+            toast.error("Failed to delete the inquiry")
+        }
+    }
+
+
 
     return (
         <section>
@@ -194,6 +239,8 @@ export default function Page() {
                     whatsapp={(item) => item.phone}
                     mobileCall={(item) => String(item.phone)}
                     detail={(item) => `/sub-user/inquiry/view/${domainId}/${item.id}`}
+                    onDelete={() => handleDelete(inquiryIds)}
+                    deleteById={(item) => handleDeleteById(item.id)}
 
                 />
 

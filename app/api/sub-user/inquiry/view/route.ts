@@ -34,7 +34,12 @@ export async function GET(req: Request) {
                     select: {
                         domainResponse: {
                             where: {
-                                addedBy: String(userId),
+                                OR : [
+
+                                    {addedBy: String(userId)},
+                                    {assignId : Number(userId)}
+                                    
+                                ]
                             }
                         }
                     }

@@ -38,7 +38,16 @@ export async function GET(req: Request) {
                                 companyName: true,
                                 email: true,
                                 phone: true,
+                                service: true,
+                                source: true,
                                 createdAt: true,
+                                followUpStatus: true,
+
+                                _count: {
+                                    select: {
+                                        followups: true,
+                                    },
+                                },
 
                                 followups: {
                                     take : 1,

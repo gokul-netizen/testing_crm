@@ -49,7 +49,7 @@ export default function CustomBreadcrumb({ paths }: CustomBreadcrumbProps) {
               ) : (
                 <span>{path.label}</span>
               )}
-            </BreadcrumbItem>
+            </BreadcrumbItem> 
 
             {index < paths.length - 1 && <BreadcrumbSeparator />}
           </span>

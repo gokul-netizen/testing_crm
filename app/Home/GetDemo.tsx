@@ -10,6 +10,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { toast } from "sonner";
 
 export default function DemoFormSection() {
   const [formData, setFormData] = useState({
@@ -29,20 +30,45 @@ export default function DemoFormSection() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({
-        name: "",
-        domain: "",
-        phone: "",
-        message: "",
+    try {
+      setIsSubmitting(true);
+
+      if(!formData.domain || !formData.name || !formData.phone || !formData.message){
+        throw new Error("All fields are required..!");
+      }
+
+      const response = await fetch(`/api/email/schedule`,{
+        method : "POST",
+        credentials: "include",
+        body : JSON.stringify({name : formData.name , domain : formData.domain , phoneNumber : formData.phone , message : formData.message})
+
       });
-    }, 1200);
+
+      const result = await response.json();
+
+      if(response.ok){
+        toast.success(result.message || "Email Sent to admin. Will catch back you soon");
+        setIsSubmitting(false);
+      }
+      
+      toast.error(result.message || "Something went wrong");
+
+
+      
+    } catch (error:any) {
+
+      console.log(error);
+      toast.error(error.message);
+      
+    }finally {
+
+      setIsSubmitting(false);
+
+    }     
   };
 
   const listVariants = {

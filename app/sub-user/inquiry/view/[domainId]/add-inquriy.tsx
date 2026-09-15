@@ -307,7 +307,7 @@ export default function Inquiry({ open, onClose }: Props) {
                 }
             };
 
-            
+
             const noConfirmRequired =
                 followUp.includes("Not Interested") ||
                 followUp.includes("Closed");
@@ -317,7 +317,7 @@ export default function Inquiry({ open, onClose }: Props) {
                 return;
             }
 
-             
+
             if (check.exist) {
                 confirmAction({
                     title: "Inquiry Already Exists",
@@ -333,7 +333,7 @@ export default function Inquiry({ open, onClose }: Props) {
                     },
                 });
             } else {
-                 
+
                 toast("Confirm Save", {
                     description:
                         date && time
@@ -341,7 +341,13 @@ export default function Inquiry({ open, onClose }: Props) {
                             : "Are you sure you want to save this inquiry?",
 
                     className:
-                        "!w-[520px] !max-w-[520px] bg-[#7367f0] text-white border-none [&_[data-button]]:!ml-8",
+                        "!w-[520px] !max-w-[520px] " +
+                        "bg-[#7367f0] text-white border-none " +
+                        "[&_[data-button]]:!ml-8 " +
+                        "max-sm:!w-[calc(100vw-24px)] " +
+                        "max-sm:!max-w-[calc(100vw-24px)] " +
+                        "max-sm:!ml-3 " +
+                        "max-sm:!mr-3",
 
                     descriptionClassName: "text-white/80",
 
@@ -451,7 +457,13 @@ export default function Inquiry({ open, onClose }: Props) {
                             : "Are you sure you want to save this inquiry?",
 
                     className:
-                        "!w-[520px] !max-w-[520px] bg-[#7367f0] text-white border-none [&_[data-button]]:!ml-8",
+                        "!w-[520px] !max-w-[520px] " +
+                        "bg-[#7367f0] text-white border-none " +
+                        "[&_[data-button]]:!ml-8 " +
+                        "max-sm:!w-[calc(100vw-24px)] " +
+                        "max-sm:!max-w-[calc(100vw-24px)] " +
+                        "max-sm:!ml-3 " +
+                        "max-sm:!mr-3",
 
                     descriptionClassName: "text-white/80",
 

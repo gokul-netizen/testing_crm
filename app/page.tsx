@@ -1,4 +1,3 @@
-"use client";
 
 import FeaturesSection from "./Home/FeatureSection";
 import Footer from "./Home/FooterSection";

@@ -8,12 +8,12 @@ import utc from 'dayjs/plugin/utc';
 import useSWR, { mutate } from "swr";
 import { fetcher } from "@/lib/fetcherSwr";
 import SpinnerCircle4 from "@/components/spinner-10";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import CustomBreadcrumb from "@/app/components/BreadCrumb";
 import { timeSince } from "@/lib/time-ago";
-import { userExcelData } from "@/lib/export-excel-data";
 import { toast } from "sonner";
+import { ExportInquiryData } from "@/lib/inquiriesExportExcel";
 
 dayjs.extend(utc);
 
@@ -171,7 +171,7 @@ export default function Page() {
                     onDelete={() => handleDelete(inquiryIds)}
                     deleteById={(item) => handleDeleteById(item.inquiry?.id)}
                     detail={(item) => `/sub-user/todays-followups/${item.inquiry.id}`}
-                    onExcel={() => userExcelData(data, "Todays follow up")}
+                    onExcel={()=> ExportInquiryData(data?.todaysfollowup)}
                     whatsapp={(item)=> item?.inquiry?.phone}
                      mobileCall={(item)=> String(item?.inquiry?.phone)}
 
